@@ -12,7 +12,7 @@ import {
   PredefinedMenuItem,
   Submenu,
 } from "@tauri-apps/api/menu";
-import { appLogDir, resolve } from "@tauri-apps/api/path";
+import { appLogDir, resolve, resolveResource } from "@tauri-apps/api/path";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { ask, message, open } from "@tauri-apps/plugin-dialog";
 import { platform } from "@tauri-apps/plugin-os";
@@ -279,10 +279,81 @@ function RootLayout() {
         label: t("Menu.Help"),
         options: [
           {
-            label: t("Menu.Help.Documentation"),
+            label: "En Croissant-TTS Support Docs",
             id: "documentation",
-            action: () => shellOpen("https://encroissant.org/docs/"),
+            action: async () => {
+              const docsPath = await resolveResource("docs/README.md");
+              shellOpen(docsPath);
+            },
           },
+          { label: "divider" },
+          {
+            label: "TTS Guide (English)",
+            id: "tts_guide_en",
+            action: async () => {
+              const p = await resolveResource("docs/tts/tts-guide.md");
+              shellOpen(p);
+            },
+          },
+          {
+            label: "TTS Guide (Fran\u00e7ais)",
+            id: "tts_guide_fr",
+            action: async () => {
+              const p = await resolveResource("docs/tts/tts-guide-fr.md");
+              shellOpen(p);
+            },
+          },
+          {
+            label: "TTS Guide (Espa\u00f1ol)",
+            id: "tts_guide_es",
+            action: async () => {
+              const p = await resolveResource("docs/tts/tts-guide-es.md");
+              shellOpen(p);
+            },
+          },
+          {
+            label: "TTS Guide (Deutsch)",
+            id: "tts_guide_de",
+            action: async () => {
+              const p = await resolveResource("docs/tts/tts-guide-de.md");
+              shellOpen(p);
+            },
+          },
+          {
+            label: "TTS\u30ac\u30a4\u30c9 (\u65e5\u672c\u8a9e)",
+            id: "tts_guide_ja",
+            action: async () => {
+              const p = await resolveResource("docs/tts/tts-guide-ja.md");
+              shellOpen(p);
+            },
+          },
+          {
+            label:
+              "\u0420\u0443\u043a\u043e\u0432\u043e\u0434\u0441\u0442\u0432\u043e TTS (\u0420\u0443\u0441\u0441\u043a\u0438\u0439)",
+            id: "tts_guide_ru",
+            action: async () => {
+              const p = await resolveResource("docs/tts/tts-guide-ru.md");
+              shellOpen(p);
+            },
+          },
+          {
+            label: "TTS\u6307\u5357 (\u4e2d\u6587)",
+            id: "tts_guide_zh",
+            action: async () => {
+              const p = await resolveResource("docs/tts/tts-guide-zh.md");
+              shellOpen(p);
+            },
+          },
+          { label: "divider" },
+          {
+            label: "License (GPL-3.0)",
+            id: "license",
+            action: async () => {
+              const p = await resolveResource("docs/LICENSE");
+              shellOpen(p);
+            },
+          },
+          { label: "divider" },
           {
             label: t("Menu.Help.ClearSavedData"),
             id: "clear_saved_data",

@@ -34,7 +34,7 @@ function AboutModal({
       centered
       opened={opened}
       onClose={() => setOpened(false)}
-      title="En Croissant"
+      title="En Croissant-TTS Support"
     >
       <Text>Version: {info?.version}</Text>
       <Text>Tauri version: {info?.tauri}</Text>
@@ -45,12 +45,33 @@ function AboutModal({
       <br />
 
       <Anchor
-        href="https://www.encroissant.org"
+        href="https://github.com/DarrellThomas/en-croissant-TTS-support"
         target="_blank"
         rel="noreferrer"
       >
-        www.encroissant.org
+        github.com/DarrellThomas/en-croissant-TTS-support
       </Anchor>
+
+      <br />
+
+      <Text size="sm">
+        Original En Croissant can be found at:{" "}
+        <Anchor
+          href="https://www.encroissant.org"
+          target="_blank"
+          rel="noreferrer"
+        >
+          www.encroissant.org
+        </Anchor>
+      </Text>
+
+      <br />
+
+      <Text size="sm">License: GPL-3.0</Text>
+      <Text size="xs" c="dimmed">
+        Based on En Croissant by Francisco Salgueiro. TTS narration by Darrell
+        at Red Shed.
+      </Text>
     </Modal>
   );
 }

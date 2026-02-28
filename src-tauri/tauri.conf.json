@@ -34,7 +34,8 @@
       "signingIdentity": "-"
     },
     "resources": {
-      "../sound/": "sound/"
+      "../sound/": "sound/",
+      "../docs/": "docs/"
     },
     "targets": "all",
     "createUpdaterArtifacts": "v1Compatible"
@@ -45,8 +46,8 @@
     "frontendDist": "../dist",
     "devUrl": "http://localhost:1420"
   },
-  "productName": "en-croissant",
-  "mainBinaryName": "en-croissant",
+  "productName": "en-croissant-TTS",
+  "mainBinaryName": "en-croissant-TTS",
   "identifier": "org.encroissant.app",
   "plugins": {
     "cli": {
@@ -61,7 +62,7 @@
     "updater": {
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDdGOTBFNjg2MzFGM0RDODUKUldTRjNQTXhodWFRZjc2MTNVeXRONGJkRjdGUXlCeW1MSlZESUczT0U4eE5hKzBmY3M2S0U2L0oK",
       "endpoints": [
-        "https://www.encroissant.org/updates"
+        "https://github.com/DarrellThomas/en-croissant-TTS-support/releases/latest/download/latest.json"
       ]
     },
     "shell": {
@@ -72,7 +73,7 @@
     "withGlobalTauri": false,
     "windows": [
       {
-        "title": "En Croissant",
+        "title": "En Croissant-TTS Support",
         "visible": false,
         "decorations": true
       }
