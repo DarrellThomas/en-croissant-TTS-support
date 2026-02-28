@@ -198,7 +198,7 @@ export default function ImportModal({
             onClick={async () => {
               const selected = (await open({
                 multiple: false,
-
+                defaultPath: "/data/chess-lab/games",
                 filters: [
                   {
                     name: t("Common.PGNFile"),

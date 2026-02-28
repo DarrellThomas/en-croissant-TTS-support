@@ -21,6 +21,12 @@ import {
   type TreeState,
   treeIteratorMainLine,
 } from "@/utils/treeReducer";
+import {
+  isAutoNarrateEnabled,
+  speakComment,
+  speakMoveNarration,
+  stopSpeaking,
+} from "@/utils/tts";
 
 export interface TreeStoreState extends TreeState {
   currentNode: () => TreeNode;
@@ -125,12 +131,27 @@ export const createTreeStore = (id?: string, initialTree?: TreeState) => {
 
     goToNext: () =>
       set((state) => {
+        stopSpeaking();
         const node = getNodeAtPath(state.root, state.position);
         const [pos] = positionFromFen(node.fen);
         if (!pos || !node.children[0]?.move) return state;
         const san = makeSan(pos, node.children[0].move);
         playSound(san.includes("x"), san.includes("+"));
         if (node && node.children.length > 0) {
+          const nextNode = node.children[0];
+          if (isAutoNarrateEnabled()) {
+            // At root position, speak the game intro comment first
+            if (state.position.length === 0 && node.comment) {
+              speakComment(node.comment);
+            } else if (nextNode.comment) {
+              speakMoveNarration(
+                nextNode.san,
+                nextNode.comment,
+                nextNode.annotations,
+                nextNode.halfMoves,
+              );
+            }
+          }
           return {
             ...state,
             position: [...state.position, 0],
@@ -139,10 +160,13 @@ export const createTreeStore = (id?: string, initialTree?: TreeState) => {
         return state;
       }),
     goToPrevious: () =>
-      set((state) => ({
-        ...state,
-        position: state.position.slice(0, -1),
-      })),
+      set((state) => {
+        stopSpeaking();
+        return {
+          ...state,
+          position: state.position.slice(0, -1),
+        };
+      }),
 
     goToAnnotation: (annotation, color) =>
       set(
@@ -232,7 +256,8 @@ export const createTreeStore = (id?: string, initialTree?: TreeState) => {
           }
         }),
       ),
-    goToEnd: () =>
+    goToEnd: () => {
+      stopSpeaking();
       set(
         produce((state) => {
           const endPosition: number[] = [];
@@ -243,17 +268,22 @@ export const createTreeStore = (id?: string, initialTree?: TreeState) => {
           }
           state.position = endPosition;
         }),
-      ),
-    goToStart: () =>
+      );
+    },
+    goToStart: () => {
+      stopSpeaking();
       set((state) => ({
         ...state,
         position: state.headers.start || [],
-      })),
-    goToMove: (move) =>
+      }));
+    },
+    goToMove: (move) => {
+      stopSpeaking();
       set((state) => ({
         ...state,
         position: move,
-      })),
+      }));
+    },
     goToBranchStart: () => {
       set(
         produce((state) => {
