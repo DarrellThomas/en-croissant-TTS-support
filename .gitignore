@@ -27,3 +27,6 @@ tsconfig.tsbuildinfo
 *.sw?
 
 src-tauri/gen/
+
+# Local issue tracking
+UPSTREAM-ISSUES.md
