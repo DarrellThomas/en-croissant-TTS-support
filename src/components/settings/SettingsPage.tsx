@@ -901,7 +901,7 @@ export default function Page() {
         <ScrollArea flex={1} px="md">
           {renderSearchResults()}
           <Text size="xs" c="dimmed" ta="right" py="md">
-            En Croissant-TTS Support v{version}
+            En Croissant-TTS v{version}
           </Text>
         </ScrollArea>
       ) : (
@@ -1075,7 +1075,7 @@ export default function Page() {
               </Card>
             </ScrollArea>
             <Text size="xs" c="dimmed" ta="right">
-              En Croissant-TTS Support v{version}
+              En Croissant-TTS v{version}
             </Text>
           </Stack>
         </Tabs>

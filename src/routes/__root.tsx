@@ -279,7 +279,7 @@ function RootLayout() {
         label: t("Menu.Help"),
         options: [
           {
-            label: "En Croissant-TTS Support Docs",
+            label: "En Croissant-TTS Docs",
             id: "documentation",
             action: async () => {
               const docsPath = await resolveResource("docs/README.md");

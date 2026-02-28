@@ -1,10 +1,10 @@
 # Getting Started
 
-This guide will help you get up and running with En Croissant-TTS Support.
+This guide will help you get up and running with En Croissant-TTS.
 
 ## Installation
 
-En Croissant-TTS Support supports Windows, Linux, and macOS.
+En Croissant-TTS supports Windows, Linux, and macOS.
 
 ### Windows
 
@@ -30,7 +30,7 @@ En Croissant-TTS Support supports Windows, Linux, and macOS.
 
 1. Go to the Download page
 2. Download the `.dmg` file
-3. Open the `.dmg` and transfer the En Croissant-TTS Support app to Applications
+3. Open the `.dmg` and transfer the En Croissant-TTS app to Applications
 
 ## First Run
 

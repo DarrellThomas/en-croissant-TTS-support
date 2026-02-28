@@ -1,6 +1,6 @@
 # Engines
 
-En Croissant-TTS Support comes with a selection of engines to download with a single click.
+En Croissant-TTS comes with a selection of engines to download with a single click.
 
 ## Available Engines
 

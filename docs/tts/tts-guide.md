@@ -75,7 +75,7 @@ This tells Google which service you want to use.
 
 ### Step 4: Create an API key
 
-The API key is what En Croissant-TTS Support uses to talk to Google's servers.
+The API key is what En Croissant-TTS uses to talk to Google's servers.
 
 1. In the top search bar, type **"Credentials"** and click **Credentials** under "APIs & Services"
 2. Near the top of the page, click **+ Create Credentials**
@@ -86,11 +86,11 @@ The API key is what En Croissant-TTS Support uses to talk to Google's servers.
 
 > **Recommended: Restrict your key.** After creating the key, you'll see it listed on the Credentials page. Click the key name to open its settings. Under **API restrictions**, select **Restrict key**, then choose **Cloud Text-to-Speech API** from the dropdown and click **Save**. This means even if someone gets your key, they can only use it for TTS — nothing else.
 
-### Step 5: Configure En Croissant-TTS Support
+### Step 5: Configure En Croissant-TTS
 
 Almost there!
 
-1. Open En Croissant-TTS Support and go to **Settings** (gear icon) > **Sound** tab
+1. Open En Croissant-TTS and go to **Settings** (gear icon) > **Sound** tab
 2. Scroll down to the TTS section
 3. Set **TTS Provider** to **Google Cloud**
 4. Click inside the **Google Cloud API Key** field and paste your key (Ctrl+V)
@@ -120,9 +120,9 @@ ElevenLabs is simpler to set up but has a smaller free tier (10,000 characters/m
 4. The key looks like: `sk_...about 30 characters...`
 5. **Click the copy icon** to copy it to your clipboard
 
-### Step 3: Configure En Croissant-TTS Support
+### Step 3: Configure En Croissant-TTS
 
-1. Open En Croissant-TTS Support and go to **Settings** (gear icon) > **Sound** tab
+1. Open En Croissant-TTS and go to **Settings** (gear icon) > **Sound** tab
 2. Scroll down to the TTS section
 3. Set **TTS Provider** to **ElevenLabs**
 4. Click inside the **ElevenLabs API Key** field and paste your key (Ctrl+V)

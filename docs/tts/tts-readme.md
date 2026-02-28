@@ -1,6 +1,6 @@
 # Text-to-Speech Narration for Chess Annotations
 
-This fork adds **ElevenLabs TTS narration** to En Croissant-TTS Support, turning annotated PGN files into spoken chess lessons. Step through any game and hear every comment read aloud with correct chess pronunciation.
+This fork adds **ElevenLabs TTS narration** to En Croissant-TTS, turning annotated PGN files into spoken chess lessons. Step through any game and hear every comment read aloud with correct chess pronunciation.
 
 Built for studying annotated master games and reviewing your own game debriefs without staring at the screen.
 
@@ -47,7 +47,7 @@ Sign up at [elevenlabs.io](https://elevenlabs.io). The free tier gives you ~10,0
 
 ### 2. Configure in Settings
 
-Open En Croissant-TTS Support and go to **Settings > Sound**:
+Open En Croissant-TTS and go to **Settings > Sound**:
 
 | Setting | Description |
 |---------|-------------|

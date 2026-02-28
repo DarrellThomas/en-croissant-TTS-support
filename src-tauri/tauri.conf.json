@@ -62,7 +62,7 @@
     "updater": {
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDdGOTBFNjg2MzFGM0RDODUKUldTRjNQTXhodWFRZjc2MTNVeXRONGJkRjdGUXlCeW1MSlZESUczT0U4eE5hKzBmY3M2S0U2L0oK",
       "endpoints": [
-        "https://github.com/DarrellThomas/en-croissant-TTS-support/releases/latest/download/latest.json"
+        "https://github.com/DarrellThomas/en-croissant-TTS/releases/latest/download/latest.json"
       ]
     },
     "shell": {
@@ -73,7 +73,7 @@
     "withGlobalTauri": false,
     "windows": [
       {
-        "title": "En Croissant-TTS Support",
+        "title": "En Croissant-TTS",
         "visible": false,
         "decorations": true
       }

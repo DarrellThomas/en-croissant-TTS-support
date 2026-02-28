@@ -76,7 +76,7 @@ Esto le indica a Google que servicio deseas utilizar.
 
 ### Paso 4: Crear una API key
 
-La API key es lo que En Croissant-TTS Support utiliza para comunicarse con los servidores de Google.
+La API key es lo que En Croissant-TTS utiliza para comunicarse con los servidores de Google.
 
 1. En la barra de busqueda superior, escribe **"Credentials"** y haz clic en **Credentials** bajo "APIs & Services"
 2. Cerca de la parte superior de la pagina, haz clic en **+ Create Credentials**
@@ -87,11 +87,11 @@ La API key es lo que En Croissant-TTS Support utiliza para comunicarse con los s
 
 > **Recomendado: Restringe tu clave.** Despues de crear la clave, la veras listada en la pagina de Credentials. Haz clic en el nombre de la clave para abrir su configuracion. En **API restrictions**, selecciona **Restrict key**, luego elige **Cloud Text-to-Speech API** en el menu desplegable y haz clic en **Save**. Esto significa que incluso si alguien obtiene tu clave, solo podra usarla para TTS -- nada mas.
 
-### Paso 5: Configurar En Croissant-TTS Support
+### Paso 5: Configurar En Croissant-TTS
 
 Ya casi terminamos!
 
-1. Abre En Croissant-TTS Support y ve a **Settings** (icono de engranaje) > pestana **Sound**
+1. Abre En Croissant-TTS y ve a **Settings** (icono de engranaje) > pestana **Sound**
 2. Desplazate hacia abajo hasta la seccion de TTS
 3. Establece **TTS Provider** en **Google Cloud**
 4. Haz clic dentro del campo **Google Cloud API Key** y pega tu clave (Ctrl+V)
@@ -121,9 +121,9 @@ ElevenLabs es mas sencillo de configurar pero tiene un nivel gratuito mas reduci
 4. La clave se ve algo asi: `sk_...about 30 characters...`
 5. **Haz clic en el icono de copiar** para copiarla al portapapeles
 
-### Paso 3: Configurar En Croissant-TTS Support
+### Paso 3: Configurar En Croissant-TTS
 
-1. Abre En Croissant-TTS Support y ve a **Settings** (icono de engranaje) > pestana **Sound**
+1. Abre En Croissant-TTS y ve a **Settings** (icono de engranaje) > pestana **Sound**
 2. Desplazate hacia abajo hasta la seccion de TTS
 3. Establece **TTS Provider** en **ElevenLabs**
 4. Haz clic dentro del campo **ElevenLabs API Key** y pega tu clave (Ctrl+V)
