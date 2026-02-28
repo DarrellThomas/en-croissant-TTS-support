@@ -7,7 +7,8 @@
 [Deutsch](TTS-GUIDE-de.md) |
 日本語 |
 [Русский](TTS-GUIDE-ru.md) |
-[中文](TTS-GUIDE-zh.md)*
+[中文](TTS-GUIDE-zh.md) |
+[한국어](TTS-GUIDE-ko.md)*
 
 ## TTS がチェス学習を変える理由
 

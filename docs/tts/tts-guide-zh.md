@@ -7,7 +7,8 @@
 [Deutsch](TTS-GUIDE-de.md) |
 [日本語](TTS-GUIDE-ja.md) |
 [Русский](TTS-GUIDE-ru.md) |
-中文*
+中文 |
+[한국어](TTS-GUIDE-ko.md)*
 
 ## 为什么 TTS 会改变你学棋的方式
 

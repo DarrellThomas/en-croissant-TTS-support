@@ -7,7 +7,8 @@ Espanol |
 [Deutsch](TTS-GUIDE-de.md) |
 [日本語](TTS-GUIDE-ja.md) |
 [Русский](TTS-GUIDE-ru.md) |
-[中文](TTS-GUIDE-zh.md)*
+[中文](TTS-GUIDE-zh.md) |
+[한국어](TTS-GUIDE-ko.md)*
 
 ## Por que TTS cambia tu forma de estudiar ajedrez
 

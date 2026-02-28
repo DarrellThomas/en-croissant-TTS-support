@@ -200,6 +200,7 @@ const TTS_TEST_PHRASES: Record<string, string> = {
   ja: "ナイト f3、チェック。センターを支配する強い展開の手。",
   ru: "Конь f3, шах. Сильный развивающий ход, контролирующий центр.",
   zh: "马 f3，将军。一步控制中心的强力出子。",
+  ko: "나이트 f3, 체크. 중앙을 지배하는 강력한 전개 수.",
 };
 
 function getTestPhrase(lang: string): string {
@@ -214,6 +215,7 @@ const TTS_LANGUAGE_OPTIONS = [
   { value: "ja", label: "日本語" },
   { value: "ru", label: "Русский" },
   { value: "zh", label: "中文" },
+  { value: "ko", label: "한국어" },
 ];
 
 export function TTSLanguageSelect() {

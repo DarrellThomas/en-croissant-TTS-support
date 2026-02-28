@@ -12,7 +12,7 @@ import {
   PredefinedMenuItem,
   Submenu,
 } from "@tauri-apps/api/menu";
-import { appLogDir, resolve, resolveResource } from "@tauri-apps/api/path";
+import { appLogDir, resolve } from "@tauri-apps/api/path";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { ask, message, open } from "@tauri-apps/plugin-dialog";
 import { platform } from "@tauri-apps/plugin-os";
@@ -27,6 +27,7 @@ import useSWRImmutable from "swr/immutable";
 import { match } from "ts-pattern";
 import type { Dirs } from "@/App";
 import AboutModal from "@/components/About";
+import { DocViewer } from "@/components/DocViewer";
 import { SideBar } from "@/components/Sidebar";
 import TopBar from "@/components/TopBar";
 import { activeTabAtom, nativeBarAtom, tabsAtom } from "@/state/atoms";
@@ -155,6 +156,8 @@ function RootLayout() {
   useHotkeys(keyMap.NEW_TAB.keys, createNewTab);
   useHotkeys(keyMap.OPEN_FILE.keys, openNewFile);
   const [opened, setOpened] = useState(false);
+  const [docResource, setDocResource] = useState<string | null>(null);
+  const [docTitle, setDocTitle] = useState("");
 
   const isMacOS = platform() === "macos";
 
@@ -281,76 +284,86 @@ function RootLayout() {
           {
             label: "En Croissant-TTS Docs",
             id: "documentation",
-            action: async () => {
-              const docsPath = await resolveResource("docs/README.md");
-              shellOpen(docsPath);
+            action: () => {
+              setDocTitle("En Croissant-TTS Docs");
+              setDocResource("docs/README.md");
             },
           },
           { label: "divider" },
           {
             label: "TTS Guide (English)",
             id: "tts_guide_en",
-            action: async () => {
-              const p = await resolveResource("docs/tts/tts-guide.md");
-              shellOpen(p);
+            action: () => {
+              setDocTitle("TTS Guide (English)");
+              setDocResource("docs/tts/tts-guide.md");
             },
           },
           {
             label: "TTS Guide (Fran\u00e7ais)",
             id: "tts_guide_fr",
-            action: async () => {
-              const p = await resolveResource("docs/tts/tts-guide-fr.md");
-              shellOpen(p);
+            action: () => {
+              setDocTitle("TTS Guide (Fran\u00e7ais)");
+              setDocResource("docs/tts/tts-guide-fr.md");
             },
           },
           {
             label: "TTS Guide (Espa\u00f1ol)",
             id: "tts_guide_es",
-            action: async () => {
-              const p = await resolveResource("docs/tts/tts-guide-es.md");
-              shellOpen(p);
+            action: () => {
+              setDocTitle("TTS Guide (Espa\u00f1ol)");
+              setDocResource("docs/tts/tts-guide-es.md");
             },
           },
           {
             label: "TTS Guide (Deutsch)",
             id: "tts_guide_de",
-            action: async () => {
-              const p = await resolveResource("docs/tts/tts-guide-de.md");
-              shellOpen(p);
+            action: () => {
+              setDocTitle("TTS Guide (Deutsch)");
+              setDocResource("docs/tts/tts-guide-de.md");
             },
           },
           {
             label: "TTS\u30ac\u30a4\u30c9 (\u65e5\u672c\u8a9e)",
             id: "tts_guide_ja",
-            action: async () => {
-              const p = await resolveResource("docs/tts/tts-guide-ja.md");
-              shellOpen(p);
+            action: () => {
+              setDocTitle("TTS\u30ac\u30a4\u30c9 (\u65e5\u672c\u8a9e)");
+              setDocResource("docs/tts/tts-guide-ja.md");
             },
           },
           {
             label:
               "\u0420\u0443\u043a\u043e\u0432\u043e\u0434\u0441\u0442\u0432\u043e TTS (\u0420\u0443\u0441\u0441\u043a\u0438\u0439)",
             id: "tts_guide_ru",
-            action: async () => {
-              const p = await resolveResource("docs/tts/tts-guide-ru.md");
-              shellOpen(p);
+            action: () => {
+              setDocTitle(
+                "\u0420\u0443\u043a\u043e\u0432\u043e\u0434\u0441\u0442\u0432\u043e TTS (\u0420\u0443\u0441\u0441\u043a\u0438\u0439)",
+              );
+              setDocResource("docs/tts/tts-guide-ru.md");
             },
           },
           {
             label: "TTS\u6307\u5357 (\u4e2d\u6587)",
             id: "tts_guide_zh",
-            action: async () => {
-              const p = await resolveResource("docs/tts/tts-guide-zh.md");
-              shellOpen(p);
+            action: () => {
+              setDocTitle("TTS\u6307\u5357 (\u4e2d\u6587)");
+              setDocResource("docs/tts/tts-guide-zh.md");
+            },
+          },
+          {
+            label: "TTS \uAC00\uC774\uB4DC (\uD55C\uAD6D\uC5B4)",
+            id: "tts_guide_ko",
+            action: () => {
+              setDocTitle("TTS \uAC00\uC774\uB4DC (\uD55C\uAD6D\uC5B4)");
+              setDocResource("docs/tts/tts-guide-ko.md");
             },
           },
           { label: "divider" },
           {
             label: "License (GPL-3.0)",
             id: "license",
-            action: async () => {
-              const p = await resolveResource("docs/LICENSE");
-              shellOpen(p);
+            action: () => {
+              setDocTitle("License (GPL-3.0)");
+              setDocResource("docs/LICENSE");
             },
           },
           { label: "divider" },
@@ -450,6 +463,11 @@ function RootLayout() {
       }}
     >
       <AboutModal opened={opened} setOpened={setOpened} />
+      <DocViewer
+        resource={docResource}
+        title={docTitle}
+        onClose={() => setDocResource(null)}
+      />
       {!isNative && import.meta.env.VITE_PLATFORM === "win32" && (
         <AppShell.Header>
           <TopBar menuActions={menuActions} />

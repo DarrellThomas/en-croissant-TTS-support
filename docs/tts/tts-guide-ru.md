@@ -7,7 +7,8 @@
 [Deutsch](TTS-GUIDE-de.md) |
 [日本語](TTS-GUIDE-ja.md) |
 Русский |
-[中文](TTS-GUIDE-zh.md)*
+[中文](TTS-GUIDE-zh.md) |
+[한국어](TTS-GUIDE-ko.md)*
 
 ## Почему TTS меняет подход к изучению шахмат
 

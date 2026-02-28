@@ -37,6 +37,7 @@ En Croissant-TTS is an open-source, cross-platform chess GUI that aims to be pow
 - [TTS\u30ac\u30a4\u30c9 (\u65e5\u672c\u8a9e)](tts/tts-guide-ja.md)
 - [\u0420\u0443\u043a\u043e\u0432\u043e\u0434\u0441\u0442\u0432\u043e TTS (\u0420\u0443\u0441\u0441\u043a\u0438\u0439)](tts/tts-guide-ru.md)
 - [TTS\u6307\u5357 (\u4e2d\u6587)](tts/tts-guide-zh.md)
+- [TTS 가이드 (한국어)](tts/tts-guide-ko.md)
 
 ## Attribution
 

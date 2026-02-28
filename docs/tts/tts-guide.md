@@ -6,7 +6,8 @@
 [Deutsch](TTS-GUIDE-de.md) |
 [日本語](TTS-GUIDE-ja.md) |
 [Русский](TTS-GUIDE-ru.md) |
-[中文](TTS-GUIDE-zh.md)*
+[中文](TTS-GUIDE-zh.md) |
+[한국어](TTS-GUIDE-ko.md)*
 
 ## Why TTS Changes How You Study Chess
 
@@ -21,7 +22,7 @@ This is especially powerful for:
 - **Opening study** — hear the ideas behind each move while you watch the position develop
 - **Game review** — step through your own annotated games and absorb the lessons naturally
 - **Endgame practice** — keep your focus on the critical squares while the commentary guides you
-- **Language immersion** — study chess in French, German, Spanish, Russian, Japanese, or Chinese with all chess terms properly translated. Hear "Cavalier f3, echec" instead of "Knight f3, check." Learn the game in the language you think in.
+- **Language immersion** — study chess in French, German, Spanish, Russian, Japanese, Chinese, or Korean with all chess terms properly translated. Hear "Cavalier f3, echec" instead of "Knight f3, check." Learn the game in the language you think in.
 - **Accessibility** — for players who find it easier to listen than to read, or who want to study away from a desk
 
 Once you try it, going back to silent annotations feels like watching a movie on mute.
@@ -153,7 +154,7 @@ All TTS settings are in **Settings > Sound**:
 
 ## Supported Languages
 
-TTS narration currently supports seven languages with fully translated chess vocabulary:
+TTS narration currently supports eight languages with fully translated chess vocabulary:
 
 | Language           | Chess example                                      |
 |--------------------|-----------------------------------------------------|
@@ -164,6 +165,7 @@ TTS narration currently supports seven languages with fully translated chess voc
 | **日本語**          | ナイト f3、チェック。強い展開の手。                      |
 | **Русский**        | Конь f3, шах. Сильный развивающий ход.              |
 | **中文**            | 马 f3，将军。一步控制中心的强力出子。                    |
+| **한국어**          | 나이트 f3, 체크. 중앙을 지배하는 강력한 전개 수.          |
 
 Every chess term — piece names, "check", "checkmate", "castles", "takes", move quality annotations like "Brilliant move" and "Blunder" — is spoken in the selected language. Comments in your PGN files are spoken as written, so annotate your games in the language you want to hear.
 
@@ -183,7 +185,7 @@ Every chess term — piece names, "check", "checkmate", "castles", "takes", move
 
 En Croissant is an open-source chess study tool created by [Francisco Salgueiro](https://github.com/franciscoBSalgueiro). Francisco built something genuinely special — a free, powerful, community-driven platform for studying chess — and released it under the GPL-3.0 license so that anyone can use it, improve it, and share it. This TTS feature exists because of that generosity. We're grateful for the foundation he built, and we're proud to contribute back to it.
 
-The TTS plugin was developed by Darrell at [Red Shed](mailto:darrell@redshed.ai), with the help of [Claude Code](https://claude.ai/claude-code). Multi-language support, dual-provider integration, translated chess vocabulary across seven languages — built from source, tested by hand, and contributed with care.
+The TTS plugin was developed by Darrell at [Red Shed](mailto:darrell@redshed.ai), with the help of [Claude Code](https://claude.ai/claude-code). Multi-language support, dual-provider integration, translated chess vocabulary across eight languages — built from source, tested by hand, and contributed with care.
 
 That's the beauty of open source. Someone builds something great. Someone else adds to it. Everyone benefits.
 

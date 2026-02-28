@@ -7,7 +7,8 @@
 Deutsch |
 [日本語](TTS-GUIDE-ja.md) |
 [Русский](TTS-GUIDE-ru.md) |
-[中文](TTS-GUIDE-zh.md)*
+[中文](TTS-GUIDE-zh.md) |
+[한국어](TTS-GUIDE-ko.md)*
 
 ## Warum TTS das Schachstudium grundlegend verändert
 

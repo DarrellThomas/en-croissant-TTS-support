@@ -178,6 +178,25 @@ const CHESS_VOCAB: Record<string, ChessVocab> = {
     mistake: "错着。",
     blunder: "漏着。",
   },
+  ko: {
+    King: "킹",
+    Queen: "퀸",
+    Rook: "룩",
+    Bishop: "비숍",
+    Knight: "나이트",
+    castlesKingside: "킹사이드 캐슬링",
+    castlesQueenside: "퀸사이드 캐슬링",
+    takes: "잡음",
+    check: "체크",
+    checkmate: "체크메이트",
+    promotesTo: "프로모션",
+    brilliant: "brilliant한 수.",
+    good: "좋은 수.",
+    interesting: "흥미로운 수.",
+    dubious: "의심스러운 수.",
+    mistake: "실수.",
+    blunder: "대실수.",
+  },
 };
 
 function getVocab(lang: string): ChessVocab {
@@ -500,6 +519,10 @@ const GOOGLE_VOICES: Record<string, Record<string, GoogleVoice>> = {
   zh: {
     MALE: { languageCode: "cmn-CN", name: "cmn-CN-WaveNet-B" },
     FEMALE: { languageCode: "cmn-CN", name: "cmn-CN-WaveNet-A" },
+  },
+  ko: {
+    MALE: { languageCode: "ko-KR", name: "ko-KR-WaveNet-C" },
+    FEMALE: { languageCode: "ko-KR", name: "ko-KR-WaveNet-A" },
   },
 };
 
