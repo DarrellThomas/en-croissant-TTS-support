@@ -41,3 +41,7 @@ scripts/kittentts-server.exe
 
 # Draft notes (not ready for release)
 AI-NOTE.md
+
+# Site and Cloudflare local state (separate repo)
+site/
+.wrangler/
