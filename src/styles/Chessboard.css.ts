@@ -7,6 +7,7 @@ export const chessboard = style({
   zIndex: 1,
   display: "flex",
   aspectRatio: "1",
+  contain: "layout style",
 });
 
 globalStyle(

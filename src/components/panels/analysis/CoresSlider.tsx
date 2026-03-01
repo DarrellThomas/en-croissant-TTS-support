@@ -6,10 +6,14 @@ export default function CoresSlider(props: {
   color?: string;
 }) {
   const theme = useMantineTheme();
-  const values = Array.from(
-    { length: Math.log2(navigator.hardwareConcurrency) + 1 },
-    (_, i) => 2 ** i,
-  );
+  const maxCores = navigator.hardwareConcurrency;
+  const values: number[] = [];
+  for (let v = 1; v <= maxCores; v *= 2) {
+    values.push(v);
+  }
+  if (values[values.length - 1] !== maxCores) {
+    values.push(maxCores);
+  }
 
   return (
     <SegmentedControl

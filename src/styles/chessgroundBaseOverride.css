@@ -2,6 +2,7 @@
   box-sizing: content-box;
   position: relative;
   display: block;
+  contain: layout style paint;
 }
 
 cg-container {
@@ -10,6 +11,7 @@ cg-container {
   height: 100%;
   display: block;
   top: 0;
+  will-change: transform;
 }
 
 cg-board {
@@ -24,6 +26,7 @@ cg-board {
   user-select: none;
   line-height: 0;
   background-size: cover;
+  contain: strict;
 }
 
 cg-board square {
