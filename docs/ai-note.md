@@ -71,6 +71,12 @@ Software is going through the same shift aviation went through decades ago. The 
 
 This project was built by a human and an AI working together. I'm proud of both halves of that.
 
+## Show Your Work
+
+Most "built with AI" stops at the label. We went further. The repo includes the actual [Claude Code workflow document](claude-workflow.md) — what the AI knows, what it's told, how sessions work, where the human draws the line. The coding principles that guide every session are in the repo too, including an honest conversation about which classic rules still hold up in the AI era and which ones don't.
+
+If you're curious what AI-assisted development actually looks like — not the marketing version, the real cockpit — it's all there. Open source means open process.
+
 ## Be Safe Out There
 
 If you're building with AI, be honest about it. If you're standing on someone else's work, say so. If the pace of change makes you uneasy, good. The people who aren't uneasy aren't paying attention.
