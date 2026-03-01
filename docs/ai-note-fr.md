@@ -65,6 +65,12 @@ J'ai vu des depots avec des milliers de lignes de code genere par IA et zero rec
 
 Ce projet a ete construit par un humain et une IA travaillant ensemble. Je suis fier des deux moities.
 
+## Montrez votre travail
+
+La plupart des projets « construits avec l'IA » s'arretent a l'etiquette. Nous sommes alles plus loin. Le depot inclut le veritable [document de workflow Claude Code](claude-workflow.md) — ce que l'IA sait, ce qu'on lui dit, comment les sessions fonctionnent, ou l'humain trace la ligne. Les principes de programmation qui guident chaque session sont aussi dans le depot, y compris une discussion honnete sur quelles regles classiques tiennent encore a l'ere de l'IA et lesquelles non.
+
+Si vous etes curieux de savoir a quoi ressemble vraiment le developpement assiste par IA — pas la version marketing, le vrai cockpit — tout est la. Open source signifie processus ouvert.
+
 ## Soyez prudents
 
 Si vous construisez avec l'IA, soyez honnetes. Si vous vous appuyez sur le travail de quelqu'un d'autre, dites-le. Si le rythme du changement vous met mal a l'aise, tant mieux. Ceux que ca ne derange pas ne font pas attention.

@@ -63,6 +63,12 @@ Ich bin Flugkapitan. Funfunddreissig Jahre im Cockpit. Mein Cockpit ist vollgest
 
 Dieses Projekt wurde von einem Menschen und einer KI gemeinsam gebaut. Ich bin stolz auf beide Halften.
 
+## Zeigt eure Arbeit
+
+Die meisten Projekte, die „mit KI gebaut" wurden, horen beim Label auf. Wir sind weitergegangen. Das Repository enthalt das tatsachliche [Claude Code Workflow-Dokument](claude-workflow.md) — was die KI weiss, was ihr gesagt wird, wie Sitzungen ablaufen, wo der Mensch die Grenze zieht. Die Programmierprinzipien, die jede Sitzung leiten, sind ebenfalls im Repository, einschliesslich einer ehrlichen Diskussion daruber, welche klassischen Regeln im KI-Zeitalter noch gelten und welche nicht.
+
+Wenn ihr neugierig seid, wie KI-gestutztes Entwickeln wirklich aussieht — nicht die Marketing-Version, das echte Cockpit — es ist alles da. Open Source bedeutet offener Prozess.
+
 ## Passt auf euch auf
 
 Wenn ihr mit KI baut, seid ehrlich daruber. Wenn ihr auf der Arbeit anderer steht, sagt es. Wenn das Tempo der Veranderung euch beunruhigt, gut. Die, die es nicht beunruhigt, passen nicht auf.

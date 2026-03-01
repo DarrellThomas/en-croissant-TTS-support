@@ -46,6 +46,9 @@ En Parlant~ is an open-source, cross-platform chess GUI that aims to be powerful
 - [System TTS Setup](tts/setup-system.md)
 - [OpenTTS Setup](tts/setup-opentts.md)
 
+### How We Build
+- [Claude Code Workflow](claude-workflow.md)
+
 ### A Note from Darrell
 - [English](ai-note.md)
 - [Francais](ai-note-fr.md)

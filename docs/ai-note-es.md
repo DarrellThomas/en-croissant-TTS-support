@@ -65,6 +65,12 @@ He visto repositorios con miles de lineas de codigo generado por IA y cero recon
 
 Este proyecto fue construido por un humano y una IA trabajando juntos. Estoy orgulloso de ambas mitades.
 
+## Muestra tu trabajo
+
+La mayoria de los proyectos "construidos con IA" se quedan en la etiqueta. Nosotros fuimos mas alla. El repositorio incluye el verdadero [documento de workflow de Claude Code](claude-workflow.md) — lo que la IA sabe, lo que se le dice, como funcionan las sesiones, donde el humano traza la linea. Los principios de programacion que guian cada sesion tambien estan en el repositorio, incluyendo una conversacion honesta sobre cuales reglas clasicas siguen vigentes en la era de la IA y cuales no.
+
+Si tienes curiosidad por saber como se ve realmente el desarrollo asistido por IA — no la version de marketing, la cabina real — esta todo ahi. Codigo abierto significa proceso abierto.
+
 ## Cuidate
 
 Si estas construyendo con IA, se honesto. Si te apoyas en el trabajo de alguien mas, dilo. Si el ritmo del cambio te inquieta, bien. Los que no se inquietan no estan prestando atencion.
