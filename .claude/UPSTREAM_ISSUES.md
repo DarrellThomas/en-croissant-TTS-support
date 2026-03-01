@@ -83,50 +83,41 @@ Issues that are likely quick fixes -- UI glitches, small parsing issues, simple 
 
 Bugs requiring more investigation or touching multiple files.
 
-### #670 -- Engine settings reset after switching sub-tabs (Unlimited time)
+### ~~#670 -- Engine settings reset after switching sub-tabs (Unlimited time)~~ FIXED (commit ea05836a)
 **Summary:** In Play Chess with Unlimited time, changes to Time/Depth/Nodes sub-tabs are lost when switching between them. Number of cores setting never saves.
-**Test:** Go to Play Chess, select two engines, set time to Unlimited, change Depth value, switch to Nodes tab, switch back -- check if Depth value persisted.
-**Difficulty:** Moderate -- state management issue in the Play Chess settings; need to persist values across sub-tab switches.
+**Fix:** GoModeInput now remembers values via useRef; OpponentForm correctly updates engine.settings instead of spreading onto the wrong object level.
 
-### #633 -- Practice mode arrows leave drill line and play sounds before answer reveal
+### ~~#633 -- Practice mode arrows leave drill line and play sounds before answer reveal~~ FIXED (commit 173aab30)
 **Summary:** Left/right arrow navigation in practice mode can jump to unintended variations. Sounds play even when navigation should be blocked before "See Answer."
-**Test:** Enter practice mode with saved cards, use left arrow several times then right arrow -- check if you land on wrong variation. Start a new card, press right arrow before "See Answer" -- check if sound plays.
-**Difficulty:** Moderate -- requires practice-specific navigation guards in the tree navigation logic.
+**Fix:** All MoveControls navigation (hotkeys + buttons) now guarded by practice state; blocked and visually disabled when phase is "waiting".
 
-### #500 -- "No analysis available" with UCI-compliant engine output
+### ~~#500 -- "No analysis available" with UCI-compliant engine output~~ FIXED (commit 50131f75)
 **Summary:** The frontend fails to parse valid UCI info strings that have `score` without the `cp` or `mate` keyword prefix, showing "No analysis available."
-**Test:** Add a custom engine that outputs `info ... score -337 depth 3 pv d1e1` (without `cp`/`mate` after `score`). Run analysis and check if results display.
-**Difficulty:** Moderate -- UCI output parser needs to handle non-standard but common info line formats.
+**Fix:** Added normalize_uci_line() that detects `score <number>` (without cp/mate) and inserts `cp` before parsing.
 
-### #569 -- Reference database shows no options after pawn promotion
+### ~~#569 -- Reference database shows no options after pawn promotion~~ FIXED (commit 16f70902)
 **Summary:** After a pawn promotes, the reference database stops showing continuation options for the resulting position.
-**Test:** Set up a position with a promotion, promote a pawn, check if the reference database tab still shows move options.
-**Difficulty:** Moderate -- likely the FEN or position hash after promotion is not matching the database lookup correctly.
+**Fix:** Material reachability pruning in get_move_after_match now accounts for promotion potential (each pawn can gain up to +8 material).
 
-### #580 -- Puzzle database workflow is broken
+### ~~#580 -- Puzzle database workflow is broken~~ FIXED (commit 55fe9bfc)
 **Summary:** Adding new puzzle databases always re-installs Lichess Puzzles and offers no option to add other local puzzle databases.
-**Test:** Go to Training tab, select database dropdown, try adding a new database -- observe if it only offers Lichess Puzzles reinstall.
-**Difficulty:** Moderate -- UI needs a path for local puzzle DB import alongside the existing Lichess download.
+**Fix:** Added Local tab to AddPuzzle dialog with file picker for importing .db3 puzzle databases from filesystem.
 
-### #163 -- UCI Protocol Inaccuracies (ucinewgame)
+### ~~#163 -- UCI Protocol Inaccuracies (ucinewgame)~~ FIXED (commit 54dd350a)
 **Summary:** The GUI does not send `ucinewgame` command when switching between different games, which can cause engines to behave incorrectly.
-**Test:** Start analysis on one game, switch to a different game, check engine logs (or use a debug engine wrapper) to verify if `ucinewgame` is sent.
-**Difficulty:** Moderate -- requires changes to the Rust engine communication layer.
+**Fix:** Send ucinewgame + isready in set_options() when the root FEN changes, clearing stale engine state before analyzing a new game.
 
-### #673 -- Games from position should be ordered by players' Elo
+### ~~#673 -- Games from position should be ordered by players' Elo~~ FIXED (commit 9b077f00)
 **Summary:** Database search by position returns games ordered by date (oldest first) instead of by Elo descending.
-**Test:** Open a database (e.g., Gigabase), search games from a common opening position, check if high-Elo games appear first.
-**Difficulty:** Moderate -- SQL query ordering change in the Rust backend.
+**Fix:** Added ORDER BY COALESCE(white_elo, 0) + COALESCE(black_elo, 0) DESC to the position search query.
 
-### #418 -- Problem while saving to database
+### ~~#418 -- Problem while saving to database~~ FIXED (commit 292544cc)
 **Summary:** Saving a game from the analysis board to an existing PGN database fails with an error.
-**Test:** Create moves on the analysis board, try to save to an existing PGN file in the database. Check for error popup.
-**Difficulty:** Moderate -- error likely in PGN write/append logic in the Rust backend.
+**Fix:** Auto-save useEffect had circular dependency on saveFile→currentTab. Used ref pattern to break the cycle and added await to prevent concurrent saves.
 
-### #707 -- Lichess Database Syntax Error
+### ~~#707 -- Lichess Database Syntax Error~~ FIXED (commit f73d17ca)
 **Summary:** Lichess All and Lichess Masters databases return a SyntaxError about invalid JSON (`<html>` response). Eventually loads but errors on any new move.
-**Test:** Open the analysis board, switch to the Lichess All or Lichess Masters database panel, observe if errors appear. Make a move and check if error returns.
-**Difficulty:** Moderate -- likely an API response handling issue where HTML error pages are not gracefully handled.
+**Fix:** Check res.ok before calling res.json() in all Lichess API functions. HTML error pages now throw meaningful HTTP status errors instead of JSON parse failures.
 
 ---
 
