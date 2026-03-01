@@ -43,7 +43,7 @@ En Parlant~ is an open-source, cross-platform chess GUI that aims to be powerful
 
 En Parlant~ is a fork of [En Croissant](https://www.encroissant.org), created by [Francisco Salgueiro](https://github.com/franciscoBSalgueiro). Francisco built an exceptional open-source chess platform — powerful, thoughtfully designed, and freely available under the GPL-3.0 license. This fork exists because of his work and generosity. The core application, database system, analysis engine, repertoire trainer, and all the features documented here are his creation. We are deeply grateful for the foundation he built.
 
-The TTS (Text-to-Speech) narration feature was developed by Darrell at [Red Shed](mailto:darrell@redshed.ai), with the help of [Claude Code](https://claude.ai/claude-code).
+The TTS (Text-to-Speech) narration feature was developed by Darrell at [Red Shed](https://redshed.ai), with the help of [Claude Code](https://claude.ai/claude-code).
 
 ## License
 

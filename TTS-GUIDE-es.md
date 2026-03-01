@@ -184,7 +184,7 @@ Cada termino de ajedrez -- nombres de piezas, "jaque", "jaque mate", "enroque", 
 
 En Croissant es una herramienta de estudio de ajedrez de codigo abierto creada por [Francisco Salgueiro](https://github.com/franciscoBSalgueiro). Francisco construyo algo genuinamente especial -- una plataforma gratuita, potente y creada por la comunidad para estudiar ajedrez -- y la publico bajo la licencia GPL-3.0 para que cualquiera pueda usarla, mejorarla y compartirla. Esta funcionalidad de TTS existe gracias a esa generosidad. Estamos agradecidos por los cimientos que el construyo, y estamos orgullosos de contribuir de vuelta.
 
-El plugin de TTS fue desarrollado por Darrell en [Red Shed](mailto:darrell@redshed.ai), con la ayuda de [Claude Code](https://claude.ai/claude-code). Soporte multiidioma, integracion con dos proveedores, vocabulario de ajedrez traducido a siete idiomas -- construido desde el codigo fuente, probado a mano y contribuido con esmero.
+El plugin de TTS fue desarrollado por Darrell en [Red Shed](https://redshed.ai), con la ayuda de [Claude Code](https://claude.ai/claude-code). Soporte multiidioma, integracion con dos proveedores, vocabulario de ajedrez traducido a siete idiomas -- construido desde el codigo fuente, probado a mano y contribuido con esmero.
 
 Esa es la belleza del codigo abierto. Alguien construye algo grandioso. Alguien mas le agrega valor. Todos se benefician.
 

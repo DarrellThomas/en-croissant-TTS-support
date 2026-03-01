@@ -333,7 +333,7 @@ TTS 내레이션은 현재 체스 용어가 완전히 번역된 8개 언어를 �
 
 En Croissant는 [Francisco Salgueiro](https://github.com/franciscoBSalgueiro)가 개발한 오픈소스 체스 학습 도구입니다. Francisco는 정말로 뛰어난 것을 만들었습니다. 무료이고 강력한, 커뮤니티 중심의 체스 학습 플랫폼을 GPL-3.0 라이선스로 공개하여 누구나 사용하고 개선하고 공유할 수 있게 했습니다. 이 TTS 기능이 존재하는 것은 그의 관대함 덕분입니다. 그가 구축한 기반에 감사하며, 이 프로젝트에 기여할 수 있음을 자랑스럽게 생각합니다.
 
-TTS 플러그인은 [Red Shed](mailto:darrell@redshed.ai)의 Darrell이 [Claude Code](https://claude.ai/claude-code)의 도움을 받아 개발했습니다. 5개 프로바이더, 다국어 지원, 8개 언어에 걸친 체스 용어 번역, 로컬 AI 추론, 의존성 관리 — 모두 소스에서 빌드하고, 직접 테스트하고, 정성을 담아 기여했습니다.
+TTS 플러그인은 [Red Shed](https://redshed.ai)의 Darrell이 [Claude Code](https://claude.ai/claude-code)의 도움을 받아 개발했습니다. 5개 프로바이더, 다국어 지원, 8개 언어에 걸친 체스 용어 번역, 로컬 AI 추론, 의존성 관리 — 모두 소스에서 빌드하고, 직접 테스트하고, 정성을 담아 기여했습니다.
 
 이것이 오픈소스의 아름다움입니다. 누군가가 멋진 것을 만듭니다. 다른 누군가가 거기에 기능을 더합니다. 그리고 모두가 혜택을 받습니다.
 

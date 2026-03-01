@@ -332,7 +332,7 @@ Every chess term — piece names, "check", "checkmate", "castles", "takes", move
 
 En Croissant is an open-source chess study tool created by [Francisco Salgueiro](https://github.com/franciscoBSalgueiro). Francisco built something genuinely special — a free, powerful, community-driven platform for studying chess — and released it under the GPL-3.0 license so that anyone can use it, improve it, and share it. This TTS feature exists because of that generosity. We're grateful for the foundation he built, and we're proud to contribute back to it.
 
-The TTS plugin was developed by Darrell at [Red Shed](mailto:darrell@redshed.ai), with the help of [Claude Code](https://claude.ai/claude-code). Five providers, multi-language support, translated chess vocabulary across eight languages, local AI inference, dependency management — built from source, tested by hand, and contributed with care.
+The TTS plugin was developed by Darrell at [Red Shed](https://redshed.ai), with the help of [Claude Code](https://claude.ai/claude-code). Five providers, multi-language support, translated chess vocabulary across eight languages, local AI inference, dependency management — built from source, tested by hand, and contributed with care.
 
 That's the beauty of open source. Someone builds something great. Someone else adds to it. Everyone benefits.
 

@@ -185,7 +185,7 @@ Chaque terme d'echecs — noms de pieces, "echec", "echec et mat", "roque", "pre
 
 En Croissant est un outil d'etude d'echecs open-source cree par [Francisco Salgueiro](https://github.com/franciscoBSalgueiro). Francisco a construit quelque chose de vraiment special — une plateforme gratuite, puissante et communautaire pour etudier les echecs — et l'a publiee sous licence GPL-3.0 pour que chacun puisse l'utiliser, l'ameliorer et la partager. Cette fonctionnalite TTS existe grace a cette generosite. Nous sommes reconnaissants pour les fondations qu'il a posees, et nous sommes fiers d'y contribuer en retour.
 
-Le plugin TTS a ete developpe par Darrell chez [Red Shed](mailto:darrell@redshed.ai), avec l'aide de [Claude Code](https://claude.ai/claude-code). Support multilingue, integration double fournisseur, vocabulaire echiqueen traduit dans sept langues — construit a partir des sources, teste a la main, et contribue avec soin.
+Le plugin TTS a ete developpe par Darrell chez [Red Shed](https://redshed.ai), avec l'aide de [Claude Code](https://claude.ai/claude-code). Support multilingue, integration double fournisseur, vocabulaire echiqueen traduit dans sept langues — construit a partir des sources, teste a la main, et contribue avec soin.
 
 C'est toute la beaute de l'open source. Quelqu'un construit quelque chose de formidable. Quelqu'un d'autre y ajoute sa contribution. Tout le monde en profite.
 

@@ -185,7 +185,7 @@ Jeder Schachbegriff — Figurennamen, „Schach", „Schachmatt", „Rochade", �
 
 En Croissant ist ein quelloffenes Schachstudien-Werkzeug, das von [Francisco Salgueiro](https://github.com/franciscoBSalgueiro) entwickelt wurde. Francisco hat etwas wirklich Besonderes geschaffen — eine kostenlose, leistungsstarke, gemeinschaftsgetriebene Plattform zum Schachstudium — und sie unter der GPL-3.0-Lizenz veröffentlicht, damit jeder sie nutzen, verbessern und teilen kann. Diese TTS-Funktion existiert dank dieser Großzügigkeit. Wir sind dankbar für das Fundament, das er gelegt hat, und stolz darauf, etwas zurückgeben zu können.
 
-Das TTS-Plugin wurde von Darrell bei [Red Shed](mailto:darrell@redshed.ai) entwickelt, mit Unterstützung von [Claude Code](https://claude.ai/claude-code). Mehrsprachige Unterstützung, Anbindung zweier Provider, übersetztes Schachvokabular in sieben Sprachen — aus dem Quellcode gebaut, von Hand getestet und mit Sorgfalt beigesteuert.
+Das TTS-Plugin wurde von Darrell bei [Red Shed](https://redshed.ai) entwickelt, mit Unterstützung von [Claude Code](https://claude.ai/claude-code). Mehrsprachige Unterstützung, Anbindung zweier Provider, übersetztes Schachvokabular in sieben Sprachen — aus dem Quellcode gebaut, von Hand getestet und mit Sorgfalt beigesteuert.
 
 Das ist das Schöne an Open Source. Jemand baut etwas Großartiges. Jemand anderes erweitert es. Alle profitieren davon.
 

@@ -184,7 +184,7 @@ TTS 解说目前支持七种语言，所有国际象棋词汇均完整翻译：
 
 En Croissant 是一款开源国际象棋学习工具，由 [Francisco Salgueiro](https://github.com/franciscoBSalgueiro) 创建。Francisco 打造了一个真正了不起的作品——一个免费、强大、由社区驱动的国际象棋学习平台——并以 GPL-3.0 许可证发布，让任何人都可以使用、改进和分享它。这个 TTS 功能的诞生正是因为他的慷慨。我们感谢他建立的基础，也为能够为之做出贡献而自豪。
 
-TTS 插件由 [Red Shed](mailto:darrell@redshed.ai) 的 Darrell 开发，在 [Claude Code](https://claude.ai/claude-code) 的协助下完成。多语言支持、双提供商集成、七种语言的完整国际象棋词汇翻译——从源码构建、手工测试、用心贡献。
+TTS 插件由 [Red Shed](https://redshed.ai) 的 Darrell 开发，在 [Claude Code](https://claude.ai/claude-code) 的协助下完成。多语言支持、双提供商集成、七种语言的完整国际象棋词汇翻译——从源码构建、手工测试、用心贡献。
 
 这就是开源的魅力。有人创造了优秀的作品，另一个人为之添砖加瓦，最终每个人都从中受益。
 

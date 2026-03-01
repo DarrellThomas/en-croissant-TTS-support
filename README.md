@@ -163,7 +163,7 @@ This installs the binary to `/usr/bin/en-parlant`, resources to `/usr/lib/en-par
 
 En Parlant~ is built on [En Croissant](https://github.com/franciscoBSalgueiro/en-croissant) by [Francisco Salgueiro](https://github.com/franciscoBSalgueiro). The original project and community can be found at [encroissant.org](https://www.encroissant.org).
 
-TTS narration developed by Darrell at [Red Shed](mailto:darrell@redshed.ai) with [Claude Code](https://claude.ai/claude-code).
+TTS narration developed by Darrell at [Red Shed](https://redshed.ai) (darrell@redshed.ai) with [Claude Code](https://claude.ai/claude-code).
 
 ## Contributing
 
