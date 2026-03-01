@@ -575,18 +575,18 @@ function MovesView({
             <Text fz="xs" fw={600} style={{ flex: 1 }}>
               {title}
             </Text>
-            <Group gap="xs" wrap="nowrap">
-              <Text fz="xs" c="dimmed" w={50} ta="center">
+            <Group gap="xs" wrap="nowrap" style={{ minWidth: 0 }}>
+              <Text fz="xs" c="dimmed" miw={35} w={50} ta="center">
                 %
               </Text>
-              <Text fz="xs" c="dimmed" w={70} ta="center">
+              <Text fz="xs" c="dimmed" miw={40} w={70} ta="center">
                 {t("Common.Games")}
               </Text>
-              <Text fz="xs" c="dimmed" w={100} ta="center">
+              <Text fz="xs" c="dimmed" miw={60} w={100} ta="center">
                 {t("Board.Practice.Build.Results")}
               </Text>
               {hasResponses && (
-                <Group gap={4} w={100} justify="center" wrap="nowrap">
+                <Group gap={4} miw={60} w={100} justify="center" wrap="nowrap">
                   <Text fz="xs" c="dimmed" ta="center">
                     {t("Board.Practice.Build.YourCoverage")}
                   </Text>
@@ -811,11 +811,11 @@ function MoveRow({
           )}
         </Group>
 
-        <Group gap="xs" wrap="nowrap">
-          <Text fz="sm" c="dimmed" w={50} ta="center">
+        <Group gap="xs" wrap="nowrap" style={{ minWidth: 0 }}>
+          <Text fz="sm" c="dimmed" miw={35} w={50} ta="center">
             {pct}
           </Text>
-          <Text fz="sm" c="dimmed" w={70} ta="center">
+          <Text fz="sm" c="dimmed" miw={40} w={70} ta="center">
             {move.games > 0 ? move.games.toLocaleString() : "—"}
           </Text>
           <Tooltip
@@ -823,7 +823,7 @@ function MoveRow({
             position="top"
             withArrow
           >
-            <Progress.Root size="xl" w={100}>
+            <Progress.Root size="xl" miw={60} w={100}>
               <Progress.Section value={wPct} color="white">
                 {wPct > 20 && <Progress.Label c="black">{wPct}</Progress.Label>}
               </Progress.Section>
@@ -836,7 +836,7 @@ function MoveRow({
             </Progress.Root>
           </Tooltip>
           {showCoverage && (
-            <Box w={100}>
+            <Box miw={60} w={100}>
               {dimmed || move.games < minGames ? (
                 <Tooltip
                   label={t("Board.Practice.Build.RareTooltip")}

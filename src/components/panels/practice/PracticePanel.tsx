@@ -211,7 +211,7 @@ function PracticePanel() {
           <Tabs.Tab value="build">{t("Board.Practice.Build")}</Tabs.Tab>
         </Tabs.List>
 
-        <Tabs.Panel value="train" style={{ overflow: "hidden" }}>
+        <Tabs.Panel value="train" style={{ overflow: "auto" }}>
           <Stack p="sm" gap="md">
             {stats.total === 0 && (
               <Alert icon={<IconInfoCircle />} color="blue">
@@ -525,7 +525,7 @@ function PracticePanel() {
           </Stack>
         </Tabs.Panel>
 
-        <Tabs.Panel value="build" style={{ overflow: "hidden" }}>
+        <Tabs.Panel value="build" style={{ overflow: "auto" }}>
           <RepertoireInfo />
         </Tabs.Panel>
       </Tabs>

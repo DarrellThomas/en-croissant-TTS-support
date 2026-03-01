@@ -130,6 +130,7 @@ piece.fading {
   font-family: sans-serif;
   font-size: 1rem;
   font-weight: bold;
+  overflow: hidden;
 }
 
 .cg-wrap coords.squares {

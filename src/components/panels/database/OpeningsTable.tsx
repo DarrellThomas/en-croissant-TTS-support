@@ -56,7 +56,7 @@ function OpeningsTable({
       columns={[
         {
           accessor: "move",
-          width: 100,
+          width: 80,
           render: ({ move }) => {
             if (move === "*")
               return (
@@ -73,7 +73,7 @@ function OpeningsTable({
         },
         {
           accessor: "total",
-          width: 180,
+          width: "auto",
           render: ({ move, white, draw, black }) => {
             const total = white + draw + black;
             const percentage = (total / grandTotal) * 100;

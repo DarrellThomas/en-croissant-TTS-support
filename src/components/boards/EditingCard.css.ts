@@ -8,6 +8,8 @@ export const card = style({
   zIndex: 10,
   display: "flex",
   flexDirection: "column",
+  minWidth: 0,
+  overflow: "auto",
 
   [vars.lightSelector]: {
     backgroundColor: vars.colors.white,
