@@ -1,200 +1,151 @@
-# Guia de Narracion Text-to-Speech
+# Guia de narracion Text-to-Speech
 
 *Esta guia tambien esta disponible en:
 [English](TTS-GUIDE.md) |
 [Francais](TTS-GUIDE-fr.md) |
-Espanol |
 [Deutsch](TTS-GUIDE-de.md) |
 [日本語](TTS-GUIDE-ja.md) |
 [Русский](TTS-GUIDE-ru.md) |
-[中文](TTS-GUIDE-zh.md)*
+[中文](TTS-GUIDE-zh.md) |
+[한국어](TTS-GUIDE-ko.md)*
 
-## Por que TTS cambia tu forma de estudiar ajedrez
+## Por que el TTS cambia tu forma de estudiar ajedrez
 
-Cuando revisas una partida anotada, tus ojos hacen doble trabajo. Intentas seguir las piezas en el tablero *y* leer los comentarios al mismo tiempo. Tu mirada va y viene entre el tablero y el panel de anotaciones, y cada vez que lo hace, pierdes la posicion por una fraccion de segundo. Tienes que volver a encontrar las piezas, volver a trazar las lineas, volver a construir la imagen en tu cabeza.
+Cuando revisas una partida anotada, tus ojos hacen doble trabajo. Intentas seguir las piezas en el tablero *y* leer los comentarios al mismo tiempo. Tu mirada va y viene entre el tablero y el panel de anotaciones, y cada vez que lo hace, pierdes la posicion por una fraccion de segundo. Tienes que volver a encontrar las piezas, retrazar las lineas, reconstruir la imagen en tu cabeza.
 
-Text-to-speech soluciona esto por completo.
+El text-to-speech soluciona esto por completo.
 
-Con TTS activado, avanzas por la partida y las anotaciones se *leen en voz alta*. Tus ojos permanecen en el tablero. Ves al caballo aterrizar en f3 mientras una voz te explica por que es un movimiento de desarrollo fuerte. Observas como cambia la estructura de peones mientras el comentario explica la idea estrategica detras. El tablero y las palabras llegan juntos, tal como te ensenaria un entrenador sentado frente a ti.
+Con el TTS activado, avanzas por una partida y las anotaciones se *leen en voz alta*. Tus ojos permanecen en el tablero. Ves al caballo aterrizar en f3 mientras una voz te explica por que es un buen movimiento de desarrollo. Ves la estructura de peones cambiar mientras el comentario explica la idea estrategica. El tablero y las palabras llegan juntos, como un entrenador sentado frente a ti.
 
-Esto es especialmente potente para:
+Esto es especialmente util para:
 
-- **Estudio de aperturas** -- escucha las ideas detras de cada movimiento mientras observas como se desarrolla la posicion
-- **Revision de partidas** -- recorre tus propias partidas anotadas y absorbe las lecciones de forma natural
-- **Practica de finales** -- manten el foco en las casillas criticas mientras el comentario te guia
-- **Inmersion linguistica** -- estudia ajedrez en frances, aleman, espanol, ruso, japones o chino con todos los terminos de ajedrez traducidos correctamente. Escucha "Cavalier f3, echec" en lugar de "Knight f3, check". Aprende el juego en el idioma en el que piensas.
-- **Accesibilidad** -- para jugadores que les resulta mas facil escuchar que leer, o que quieren estudiar lejos del escritorio
+- **Estudio de aperturas** — escucha las ideas detras de cada movimiento mientras observas la posicion desarrollarse
+- **Revision de partidas** — recorre tus partidas anotadas y absorbe las lecciones naturalmente
+- **Practica de finales** — mantén la vista en las casillas criticas mientras el comentario te guia
+- **Inmersion linguistica** — estudia ajedrez en frances, aleman, espanol, ruso, japones, chino o coreano con todos los terminos traducidos
+- **Accesibilidad** — para jugadores que prefieren escuchar que leer, o que quieren estudiar lejos del escritorio
 
-Una vez que lo pruebes, volver a las anotaciones en silencio se siente como ver una pelicula en modo mudo.
+Una vez que lo pruebes, volver a las anotaciones silenciosas sera como ver una pelicula sin sonido.
 
 ## Elegir un proveedor
 
-Esta version incluye dos proveedores de TTS -- Google Cloud y ElevenLabs. Si la comunidad desea ver otro proveedor, haganoslo saber y podemos agregarlo. Solo necesitas un proveedor para empezar -- elige el que mejor se adapte a tus necesidades.
+En Parlant~ viene con cinco proveedores TTS. Solo necesitas uno para empezar. Elige el que mejor te convenga.
 
-|                        | Google Cloud                  | ElevenLabs                    |
-|------------------------|-------------------------------|-------------------------------|
-| **Nivel gratuito**     | 1,000,000 caracteres/mes      | 10,000 caracteres/mes         |
-| **Calidad de voz**     | Muy buena (WaveNet)           | Excelente (voces AI premium)  |
-| **Seleccion de voces** | Masculina o femenina por idioma | Docenas de personajes unicos |
-| **Planes de pago**     | Pago por uso (centavos)       | Desde $5/mes                  |
-| **Ideal para**         | La mayoria de usuarios        | Entusiastas de calidad de voz |
-| **Dificultad de configuracion** | Moderada (Cloud Console) | Facil (registro sencillo) |
+### ElevenLabs
 
-**Nuestra recomendacion:** Comienza con **Google Cloud**. El nivel gratuito te da un millon de caracteres al mes -- eso equivale a cientos de partidas completamente anotadas, gratis. Las voces WaveNet suenan muy bien. Si mas adelante quieres una narracion mas rica y expresiva con mayor personalidad de voz, ElevenLabs esta ahi para ti.
+La mejor calidad de voz disponible. ElevenLabs produce habla expresiva y natural con verdadera personalidad — algunas voces suenan como narradores de audiolibros, otras como presentadores. Decenas de voces unicas. Compatible con los ocho idiomas con excelente pronunciacion CJK.
 
-## Configurar Google Cloud TTS
+El nivel gratuito ofrece 10.000 caracteres al mes (suficiente para 2-5 partidas anotadas). Los planes de pago empiezan en 5$/mes por 30.000 caracteres. Configuracion simple: crea una cuenta, copia tu clave API, pegala en En Parlant~.
 
-Este proceso toma unos 5 minutos. Necesitaras una cuenta de Google (la misma que usas para Gmail o YouTube funciona perfectamente).
+Requiere internet. Ideal para entusiastas de la calidad vocal.
 
-### Paso 1: Iniciar sesion en Google Cloud Console
+**[Guia de configuracion de ElevenLabs](docs/tts/setup-elevenlabs.md)** *(en ingles)*
 
-1. Abre tu navegador y ve a **[console.cloud.google.com](https://console.cloud.google.com/)**
-2. Inicia sesion con tu cuenta de Google
-3. Si es tu primera vez, Google te pedira que aceptes los Terminos de Servicio. Marca la casilla y haz clic en **Agree and Continue**
+### Google Cloud TTS
 
-Ahora deberias ver el panel de Google Cloud Console. Se ve bastante cargado -- no te preocupes, solo necesitamos dos cosas de aqui.
+El mejor equilibrio entre calidad, soporte de idiomas y valor. Las voces neuronales WaveNet de Google suenan naturales y claras en los ocho idiomas. El nivel gratuito es generoso — un millon de caracteres al mes cubre cientos de partidas anotadas.
 
-### Paso 2: Configurar la facturacion
+La configuracion tarda unos 5 minutos: crea una cuenta de Google Cloud, habilita la API Text-to-Speech, genera una clave API. Sin cargos a menos que excedas el nivel gratuito.
 
-Google requiere una cuenta de facturacion incluso para su nivel gratuito. **No se te cobrara** a menos que superes 1 millon de caracteres en un mes (eso es muy dificil de lograr con anotaciones de ajedrez). Google te muestra una advertencia mucho antes de que eso suceda.
+Requiere internet. Ideal para la mayoria de usuarios.
 
-1. En la barra de busqueda superior, escribe **"Billing"** y haz clic en **Billing** en el menu desplegable
-2. Haz clic en **Link a billing account** (o **Create account** si aun no tienes una)
-3. Sigue las instrucciones para agregar una tarjeta de credito o debito
-4. Una vez completado, veras una marca de verificacion verde junto a tu cuenta de facturacion
+**[Guia de configuracion de Google Cloud](docs/tts/setup-google.md)** *(en ingles)*
 
-> **Nota:** Si ya tienes configurada la facturacion de Google Cloud por otro proyecto, puedes omitir este paso. Tu cuenta de facturacion existente funciona sin problemas.
+### KittenTTS
 
-### Paso 3: Habilitar la API de Text-to-Speech
+IA local de alta calidad que funciona completamente en tu maquina. Usa un modelo neuronal ligero de ~25 MB con 8 voces expresivas (4 masculinas, 4 femeninas). La calidad es notablemente buena — entonacion natural, pronunciacion clara, expresividad autentica.
 
-Esto le indica a Google que servicio deseas utilizar.
+La desventaja es el hardware: KittenTTS usa PyTorch para inferencia en CPU y necesita un procesador multi-nucleo moderno. Solo ingles por ahora.
 
-1. En la barra de busqueda superior, escribe **"Text-to-Speech"**
-2. En los resultados del menu desplegable, haz clic en **Cloud Text-to-Speech API** (tiene un icono azul de API)
-3. Llegaras a la pagina de detalles de la API. Haz clic en el gran boton azul **Enable**
-4. Espera unos segundos. Cuando el boton cambie a **Manage**, la API esta habilitada
+No requiere internet. Sin clave API. Mejor calidad local.
 
-### Paso 4: Crear una API key
+**[Guia de configuracion de KittenTTS](docs/tts/setup-kittentts.md)** *(en ingles)*
 
-La API key es lo que En Parlant~ utiliza para comunicarse con los servidores de Google.
+### System TTS
 
-1. En la barra de busqueda superior, escribe **"Credentials"** y haz clic en **Credentials** bajo "APIs & Services"
-2. Cerca de la parte superior de la pagina, haz clic en **+ Create Credentials**
-3. En el menu desplegable, selecciona **API key**
-4. Aparecera un cuadro de dialogo mostrando tu nueva clave. Se ve algo asi: `AIzaSyC...about 35 characters...`
-5. **Haz clic en el icono de copiar** junto a la clave para copiarla al portapapeles
-6. Haz clic en **Close**
+La sintesis de voz integrada de tu sistema operativo. Nada que instalar, sin claves API, sin servidores. Seleccionalo y listo. La calidad de voz es basica, pero funciona al instante.
 
-> **Recomendado: Restringe tu clave.** Despues de crear la clave, la veras listada en la pagina de Credentials. Haz clic en el nombre de la clave para abrir su configuracion. En **API restrictions**, selecciona **Restrict key**, luego elige **Cloud Text-to-Speech API** en el menu desplegable y haz clic en **Save**. Esto significa que incluso si alguien obtiene tu clave, solo podra usarla para TTS -- nada mas.
+En Linux es tipicamente eSpeak o speech-dispatcher; en macOS es la voz del sistema; en Windows es SAPI.
 
-### Paso 5: Configurar En Parlant~
+No requiere internet. Ideal para pruebas rapidas.
 
-Ya casi terminamos!
+**[Guia de configuracion de System TTS](docs/tts/setup-system.md)** *(en ingles)*
 
-1. Abre En Parlant~ y ve a **Settings** (icono de engranaje) > pestana **Sound**
-2. Desplazate hacia abajo hasta la seccion de TTS
-3. Establece **TTS Provider** en **Google Cloud**
-4. Haz clic dentro del campo **Google Cloud API Key** y pega tu clave (Ctrl+V)
-5. Establece **Text-to-Speech** en **On**
-6. Haz clic en el boton **Test** junto al selector de voz
+### OpenTTS
 
-Deberias escuchar un movimiento de ajedrez en voz alta. Si lo oyes, felicitaciones, ya esta todo configurado!
+Un servidor TTS de codigo abierto que funciona en tu maquina via Docker. Nada sale de tu computadora. Incluye varios motores TTS (Larynx, Festival, eSpeak, Coqui-TTS), ofreciendo mas de 75 voces solo para ingles.
 
-> **Solucion de problemas:** Si la prueba es silenciosa, verifica que (1) pegaste la API key completa, (2) la API de Text-to-Speech esta habilitada (Paso 3), y (3) la facturacion esta vinculada (Paso 2). El problema mas comun es olvidar habilitar la API.
+La desventaja es la calidad: estos motores son mas antiguos, asi que el resultado suena mas robotico. Funciona mejor con idiomas europeos — CJK no esta bien soportado. OpenTTS podria ser eliminado en una version futura.
 
-## Configurar ElevenLabs
+No requiere internet. Sin clave API. Ideal para maxima privacidad.
 
-ElevenLabs es mas sencillo de configurar pero tiene un nivel gratuito mas reducido (10,000 caracteres/mes -- suficiente para probar con algunas partidas).
+**[Guia de configuracion de OpenTTS](docs/tts/setup-opentts.md)** *(en ingles)*
 
-### Paso 1: Crear una cuenta
+### Nuestra recomendacion
 
-1. Abre tu navegador y ve a **[elevenlabs.io](https://elevenlabs.io/)**
-2. Haz clic en **Sign Up** en la esquina superior derecha
-3. Puedes registrarte con Google, GitHub o correo electronico -- elige lo que te resulte mas facil
-4. Despues de registrarte, llegaras al panel de ElevenLabs
-
-### Paso 2: Obtener tu API key
-
-1. En la esquina inferior izquierda del panel, haz clic en tu **icono de perfil** (o tu nombre)
-2. Haz clic en **Profile + API key**
-3. Veras una seccion de API key. Haz clic en **Reveal** para mostrar tu clave, o en **Generate** si aun no tienes una
-4. La clave se ve algo asi: `sk_...about 30 characters...`
-5. **Haz clic en el icono de copiar** para copiarla al portapapeles
-
-### Paso 3: Configurar En Parlant~
-
-1. Abre En Parlant~ y ve a **Settings** (icono de engranaje) > pestana **Sound**
-2. Desplazate hacia abajo hasta la seccion de TTS
-3. Establece **TTS Provider** en **ElevenLabs**
-4. Haz clic dentro del campo **ElevenLabs API Key** y pega tu clave (Ctrl+V)
-5. El menu desplegable de **TTS Voice** se llenara con las voces disponibles. **Adam** es una excelente opcion predeterminada -- clara, natural y funciona muy bien para comentarios de ajedrez
-6. Establece **Text-to-Speech** en **On**
-7. Haz clic en el boton **Test** junto al selector de voz
-
-Deberias escuchar un movimiento de ajedrez en voz alta.
-
-> **Sobre el nivel gratuito:** ElevenLabs te ofrece 10,000 caracteres/mes en el plan gratuito. Una partida anotada tipica consume entre 2,000 y 4,000 caracteres, asi que puedes revisar de 2 a 5 partidas al mes gratis. Si TTS te resulta valioso, su plan Starter a $5/mes (30,000 caracteres) es una mejora solida. El plan Pro ($22/mes, 100,000 caracteres) cubre un uso intensivo.
+Empieza con **ElevenLabs** si quieres la mejor calidad vocal. Para el mejor equilibrio calidad/uso gratuito, **Google Cloud** cubre cientos de partidas al mes. Para TTS local de alta calidad, **KittenTTS** es excelente si tienes una CPU moderna. Para probar sin configuracion, **System TTS** funciona al instante. Para maxima privacidad, **OpenTTS** funciona localmente via Docker.
 
 ## Referencia de ajustes
 
-Todos los ajustes de TTS se encuentran en **Settings > Sound**:
+Todos los ajustes TTS estan en **Settings > Sound**:
 
-| Ajuste                   | Que hace                                                                       |
-|--------------------------|--------------------------------------------------------------------------------|
-| **Text-to-Speech**       | Interruptor principal de encendido/apagado para todas las funciones de TTS      |
-| **Auto-Narrate on Move** | Lee automaticamente las anotaciones al avanzar por los movimientos con las flechas |
-| **TTS Provider**         | Cambiar entre ElevenLabs y Google Cloud                                        |
-| **ElevenLabs API Key**   | Tu API key de ElevenLabs (solo necesaria si usas ElevenLabs)                   |
-| **Google Cloud API Key** | Tu API key de Google Cloud (solo necesaria si usas Google)                      |
-| **TTS Voice**            | ElevenLabs: elige entre tus voces. Google: elige Masculina o Femenina          |
-| **TTS Language**         | Idioma de la narracion -- todos los terminos de ajedrez se traducen automaticamente |
-| **TTS Volume**           | Volumen de la narracion                                                        |
-| **TTS Speed**            | Velocidad de reproduccion (0.5x a 2x) -- se ajusta al instante sin regenerar audio |
-| **TTS Audio Cache**      | Borrar el audio en cache para forzar la regeneracion (util tras editar anotaciones) |
+| Ajuste | Funcion |
+|--------|---------|
+| **Text-to-Speech** | Interruptor principal para todas las funciones TTS |
+| **Auto-Narrate on Move** | Leer automaticamente las anotaciones al avanzar por los movimientos |
+| **TTS Provider** | Elegir entre los cinco proveedores |
+| **TTS Voice** | Seleccion de voz especifica del proveedor |
+| **TTS Language** | Idioma de narracion — los terminos de ajedrez se traducen automaticamente |
+| **TTS Volume** | Volumen de la narracion |
+| **TTS Speed** | Velocidad de reproduccion (0,5x a 2x) — ajusta sin regenerar el audio |
+| **ElevenLabs API Key** | Tu clave API de ElevenLabs |
+| **Google Cloud API Key** | Tu clave API de Google Cloud |
+| **KittenTTS CPU Threads** | Hilos de CPU para inferencia (0 = auto) |
+| **TTS Audio Cache** | Limpiar cache de audio para forzar regeneracion |
 
-## Idiomas compatibles
+## Idiomas soportados
 
-La narracion TTS actualmente soporta siete idiomas con vocabulario de ajedrez completamente traducido:
+La narracion TTS soporta ocho idiomas con vocabulario de ajedrez completamente traducido:
 
-| Idioma             | Ejemplo de ajedrez                                  |
-|--------------------|-----------------------------------------------------|
-| **English**        | Knight f3, check. A strong developing move.         |
-| **Francais**       | Cavalier f3, echec. Un coup de developpement fort.  |
-| **Espanol**        | Caballo f3, jaque. Un fuerte movimiento.            |
-| **Deutsch**        | Springer f3, Schach. Ein starker Entwicklungszug.   |
-| **日本語**          | ナイト f3、チェック。強い展開の手。                      |
-| **Русский**        | Конь f3, шах. Сильный развивающий ход.              |
-| **中文**            | 马 f3，将军。一步控制中心的强力出子。                    |
+| Idioma | Ejemplo de ajedrez |
+|--------|-------------------|
+| **English** | Knight f3, check. A strong developing move. |
+| **Francais** | Cavalier f3, echec. Un coup de developpement fort. |
+| **Espanol** | Caballo f3, jaque. Un fuerte movimiento. |
+| **Deutsch** | Springer f3, Schach. Ein starker Entwicklungszug. |
+| **日本語** | ナイト f3、チェック。強い展開の手。 |
+| **Русский** | Конь f3, шах. Сильный развивающий ход. |
+| **中文** | 马 f3，将军。一步控制中心的强力出子。 |
+| **한국어** | 나이트 f3, 체크. 중앙을 지배하는 강력한 전개 수. |
 
-Cada termino de ajedrez -- nombres de piezas, "jaque", "jaque mate", "enroque", "captura", anotaciones de calidad de movimiento como "Jugada brillante" y "Error grave" -- se pronuncia en el idioma seleccionado. Los comentarios en tus archivos PGN se leen tal como estan escritos, asi que anota tus partidas en el idioma que quieras escuchar.
+Todos los terminos de ajedrez — nombres de piezas, "jaque", "jaque mate", "enroque", "captura", anotaciones como "Jugada brillante" y "Error grave" — se pronuncian en el idioma seleccionado.
 
 ## Consejos para la mejor experiencia
 
-- **Usa Auto-Narrate.** Activa "Auto-Narrate on Move" y simplemente usa las flechas del teclado para avanzar por las partidas. Los comentarios llegan de forma natural mientras te mueves, como tener un entrenador a tu lado.
+- **Usa Auto-Narrate.** Activa "Auto-Narrate on Move" y usa las flechas para recorrer las partidas. El comentario llega naturalmente mientras avanzas.
 
-- **Anota tus propias partidas.** TTS brilla especialmente cuando escuchas comentarios sobre *tus* partidas. Anota tus partidas y luego recorrelas con la narracion activada. Escuchar "Capturar ese peon parece tentador, pero todo tu flanco de rey sigue dormido" mientras miras fijamente la posicion pega distinto que leerlo.
+- **Anota tus propias partidas.** El TTS brilla de verdad cuando escuchas comentarios sobre *tus* partidas.
 
-- **Prueba diferentes velocidades.** Algunos jugadores prefieren 1x para estudio cuidadoso, otros prefieren 1.3x para una revision mas rapida. El control de velocidad ajusta la reproduccion en tiempo real sin gastar caracteres adicionales de la API -- el audio se genera una sola vez y se reproduce mas rapido.
+- **Prueba diferentes velocidades.** Algunos jugadores prefieren 1x para estudio cuidadoso, otros 1,3x para revision rapida.
 
-- **Usa el icono de altavoz.** Cada comentario en la lista de movimientos tiene un pequeno icono de altavoz. Haz clic en el para escuchar solo esa anotacion sin tener que recorrer toda la partida.
+- **Usa el icono de altavoz.** Cada comentario en la lista de movimientos tiene un pequeno icono de altavoz. Haz clic para escuchar esa anotacion.
 
-- **Cambia de idioma para aprender vocabulario ajedrecistico.** Si estudias ajedrez en un segundo idioma, configura el idioma de TTS para que coincida. Aprenderas terminos como "Cavalier" (caballo), "echec" (jaque) y "mat" (jaque mate) de forma natural simplemente escuchando.
+- **Cambia de idioma para aprender vocabulario.** Si estudias ajedrez en un segundo idioma, ajusta el idioma TTS para que coincida.
 
-## Acerca de esta funcionalidad
+## Sobre esta funcion
 
-En Croissant es una herramienta de estudio de ajedrez de codigo abierto creada por [Francisco Salgueiro](https://github.com/franciscoBSalgueiro). Francisco construyo algo genuinamente especial -- una plataforma gratuita, potente y creada por la comunidad para estudiar ajedrez -- y la publico bajo la licencia GPL-3.0 para que cualquiera pueda usarla, mejorarla y compartirla. Esta funcionalidad de TTS existe gracias a esa generosidad. Estamos agradecidos por los cimientos que el construyo, y estamos orgullosos de contribuir de vuelta.
+En Croissant es una herramienta de estudio de ajedrez de codigo abierto creada por [Francisco Salgueiro](https://github.com/franciscoBSalgueiro). Francisco construyo algo genuinamente especial y lo publico bajo licencia GPL-3.0. Esta funcion TTS existe gracias a su generosidad.
 
-El plugin de TTS fue desarrollado por Darrell en [Red Shed](https://redshed.ai), con la ayuda de [Claude Code](https://claude.ai/claude-code). Soporte multiidioma, integracion con dos proveedores, vocabulario de ajedrez traducido a siete idiomas -- construido desde el codigo fuente, probado a mano y contribuido con esmero.
+El plugin TTS fue desarrollado por Darrell en [Red Shed](https://redshed.ai), con la ayuda de [Claude Code](https://www.anthropic.com/claude-code). Cinco proveedores, soporte multi-idioma, vocabulario de ajedrez traducido en ocho idiomas.
 
-Esa es la belleza del codigo abierto. Alguien construye algo grandioso. Alguien mas le agrega valor. Todos se benefician.
+Usamos IA para construir esto. [Lee mas aqui](docs/ai-note.md).
 
-## Contactanos
+## Contacto
 
-Estamos entusiasmados con esta funcionalidad y nos encantaria saber como te esta funcionando. Comentarios, sugerencias y opiniones siempre son bienvenidos.
+Nos encantaria saber como te funciona el TTS. Comentarios, sugerencias y retroalimentacion son siempre bienvenidos.
 
-- **Quieres un idioma que aun no soportamos?** Haznos saber -- podemos agregar nuevos idiomas rapidamente.
-- **Encontraste un error?** Cuentanos y lo arreglaremos rapido.
-- **Tienes una idea para otro proveedor de TTS?** Con gusto lo agregamos.
-- **Solo quieres decirnos que funciona bien?** Eso tambien nos alegra escucharlo.
+- **¿Quieres un idioma que aun no soportamos?** Dinoslo.
+- **¿Encontraste un error?** Dinoslo y lo arreglaremos rapido.
+- **¿Tienes una idea para otro proveedor TTS?** Estamos encantados de agregarlo.
 
-Abre un issue aqui en GitHub, o escribenos directamente a **[darrell@redshed.ai](mailto:darrell@redshed.ai)**.
+Abre un ticket en [GitHub](https://github.com/DarrellThomas/en-parlant), o contactanos directamente en **[darrell@redshed.ai](mailto:darrell@redshed.ai)**.

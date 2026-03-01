@@ -1,201 +1,147 @@
 # Text-to-Speech Narrations-Anleitung
 
-*Diese Anleitung ist auch verfügbar auf:
-[English](TTS-GUIDE.md) |
-[Francais](TTS-GUIDE-fr.md) |
-[Espanol](TTS-GUIDE-es.md) |
-Deutsch |
-[日本語](TTS-GUIDE-ja.md) |
-[Русский](TTS-GUIDE-ru.md) |
-[中文](TTS-GUIDE-zh.md) |
-[한국어](TTS-GUIDE-ko.md)*
+*Diese Anleitung ist auch verfugbar in:
+[English](tts-guide.md) |
+[Francais](tts-guide-fr.md) |
+[Espanol](tts-guide-es.md) |
+[日本語](tts-guide-ja.md) |
+[Русский](tts-guide-ru.md) |
+[中文](tts-guide-zh.md) |
+[한국어](tts-guide-ko.md)*
 
-## Warum TTS das Schachstudium grundlegend verändert
+## Warum TTS Ihr Schachstudium verandert
 
-Wenn du eine kommentierte Partie durchgehst, müssen deine Augen Doppelarbeit leisten. Du versuchst gleichzeitig, den Figuren auf dem Brett zu folgen *und* die Kommentare zu lesen. Dein Blick springt ständig zwischen Brett und Kommentarfeld hin und her, und jedes Mal verlierst du für einen kurzen Moment die Stellung. Du musst die Figuren wiederfinden, die Varianten nachvollziehen und dir das Bild im Kopf neu aufbauen.
+Wenn Sie eine kommentierte Partie analysieren, leisten Ihre Augen Doppelarbeit. Sie versuchen, den Figuren auf dem Brett zu folgen *und* gleichzeitig die Kommentare zu lesen. Ihr Blick springt zwischen dem Brett und dem Annotationspanel hin und her, und jedes Mal verlieren Sie die Position fur den Bruchteil einer Sekunde.
 
-Text-to-Speech löst dieses Problem vollständig.
+Text-to-Speech lost dieses Problem vollstandig.
 
-Mit aktiviertem TTS klickst du dich durch eine Partie, und die Kommentare werden dir *vorgelesen*. Deine Augen bleiben auf dem Brett. Du beobachtest, wie der Springer auf f3 landet, während eine Stimme dir erklärt, warum das ein starker Entwicklungszug ist. Du siehst, wie sich die Bauernstruktur verändert, während der Kommentar die strategische Idee dahinter erläutert. Brett und Worte kommen gleichzeitig an — genau so, wie ein Trainer dir gegenüber es erklären würde.
+Mit aktiviertem TTS gehen Sie durch eine Partie und die Annotationen werden Ihnen *vorgelesen*. Ihre Augen bleiben auf dem Brett. Sie beobachten, wie der Springer auf f3 landet, wahrend eine Stimme erklart, warum das ein starker Entwicklungszug ist. Brett und Worte kommen zusammen an, wie ein Trainer, der Ihnen gegenuber sitzt.
 
-Das ist besonders wirkungsvoll für:
+Das ist besonders wirkungsvoll fur:
 
-- **Eröffnungsstudium** — höre die Ideen hinter jedem Zug, während du die Stellung sich entwickeln siehst
-- **Partiebesprechung** — gehe deine eigenen kommentierten Partien durch und nimm die Lektionen ganz natürlich auf
-- **Endspieltraining** — halte deinen Fokus auf den entscheidenden Feldern, während der Kommentar dich leitet
-- **Sprachimmersion** — studiere Schach auf Französisch, Deutsch, Spanisch, Russisch, Japanisch oder Chinesisch, wobei alle Schachbegriffe korrekt übersetzt werden. Höre „Springer f3, Schach" statt „Knight f3, check." Lerne das Spiel in der Sprache, in der du denkst.
-- **Barrierefreiheit** — für Spieler, denen Zuhören leichter fällt als Lesen, oder die abseits vom Schreibtisch lernen möchten
+- **Eroffnungsstudium** — horen Sie die Ideen hinter jedem Zug, wahrend Sie die Position sich entwickeln sehen
+- **Partiereview** — gehen Sie durch Ihre kommentierten Partien und nehmen Sie die Lektionen naturlich auf
+- **Endspielpraxis** — halten Sie den Fokus auf den kritischen Feldern, wahrend der Kommentar Sie leitet
+- **Sprachimmersion** — studieren Sie Schach auf Franzosisch, Deutsch, Spanisch, Russisch, Japanisch, Chinesisch oder Koreanisch mit allen ubersetzten Fachbegriffen
+- **Barrierefreiheit** — fur Spieler, die lieber zuhoren als lesen
 
-Wenn du es einmal ausprobiert hast, fühlen sich stumme Kommentare an wie ein Film ohne Ton.
+Wenn Sie es einmal ausprobiert haben, fuhlen sich stumme Annotationen an wie ein Film ohne Ton.
 
-## Einen Anbieter wählen
+## Einen Anbieter wahlen
 
-Diese Version enthält zwei TTS-Anbieter — Google Cloud und ElevenLabs. Wenn die Community einen weiteren Anbieter wünscht, gebt uns Bescheid und wir können ihn hinzufügen. Du brauchst nur einen Anbieter, um loszulegen — wähle den, der am besten zu dir passt.
+En Parlant~ wird mit funf TTS-Anbietern ausgeliefert. Sie brauchen nur einen, um loszulegen.
 
-|                        | Google Cloud                  | ElevenLabs                    |
-|------------------------|-------------------------------|-------------------------------|
-| **Kostenloses Kontingent** | 1.000.000 Zeichen/Monat   | 10.000 Zeichen/Monat          |
-| **Stimmqualität**      | Sehr gut (WaveNet)            | Ausgezeichnet (Premium-KI-Stimmen) |
-| **Stimmauswahl**       | Männlich oder Weiblich je Sprache | Dutzende einzigartiger Stimmen |
-| **Bezahlpläne**        | Nutzungsbasiert (wenige Cent) | Ab 5 $/Monat                  |
-| **Am besten für**      | Die meisten Nutzer            | Stimmqualitäts-Enthusiasten   |
-| **Einrichtungsaufwand**| Mittel (Cloud Console)        | Einfach (unkomplizierte Anmeldung) |
+### ElevenLabs
 
-**Unsere Empfehlung:** Starte mit **Google Cloud**. Das kostenlose Kontingent bietet dir eine Million Zeichen pro Monat — das reicht für Hunderte voll kommentierter Partien, völlig kostenlos. Die WaveNet-Stimmen klingen hervorragend. Wenn du später ausdrucksstärkere Narration mit mehr stimmlicher Persönlichkeit möchtest, ist ElevenLabs für dich da.
+Die beste verfugbare Sprachqualitat. ElevenLabs produziert ausdrucksstarke, menschenahnliche Sprache mit echter Personlichkeit. Dutzende einzigartige Stimmen. Unterstutzt alle acht Sprachen mit ausgezeichneter CJK-Aussprache.
 
-## Google Cloud TTS einrichten
+Das kostenlose Kontingent bietet 10.000 Zeichen pro Monat (ausreichend fur 2-5 kommentierte Partien). Bezahlplane ab 5$/Monat fur 30.000 Zeichen. Einfache Einrichtung: Konto erstellen, API-Schlussel kopieren, in En Parlant~ einfugen.
 
-Diese Anleitung dauert etwa 5 Minuten. Du brauchst ein Google-Konto (dasselbe, das du für Gmail oder YouTube verwendest, funktioniert einwandfrei).
+Erfordert Internet. Ideal fur Sprachqualitats-Enthusiasten.
 
-### Schritt 1: Bei der Google Cloud Console anmelden
+**[ElevenLabs Einrichtungsanleitung](setup-elevenlabs.md)** *(auf Englisch)*
 
-1. Öffne deinen Browser und gehe zu **[console.cloud.google.com](https://console.cloud.google.com/)**
-2. Melde dich mit deinem Google-Konto an
-3. Wenn du zum ersten Mal hier bist, wirst du gebeten, den Nutzungsbedingungen zuzustimmen. Setze das Häkchen und klicke auf **Agree and Continue**
+### Google Cloud TTS
 
-Du solltest jetzt das Dashboard der Google Cloud Console sehen. Es sieht nach viel aus — keine Sorge, wir brauchen hier nur zwei Dinge.
+Die beste Balance aus Qualitat, Sprachunterstutzung und Wert. Googles WaveNet-Neuronalstimmen klingen naturlich und klar in allen acht Sprachen. Das kostenlose Kontingent ist grosszugig — eine Million Zeichen pro Monat deckt Hunderte von kommentierten Partien ab.
 
-### Schritt 2: Abrechnung einrichten
+Die Einrichtung dauert etwa 5 Minuten. Keine Kosten, es sei denn, Sie uberschreiten das kostenlose Kontingent.
 
-Google verlangt ein Rechnungskonto, auch für das kostenlose Kontingent. **Dir wird nichts berechnet**, es sei denn, du überschreitest eine Million Zeichen pro Monat (was mit Schachkommentaren kaum zu schaffen ist). Google warnt dich rechtzeitig, bevor das passiert.
+Erfordert Internet. Ideal fur die meisten Benutzer.
 
-1. Tippe in die obere Suchleiste **„Billing"** und klicke auf **Billing** im Dropdown
-2. Klicke auf **Link a billing account** (oder **Create account**, falls du noch keines hast)
-3. Folge den Anweisungen, um eine Kredit- oder Debitkarte hinzuzufügen
-4. Wenn alles fertig ist, siehst du ein grünes Häkchen neben deinem Rechnungskonto
+**[Google Cloud Einrichtungsanleitung](setup-google.md)** *(auf Englisch)*
 
-> **Hinweis:** Falls du bereits ein Google Cloud Rechnungskonto von einem anderen Projekt hast, kannst du diesen Schritt überspringen. Dein bestehendes Rechnungskonto funktioniert problemlos.
+### KittenTTS
 
-### Schritt 3: Die Text-to-Speech API aktivieren
+Hochwertige lokale KI, die vollstandig auf Ihrem Rechner lauft. Verwendet ein leichtgewichtiges ~25-MB-Neuronalmodell mit 8 ausdrucksstarken Stimmen (4 mannlich, 4 weiblich). Die Qualitat ist bemerkenswert gut.
 
-Damit teilst du Google mit, welchen Dienst du nutzen möchtest.
+Der Kompromiss ist die Hardware: KittenTTS verwendet PyTorch fur CPU-Inferenz und benotigt einen modernen Mehrkern-Prozessor. Derzeit nur Englisch.
 
-1. Tippe in die obere Suchleiste **„Text-to-Speech"**
-2. Klicke in den Suchergebnissen auf **Cloud Text-to-Speech API** (mit dem blauen API-Symbol)
-3. Du landest auf der Detailseite der API. Klicke auf den großen blauen **Enable**-Button
-4. Warte ein paar Sekunden. Wenn sich der Button zu **Manage** ändert, ist die API aktiviert
+Kein Internet erforderlich. Kein API-Schlussel. Beste lokale Qualitat.
 
-### Schritt 4: Einen API key erstellen
+**[KittenTTS Einrichtungsanleitung](setup-kittentts.md)** *(auf Englisch)*
 
-Der API key ist das, womit En Parlant~ mit den Google-Servern kommuniziert.
+### System TTS
 
-1. Tippe in die obere Suchleiste **„Credentials"** und klicke auf **Credentials** unter „APIs & Services"
-2. Klicke oben auf der Seite auf **+ Create Credentials**
-3. Wähle im Dropdown **API key**
-4. Ein Dialogfenster erscheint und zeigt deinen neuen Schlüssel an. Er sieht ungefähr so aus: `AIzaSyC...about 35 characters...`
-5. **Klicke auf das Kopier-Symbol** neben dem Schlüssel, um ihn in die Zwischenablage zu kopieren
-6. Klicke auf **Close**
+Die eingebaute Sprachsynthese Ihres Betriebssystems. Nichts zu installieren, keine API-Schlussel, keine Server. Auswahlen und loslegen. Die Sprachqualitat ist grundlegend, aber es funktioniert sofort.
 
-> **Empfohlen: Schränke deinen Schlüssel ein.** Nachdem du den Schlüssel erstellt hast, siehst du ihn auf der Credentials-Seite aufgelistet. Klicke auf den Schlüsselnamen, um seine Einstellungen zu öffnen. Wähle unter **API restrictions** die Option **Restrict key**, dann wähle **Cloud Text-to-Speech API** aus dem Dropdown und klicke auf **Save**. Damit kann selbst bei einem Schlüsselleck nur TTS genutzt werden — sonst nichts.
+Unter Linux typischerweise eSpeak oder speech-dispatcher; unter macOS die Systemstimme; unter Windows SAPI.
 
-### Schritt 5: En Parlant~ konfigurieren
+Kein Internet erforderlich. Ideal fur schnelle Tests.
 
-Fast geschafft!
+**[System TTS Einrichtungsanleitung](setup-system.md)** *(auf Englisch)*
 
-1. Öffne En Parlant~ und gehe zu **Settings** (Zahnrad-Symbol) > **Sound**-Tab
-2. Scrolle nach unten zum TTS-Bereich
-3. Setze **TTS Provider** auf **Google Cloud**
-4. Klicke in das Feld **Google Cloud API Key** und füge deinen Schlüssel ein (Strg+V)
-5. Setze **Text-to-Speech** auf **On**
-6. Klicke auf den **Test**-Button neben der Stimmauswahl
+### OpenTTS
 
-Du solltest einen Schachzug vorgesprochen hören. Wenn ja — herzlichen Glückwunsch, du bist fertig eingerichtet!
+Ein Open-Source-TTS-Server, der uber Docker auf Ihrem Rechner lauft. Nichts verlasst Ihren Computer. Bundelt mehrere TTS-Engines (Larynx, Festival, eSpeak, Coqui-TTS) mit uber 75 Stimmen allein fur Englisch.
 
-> **Fehlerbehebung:** Wenn der Test stumm bleibt, überprüfe, ob (1) du den vollständigen API key eingefügt hast, (2) die Text-to-Speech API aktiviert ist (Schritt 3) und (3) die Abrechnung verknüpft ist (Schritt 2). Das häufigste Problem ist, dass man vergisst, die API zu aktivieren.
+Der Kompromiss ist die Qualitat: altere Engines, daher roboterhafter als ElevenLabs oder Google. Funktioniert am besten mit europaischen Sprachen — CJK wird nicht gut unterstutzt. OpenTTS konnte in einer zukunftigen Version entfernt werden.
 
-## ElevenLabs einrichten
+Kein Internet erforderlich. Kein API-Schlussel. Ideal fur maximale Privatsphare.
 
-ElevenLabs ist einfacher einzurichten, bietet aber ein kleineres kostenloses Kontingent (10.000 Zeichen/Monat — genug, um es mit ein paar Partien auszuprobieren).
+**[OpenTTS Einrichtungsanleitung](setup-opentts.md)** *(auf Englisch)*
 
-### Schritt 1: Ein Konto erstellen
+### Unsere Empfehlung
 
-1. Öffne deinen Browser und gehe zu **[elevenlabs.io](https://elevenlabs.io/)**
-2. Klicke oben rechts auf **Sign Up**
-3. Du kannst dich mit Google, GitHub oder E-Mail anmelden — nimm, was am einfachsten ist
-4. Nach der Anmeldung landest du auf dem ElevenLabs-Dashboard
+Beginnen Sie mit **ElevenLabs** fur die beste Sprachqualitat. Fur das beste Verhaltnis von Qualitat und kostenloser Nutzung deckt **Google Cloud** Hunderte von Partien pro Monat ab. Fur hochwertiges lokales TTS ist **KittenTTS** ausgezeichnet bei moderner CPU. Fur Tests ohne Einrichtung funktioniert **System TTS** sofort. Fur maximale Privatsphare lauft **OpenTTS** lokal uber Docker.
 
-### Schritt 2: Deinen API key abrufen
+## Einstellungsreferenz
 
-1. Klicke unten links im Dashboard auf dein **Profilsymbol** (oder deinen Namen)
-2. Klicke auf **Profile + API key**
-3. Du siehst einen API-key-Bereich. Klicke auf **Reveal**, um deinen Schlüssel anzuzeigen, oder auf **Generate**, falls du noch keinen hast
-4. Der Schlüssel sieht so aus: `sk_...about 30 characters...`
-5. **Klicke auf das Kopier-Symbol**, um ihn in die Zwischenablage zu kopieren
+Alle TTS-Einstellungen finden Sie unter **Settings > Sound**:
 
-### Schritt 3: En Parlant~ konfigurieren
+| Einstellung | Funktion |
+|-------------|----------|
+| **Text-to-Speech** | Hauptschalter fur alle TTS-Funktionen |
+| **Auto-Narrate on Move** | Annotationen automatisch vorlesen beim Durchgehen der Zuge |
+| **TTS Provider** | Zwischen den funf Anbietern wechseln |
+| **TTS Voice** | Anbieterspezifische Stimmauswahl |
+| **TTS Language** | Narrations-Sprache — Schachbegriffe werden automatisch ubersetzt |
+| **TTS Volume** | Lautstarke der Narration |
+| **TTS Speed** | Wiedergabegeschwindigkeit (0,5x bis 2x) — anpassbar ohne Audio-Neugenerierung |
+| **ElevenLabs API Key** | Ihr ElevenLabs-API-Schlussel |
+| **Google Cloud API Key** | Ihr Google Cloud-API-Schlussel |
+| **KittenTTS CPU Threads** | CPU-Threads fur Inferenz (0 = automatisch) |
+| **TTS Audio Cache** | Audio-Cache loschen zur erzwungenen Neugenerierung |
 
-1. Öffne En Parlant~ und gehe zu **Settings** (Zahnrad-Symbol) > **Sound**-Tab
-2. Scrolle nach unten zum TTS-Bereich
-3. Setze **TTS Provider** auf **ElevenLabs**
-4. Klicke in das Feld **ElevenLabs API Key** und füge deinen Schlüssel ein (Strg+V)
-5. Das Dropdown **TTS Voice** wird mit deinen verfügbaren Stimmen befüllt. **Adam** ist eine hervorragende Standardwahl — klar, natürlich und ideal für Schachkommentare
-6. Setze **Text-to-Speech** auf **On**
-7. Klicke auf den **Test**-Button neben der Stimmauswahl
+## Unterstutzte Sprachen
 
-Du solltest einen Schachzug vorgesprochen hören.
+TTS-Narration unterstutzt acht Sprachen mit vollstandig ubersetztem Schachvokabular:
 
-> **Zum kostenlosen Kontingent:** ElevenLabs bietet dir 10.000 Zeichen/Monat im kostenlosen Plan. Eine typische kommentierte Partie verbraucht 2.000–4.000 Zeichen, sodass du 2–5 Partien pro Monat kostenlos durchgehen kannst. Wenn du TTS als wertvoll empfindest, ist der Starter-Plan für 5 $/Monat (30.000 Zeichen) ein solides Upgrade. Der Pro-Plan (22 $/Monat, 100.000 Zeichen) deckt auch intensiven Gebrauch ab.
+| Sprache | Schachbeispiel |
+|---------|---------------|
+| **English** | Knight f3, check. A strong developing move. |
+| **Francais** | Cavalier f3, echec. Un coup de developpement fort. |
+| **Espanol** | Caballo f3, jaque. Un fuerte movimiento. |
+| **Deutsch** | Springer f3, Schach. Ein starker Entwicklungszug. |
+| **日本語** | ナイト f3、チェック。強い展開の手。 |
+| **Русский** | Конь f3, шах. Сильный развивающий ход. |
+| **中文** | 马 f3，将军。一步控制中心的强力出子。 |
+| **한국어** | 나이트 f3, 체크. 중앙을 지배하는 강력한 전개 수. |
 
-## Einstellungsübersicht
+Alle Schachbegriffe — Figurennamen, "Schach", "Schachmatt", "Rochade", "schlagt", Zugbewertungen wie "Brillanter Zug" und "Patzer" — werden in der ausgewahlten Sprache gesprochen.
 
-Alle TTS-Einstellungen findest du unter **Settings > Sound**:
+## Tipps fur die beste Erfahrung
 
-| Einstellung              | Funktion                                                                      |
-|--------------------------|-------------------------------------------------------------------------------|
-| **Text-to-Speech**       | Hauptschalter für alle TTS-Funktionen                                         |
-| **Auto-Narrate on Move** | Spricht Kommentare automatisch, wenn du mit den Pfeiltasten durch Züge gehst  |
-| **TTS Provider**         | Wechsel zwischen ElevenLabs und Google Cloud                                  |
-| **ElevenLabs API Key**   | Dein ElevenLabs API key (nur nötig bei Nutzung von ElevenLabs)                |
-| **Google Cloud API Key** | Dein Google Cloud API key (nur nötig bei Nutzung von Google)                  |
-| **TTS Voice**            | ElevenLabs: Auswahl aus deinen Stimmen. Google: Männlich oder Weiblich        |
-| **TTS Language**         | Sprache für die Narration — alle Schachbegriffe werden automatisch übersetzt   |
-| **TTS Volume**           | Lautstärke der Narration                                                      |
-| **TTS Speed**            | Wiedergabegeschwindigkeit (0,5x bis 2x) — sofortige Anpassung ohne erneute Audio-Generierung |
-| **TTS Audio Cache**      | Zwischengespeicherte Audiodateien löschen, um eine Neugenerierung zu erzwingen (nützlich nach Bearbeitung von Kommentaren) |
+- **Nutzen Sie Auto-Narrate.** Aktivieren Sie "Auto-Narrate on Move" und verwenden Sie die Pfeiltasten. Der Kommentar kommt naturlich wahrend Sie vorwarts gehen.
 
-## Unterstützte Sprachen
+- **Kommentieren Sie Ihre eigenen Partien.** TTS glanzt wirklich, wenn Sie Kommentare zu *Ihren* Partien horen.
 
-Die TTS-Narration unterstützt derzeit sieben Sprachen mit vollständig übersetztem Schachvokabular:
+- **Probieren Sie verschiedene Geschwindigkeiten.** Manche Spieler bevorzugen 1x fur sorgfaltiges Studium, andere 1,3x fur schnellere Durchsicht.
 
-| Sprache            | Schachbeispiel                                      |
-|--------------------|-----------------------------------------------------|
-| **English**        | Knight f3, check. A strong developing move.         |
-| **Francais**       | Cavalier f3, echec. Un coup de developpement fort.  |
-| **Espanol**        | Caballo f3, jaque. Un fuerte movimiento.            |
-| **Deutsch**        | Springer f3, Schach. Ein starker Entwicklungszug.   |
-| **日本語**          | ナイト f3、チェック。強い展開の手。                      |
-| **Русский**        | Конь f3, шах. Сильный развивающий ход.              |
-| **中文**            | 马 f3，将军。一步控制中心的强力出子。                    |
+- **Nutzen Sie das Lautsprecher-Symbol.** Jeder Kommentar in der Zugliste hat ein kleines Lautsprecher-Symbol. Klicken Sie darauf, um diese Annotation zu horen.
 
-Jeder Schachbegriff — Figurennamen, „Schach", „Schachmatt", „Rochade", „schlägt", Zugbewertungen wie „Brillanter Zug" und „Patzer" — wird in der gewählten Sprache gesprochen. Kommentare in deinen PGN-Dateien werden so vorgelesen, wie sie geschrieben sind. Kommentiere deine Partien also in der Sprache, die du hören möchtest.
+- **Wechseln Sie die Sprache, um Vokabular zu lernen.** Wenn Sie Schach in einer Zweitsprache studieren, stellen Sie die TTS-Sprache entsprechend ein.
 
-## Tipps für das beste Erlebnis
+## Uber diese Funktion
 
-- **Nutze Auto-Narrate.** Aktiviere „Auto-Narrate on Move" und verwende einfach die Pfeiltasten, um durch Partien zu gehen. Die Kommentare kommen ganz natürlich beim Weiterklicken — als hättest du einen Trainer neben dir sitzen.
+En Croissant ist ein Open-Source-Schachstudientool von [Francisco Salgueiro](https://github.com/franciscoBSalgueiro). Francisco hat etwas wirklich Besonderes geschaffen und es unter der GPL-3.0-Lizenz veroffentlicht. Diese TTS-Funktion existiert dank seiner Grosszugigkeit.
 
-- **Kommentiere deine eigenen Partien.** TTS entfaltet seine wahre Stärke, wenn du Kommentare zu *deinen* Partien hörst. Kommentiere deine Partien und gehe sie dann mit Narration durch. „Der Bauer sieht verlockend aus, aber dein gesamter Königsflügel schläft noch" zu hören, während du auf die Stellung starrst, trifft ganz anders als es nur zu lesen.
+Das TTS-Plugin wurde von Darrell bei [Red Shed](https://redshed.ai) entwickelt, mit Hilfe von [Claude Code](https://www.anthropic.com/claude-code). Funf Anbieter, Mehrsprachen-Unterstutzung, ubersetztes Schachvokabular in acht Sprachen.
 
-- **Probiere verschiedene Geschwindigkeiten aus.** Manche Spieler mögen 1x für gründliches Studium, andere bevorzugen 1,3x für schnelleres Durchgehen. Der Geschwindigkeitsregler passt die Wiedergabe in Echtzeit an, ohne zusätzliche API-Zeichen zu verbrauchen — das Audio wird einmal generiert und dann schneller abgespielt.
-
-- **Nutze das Lautsprecher-Symbol.** Jeder Kommentar in der Zugliste hat ein kleines Lautsprecher-Symbol. Klicke darauf, um nur diesen einen Kommentar zu hören, ohne die ganze Partie durchgehen zu müssen.
-
-- **Wechsle die Sprache, um Schachvokabular zu lernen.** Wenn du Schach in einer Fremdsprache studierst, stelle die TTS-Sprache entsprechend ein. Du lernst Begriffe wie „Cavalier" (Springer), „echec" (Schach) und „mat" (Schachmatt) ganz nebenbei beim Zuhören.
-
-## Über diese Funktion
-
-En Croissant ist ein quelloffenes Schachstudien-Werkzeug, das von [Francisco Salgueiro](https://github.com/franciscoBSalgueiro) entwickelt wurde. Francisco hat etwas wirklich Besonderes geschaffen — eine kostenlose, leistungsstarke, gemeinschaftsgetriebene Plattform zum Schachstudium — und sie unter der GPL-3.0-Lizenz veröffentlicht, damit jeder sie nutzen, verbessern und teilen kann. Diese TTS-Funktion existiert dank dieser Großzügigkeit. Wir sind dankbar für das Fundament, das er gelegt hat, und stolz darauf, etwas zurückgeben zu können.
-
-Das TTS-Plugin wurde von Darrell bei [Red Shed](https://redshed.ai) entwickelt, mit Unterstützung von [Claude Code](https://claude.ai/claude-code). Mehrsprachige Unterstützung, Anbindung zweier Provider, übersetztes Schachvokabular in sieben Sprachen — aus dem Quellcode gebaut, von Hand getestet und mit Sorgfalt beigesteuert.
-
-Das ist das Schöne an Open Source. Jemand baut etwas Großartiges. Jemand anderes erweitert es. Alle profitieren davon.
+Wir haben KI benutzt, um dies zu bauen. [Mehr erfahren](../ai-note.md).
 
 ## Kontakt
 
-Wir freuen uns über diese Funktion und würden gerne hören, wie sie bei dir funktioniert. Kommentare, Vorschläge und Feedback sind jederzeit willkommen.
+Wir wurden gerne horen, wie TTS fur Sie funktioniert. Kommentare, Vorschlage und Feedback sind immer willkommen.
 
-- **Du wünschst dir eine Sprache, die wir noch nicht unterstützen?** Lass es uns wissen — wir können neue Sprachen schnell hinzufügen.
-- **Einen Fehler gefunden?** Sag uns Bescheid, und wir beheben ihn zügig.
-- **Eine Idee für einen weiteren TTS-Anbieter?** Wir bauen ihn gerne ein.
-- **Willst du einfach nur sagen, dass es funktioniert?** Auch das hören wir gerne.
-
-Eröffne ein Issue hier auf GitHub oder schreib uns direkt an **[darrell@redshed.ai](mailto:darrell@redshed.ai)**.
+Offnen Sie ein Ticket auf [GitHub](https://github.com/DarrellThomas/en-parlant), oder kontaktieren Sie uns direkt unter **[darrell@redshed.ai](mailto:darrell@redshed.ai)**.

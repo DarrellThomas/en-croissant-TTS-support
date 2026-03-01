@@ -69,8 +69,16 @@ function AboutModal({
 
       <Text size="sm">License: GPL-3.0</Text>
       <Text size="xs" c="dimmed">
-        Based on En Croissant by Francisco Salgueiro. TTS narration by Darrell
-        at Red Shed.
+        Based on En Croissant by Francisco Salgueiro. TTS narration by{" "}
+        <Anchor
+          href="mailto:darrell@redshed.ai"
+          target="_blank"
+          rel="noreferrer"
+          size="xs"
+          c="dimmed"
+        >
+          darrell@redshed.ai
+        </Anchor>
       </Text>
     </Modal>
   );

@@ -447,12 +447,78 @@ function RootLayout() {
           },
           { label: "divider", id: "tts_divider" },
           {
-            label: "A Note About AI",
+            label: "A Note from Darrell",
             id: "tts_ai_note",
-            action: () => {
-              setDocTitle("A Note About AI");
-              setDocResource("docs/ai-note.md");
-            },
+            submenu: [
+              {
+                label: "English",
+                id: "ai_note_en",
+                action: () => {
+                  setDocTitle("A Note from Darrell");
+                  setDocResource("docs/ai-note.md");
+                },
+              },
+              {
+                label: "Fran\u00e7ais",
+                id: "ai_note_fr",
+                action: () => {
+                  setDocTitle("Un mot de Darrell");
+                  setDocResource("docs/ai-note-fr.md");
+                },
+              },
+              {
+                label: "Espa\u00f1ol",
+                id: "ai_note_es",
+                action: () => {
+                  setDocTitle("Una nota de Darrell");
+                  setDocResource("docs/ai-note-es.md");
+                },
+              },
+              {
+                label: "Deutsch",
+                id: "ai_note_de",
+                action: () => {
+                  setDocTitle("Ein Wort von Darrell");
+                  setDocResource("docs/ai-note-de.md");
+                },
+              },
+              {
+                label: "\u65e5\u672c\u8a9e",
+                id: "ai_note_ja",
+                action: () => {
+                  setDocTitle(
+                    "\u30c0\u30ec\u30eb\u304b\u3089\u306e\u30e1\u30c3\u30bb\u30fc\u30b8",
+                  );
+                  setDocResource("docs/ai-note-ja.md");
+                },
+              },
+              {
+                label: "\u0420\u0443\u0441\u0441\u043a\u0438\u0439",
+                id: "ai_note_ru",
+                action: () => {
+                  setDocTitle(
+                    "\u0417\u0430\u043c\u0435\u0442\u043a\u0430 \u043e\u0442 \u0414\u0430\u0440\u0440\u0435\u043b\u043b\u0430",
+                  );
+                  setDocResource("docs/ai-note-ru.md");
+                },
+              },
+              {
+                label: "\u4e2d\u6587",
+                id: "ai_note_zh",
+                action: () => {
+                  setDocTitle("\u6765\u81ea Darrell \u7684\u5bc4\u8bed");
+                  setDocResource("docs/ai-note-zh.md");
+                },
+              },
+              {
+                label: "\uD55C\uAD6D\uC5B4",
+                id: "ai_note_ko",
+                action: () => {
+                  setDocTitle("Darrell\uC758 \uBA54\uC2DC\uC9C0");
+                  setDocResource("docs/ai-note-ko.md");
+                },
+              },
+            ],
           },
         ],
       },
@@ -576,6 +642,10 @@ function RootLayout() {
         resource={docResource}
         title={docTitle}
         onClose={() => setDocResource(null)}
+        onNavigate={(res, t) => {
+          setDocResource(res);
+          setDocTitle(t);
+        }}
       />
       {!isNative && import.meta.env.VITE_PLATFORM === "win32" && (
         <AppShell.Header>
