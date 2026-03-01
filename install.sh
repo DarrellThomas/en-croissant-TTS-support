@@ -70,6 +70,7 @@ Type=Application
 Name=En Parlant~
 Exec=en-parlant %f
 Icon=en-parlant
+StartupWMClass=en-parlant
 Comment=Chess Database with TTS
 Categories=Game;BoardGame;
 Terminal=false
