@@ -102,12 +102,7 @@ export function useDefaultEngines(os: Platform | undefined, opened: boolean) {
     opened ? os : null,
     async (os: Platform) => {
       const bmi2: boolean = await commands.isBmi2Compatible();
-      const data = await fetch(
-        `https://www.encroissant.org/engines?os=${os}&bmi2=${bmi2}`,
-        {
-          method: "GET",
-        },
-      );
+      const data = await fetch("https://enparlant.redshed.ai/api/engines.json");
       if (!data.ok) {
         throw new Error("Failed to fetch engines");
       }

@@ -122,9 +122,9 @@ export function useDefaultDatabases(opened: boolean) {
   const { data, error, isLoading } = useSWR(
     opened ? "default-dbs" : null,
     async () => {
-      const data = await fetch("https://www.encroissant.org/databases", {
-        method: "GET",
-      });
+      const data = await fetch(
+        "https://enparlant.redshed.ai/api/databases.json",
+      );
       if (!data.ok) {
         throw new Error("Failed to fetch engines");
       }
@@ -141,9 +141,9 @@ export function useDefaultDatabases(opened: boolean) {
 export async function getDefaultPuzzleDatabases(): Promise<
   (PuzzleDatabaseInfo & { downloadLink: string })[]
 > {
-  const data = await fetch("https://www.encroissant.org/puzzle_databases", {
-    method: "GET",
-  });
+  const data = await fetch(
+    "https://enparlant.redshed.ai/api/puzzle_databases.json",
+  );
   if (!data.ok) {
     throw new Error("Failed to fetch puzzle databases");
   }
