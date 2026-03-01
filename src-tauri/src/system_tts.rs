@@ -33,11 +33,26 @@ pub fn system_tts_speak(
     let mut guard = get_or_init_tts(&state.0)?;
     let tts = guard.as_mut().ok_or("TTS not initialized")?;
 
+    // Rate is normalized 0.5-2.0 from the frontend (1.0 = normal).
+    // Map it to the platform's actual range using the crate's own bounds.
     if let Some(r) = rate {
-        let _ = tts.set_rate(r);
+        let normal = tts.normal_rate();
+        let platform_rate = if r <= 1.0 {
+            // Slower: interpolate between min_rate and normal_rate
+            let min = tts.min_rate();
+            min + (normal - min) * r
+        } else {
+            // Faster: interpolate between normal_rate and max_rate
+            let max = tts.max_rate();
+            normal + (max - normal) * (r - 1.0)
+        };
+        let _ = tts.set_rate(platform_rate);
     }
     if let Some(v) = volume {
-        let _ = tts.set_volume(v);
+        // Volume is 0.0-1.0 from frontend, map to platform range
+        let min = tts.min_volume();
+        let max = tts.max_volume();
+        let _ = tts.set_volume(min + (max - min) * v);
     }
     if let Some(p) = pitch {
         let _ = tts.set_pitch(p);

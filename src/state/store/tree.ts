@@ -143,7 +143,7 @@ export const createTreeStore = (id?: string, initialTree?: TreeState) => {
             // At root position, speak the game intro comment first
             if (state.position.length === 0 && node.comment) {
               speakComment(node.comment);
-            } else if (nextNode.comment) {
+            } else if (nextNode.comment || nextNode.annotations.length > 0) {
               speakMoveNarration(
                 nextNode.san,
                 nextNode.comment,

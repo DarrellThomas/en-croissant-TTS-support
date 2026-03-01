@@ -1,3 +1,4 @@
+import { notifications } from "@mantine/notifications";
 import { invoke } from "@tauri-apps/api/core";
 import { fetch } from "@tauri-apps/plugin-http";
 import { getDefaultStore } from "jotai";
@@ -19,6 +20,15 @@ import {
   ttsVolumeAtom,
 } from "@/state/atoms";
 import type { TreeNode } from "@/utils/treeReducer";
+
+// Throttle TTS notifications so rapid navigation doesn't spam the user
+let lastTtsNotification = 0;
+function showTtsNotification(title: string, message: string) {
+  const now = Date.now();
+  if (now - lastTtsNotification < 5000) return;
+  lastTtsNotification = now;
+  notifications.show({ title, message, color: "yellow", autoClose: 8000 });
+}
 
 // --- Audio playback state ---
 
@@ -667,8 +677,8 @@ async function speakSystemTTS(
   }
   await invoke("system_tts_speak", {
     text,
-    rate: rate * 200, // speech-dispatcher rate: ~200 = normal
-    volume: volume * 100, // speech-dispatcher volume: 0-100
+    rate, // normalized: 0.5-2.0, 1.0 = normal (Rust maps to platform range)
+    volume, // normalized: 0.0-1.0 (Rust maps to platform range)
     pitch: null,
   });
 }
@@ -731,16 +741,34 @@ export async function speakText(text: string): Promise<void> {
   } else if (provider === "opentts") {
     openTTSUrl = store.get(ttsOpenTTSUrlAtom) || "http://localhost:5500";
     voiceId = store.get(ttsOpenTTSVoiceAtom) || "";
-    if (!voiceId) return;
+    if (!voiceId) {
+      showTtsNotification(
+        "OpenTTS: No voice selected",
+        "Go to Settings > Sound and select a voice for OpenTTS.",
+      );
+      return;
+    }
   } else if (provider === "google") {
     apiKey = store.get(ttsGoogleApiKeyAtom);
     gender = store.get(ttsGoogleGenderAtom) || "MALE";
     voiceId = getGoogleVoice(lang, gender).name;
-    if (!apiKey) return;
+    if (!apiKey) {
+      showTtsNotification(
+        "Google Cloud TTS: API key required",
+        "Go to Settings > Sound and enter your Google Cloud API key.",
+      );
+      return;
+    }
   } else {
     apiKey = store.get(ttsApiKeyAtom);
     voiceId = store.get(ttsVoiceIdAtom) || DEFAULT_VOICE_ID;
-    if (!apiKey) return;
+    if (!apiKey) {
+      showTtsNotification(
+        "ElevenLabs: API key required",
+        "Go to Settings > Sound and enter your ElevenLabs API key.",
+      );
+      return;
+    }
   }
 
   // Stop any currently playing audio and cancel in-flight requests
@@ -751,7 +779,13 @@ export async function speakText(text: string): Promise<void> {
   const abort = new AbortController();
   currentAbort = abort;
 
+  // Timeout for cloud providers — don't hang forever on bad networks
   const isLocalServer = provider === "kittentts" || provider === "opentts";
+  const isCloudProvider = provider === "elevenlabs" || provider === "google";
+  let timeout: ReturnType<typeof setTimeout> | null = null;
+  if (isCloudProvider) {
+    timeout = setTimeout(() => abort.abort(), 15000);
+  }
   const maxAttempts = isLocalServer ? 2 : 1;
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
@@ -808,8 +842,10 @@ export async function speakText(text: string): Promise<void> {
       currentAudio.volume = volume;
       currentAudio.playbackRate = speed;
       await currentAudio.play();
+      if (timeout) clearTimeout(timeout);
       return; // success — exit retry loop
     } catch (e) {
+      if (timeout) clearTimeout(timeout);
       if (e instanceof DOMException && e.name === "AbortError") return;
       if (attempt < maxAttempts) {
         // Server may still be starting — wait and retry
@@ -819,6 +855,27 @@ export async function speakText(text: string): Promise<void> {
         continue;
       }
       console.error("TTS error:", e);
+      if (isLocalServer) {
+        showTtsNotification(
+          `${provider === "kittentts" ? "KittenTTS" : "OpenTTS"} server not responding`,
+          "Start the server from Settings > Sound, or switch to a different provider.",
+        );
+      } else if (provider === "system") {
+        showTtsNotification(
+          "System TTS failed",
+          String(e).includes("initialize")
+            ? "Your OS speech system could not be initialized. On Linux, install speech-dispatcher."
+            : `System TTS error: ${e}`,
+        );
+      } else if (isCloudProvider) {
+        const msg = String(e);
+        showTtsNotification(
+          `${provider === "google" ? "Google Cloud" : "ElevenLabs"} TTS failed`,
+          msg.includes("abort") || msg.includes("timeout")
+            ? "Request timed out. Check your internet connection."
+            : msg,
+        );
+      }
     }
   }
 }
