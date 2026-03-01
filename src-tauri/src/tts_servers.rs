@@ -131,7 +131,11 @@ pub fn check_docker_installed() -> DepCheck {
             ok: false,
             label: "Docker not installed".into(),
             detail: "Docker is required to run OpenTTS".into(),
-            fix_hint: "sudo apt install docker.io && sudo usermod -aG docker $USER".into(),
+            fix_hint: if cfg!(target_os = "windows") {
+                "Install Docker Desktop from docker.com".into()
+            } else {
+                "sudo apt install docker.io && sudo usermod -aG docker $USER".into()
+            },
         },
     }
 }
@@ -148,7 +152,9 @@ pub fn check_docker_running() -> DepCheck {
         },
         Ok(output) => {
             let stderr = String::from_utf8_lossy(&output.stderr).to_string();
-            let hint = if stderr.contains("permission denied") {
+            let hint = if cfg!(target_os = "windows") {
+                "Start Docker Desktop from the Start menu"
+            } else if stderr.contains("permission denied") {
                 "sudo usermod -aG docker $USER && newgrp docker"
             } else {
                 "sudo systemctl start docker"
@@ -164,7 +170,11 @@ pub fn check_docker_running() -> DepCheck {
             ok: false,
             label: "Docker not running".into(),
             detail: "Could not communicate with Docker".into(),
-            fix_hint: "sudo systemctl start docker".into(),
+            fix_hint: if cfg!(target_os = "windows") {
+                "Start Docker Desktop from the Start menu".into()
+            } else {
+                "sudo systemctl start docker".into()
+            },
         },
     }
 }
@@ -245,7 +255,11 @@ pub fn check_kittentts_venv(app_handle: tauri::AppHandle) -> DepCheck {
             ok: false,
             label: "Virtual environment not found".into(),
             detail: "No .venv directory found in scripts/".into(),
-            fix_hint: "python3 -m venv scripts/.venv".into(),
+            fix_hint: if cfg!(target_os = "windows") {
+                "python -m venv scripts/.venv".into()
+            } else {
+                "python3 -m venv scripts/.venv".into()
+            },
         },
     }
 }
