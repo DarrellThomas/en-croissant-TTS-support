@@ -65,7 +65,6 @@
     "mantine-contextmenu": "^8.3.13",
     "mantine-datatable": "^8.3.13",
     "mantine-flagpack": "^4.1.1",
-    "posthog-js": "^1.342.1",
     "react": "^19.2.4",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",

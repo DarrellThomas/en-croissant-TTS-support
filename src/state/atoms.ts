@@ -379,13 +379,6 @@ export const primaryColorAtom = atomWithStorage<MantineColor>(
 );
 export const sessionsAtom = atomWithStorage<Session[]>("sessions", []);
 export const nativeBarAtom = atomWithStorage<boolean>("native-bar", false);
-export const telemetryEnabledAtom = atomWithStorage<boolean>(
-  "telemetry-enabled",
-  true,
-  undefined,
-  { getOnInit: true },
-);
-
 // Recent Files
 
 export type RecentFile = {
