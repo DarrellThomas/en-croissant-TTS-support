@@ -30,10 +30,10 @@ rm -rf /opt/en-croissant-TTS
 cp "$RELEASE_DIR/en-croissant-TTS" /usr/bin/en-croissant-TTS
 chmod 755 /usr/bin/en-croissant-TTS
 
-# Resources
+# Resources (copy from source — --no-bundle doesn't copy resources to release dir)
 mkdir -p "$RES_DIR"
-cp -r "$RELEASE_DIR/docs"  "$RES_DIR/"
-cp -r "$RELEASE_DIR/sound" "$RES_DIR/"
+cp -r docs/  "$RES_DIR/docs"
+cp -r sound/ "$RES_DIR/sound"
 
 # Desktop entry
 cat > /usr/share/applications/en-croissant-TTS.desktop <<'EOF'

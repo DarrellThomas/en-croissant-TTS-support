@@ -12,9 +12,10 @@ import {
   PredefinedMenuItem,
   Submenu,
 } from "@tauri-apps/api/menu";
-import { appLogDir, resolve } from "@tauri-apps/api/path";
+import { appLogDir, resolve, resolveResource } from "@tauri-apps/api/path";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { ask, message, open } from "@tauri-apps/plugin-dialog";
+import { readTextFile } from "@tauri-apps/plugin-fs";
 import { platform } from "@tauri-apps/plugin-os";
 import { exit, relaunch } from "@tauri-apps/plugin-process";
 import { open as shellOpen } from "@tauri-apps/plugin-shell";
@@ -54,6 +55,7 @@ type MenuAction = {
     | "Undo"
     | "Redo"
     | "Quit";
+  submenu?: MenuAction[];
 };
 
 async function createMenu(menuActions: MenuGroup[]) {
@@ -67,11 +69,27 @@ async function createMenu(menuActions: MenuGroup[]) {
                 item: "Separator",
               }),
             )
-            .otherwise(() => {
+            .otherwise(async () => {
               if (option.item) {
                 return PredefinedMenuItem.new({
                   text: option.label,
                   item: option.item,
+                });
+              }
+
+              if (option.submenu) {
+                const children = await Promise.all(
+                  option.submenu.map((sub) =>
+                    MenuItem.new({
+                      id: sub.id,
+                      text: sub.label,
+                      action: sub.action,
+                    }),
+                  ),
+                );
+                return Submenu.new({
+                  text: option.label,
+                  items: children,
                 });
               }
 
@@ -131,6 +149,25 @@ function RootLayout() {
       setActiveTab,
     });
   }, [navigate, setActiveTab, setTabs, t]);
+
+  const openDemo = useCallback(
+    async (lang: string, label: string) => {
+      try {
+        const p = await resolveResource(`docs/demos/tts-demo-${lang}.pgn`);
+        const pgn = await readTextFile(p);
+        navigate({ to: "/" });
+        createTab({
+          tab: { name: `TTS Demo (${label})`, type: "analysis" },
+          setTabs,
+          setActiveTab,
+          pgn,
+        });
+      } catch (e) {
+        console.error("Failed to open demo:", e);
+      }
+    },
+    [navigate, setTabs, setActiveTab],
+  );
 
   const checkForUpdates = useCallback(async () => {
     const update = await check();
@@ -279,6 +316,131 @@ function RootLayout() {
         ],
       },
       {
+        label: "TTS",
+        options: [
+          {
+            label: "Getting Started",
+            id: "tts_getting_started",
+            submenu: [
+              {
+                label: "TTS Guide (English)",
+                id: "tts_guide_en",
+                action: () => {
+                  setDocTitle("TTS Guide (English)");
+                  setDocResource("docs/tts/tts-guide.md");
+                },
+              },
+              {
+                label: "TTS Guide (Fran\u00e7ais)",
+                id: "tts_guide_fr",
+                action: () => {
+                  setDocTitle("TTS Guide (Fran\u00e7ais)");
+                  setDocResource("docs/tts/tts-guide-fr.md");
+                },
+              },
+              {
+                label: "TTS Guide (Espa\u00f1ol)",
+                id: "tts_guide_es",
+                action: () => {
+                  setDocTitle("TTS Guide (Espa\u00f1ol)");
+                  setDocResource("docs/tts/tts-guide-es.md");
+                },
+              },
+              {
+                label: "TTS Guide (Deutsch)",
+                id: "tts_guide_de",
+                action: () => {
+                  setDocTitle("TTS Guide (Deutsch)");
+                  setDocResource("docs/tts/tts-guide-de.md");
+                },
+              },
+              {
+                label: "TTS\u30ac\u30a4\u30c9 (\u65e5\u672c\u8a9e)",
+                id: "tts_guide_ja",
+                action: () => {
+                  setDocTitle("TTS\u30ac\u30a4\u30c9 (\u65e5\u672c\u8a9e)");
+                  setDocResource("docs/tts/tts-guide-ja.md");
+                },
+              },
+              {
+                label:
+                  "\u0420\u0443\u043a\u043e\u0432\u043e\u0434\u0441\u0442\u0432\u043e TTS (\u0420\u0443\u0441\u0441\u043a\u0438\u0439)",
+                id: "tts_guide_ru",
+                action: () => {
+                  setDocTitle(
+                    "\u0420\u0443\u043a\u043e\u0432\u043e\u0434\u0441\u0442\u0432\u043e TTS (\u0420\u0443\u0441\u0441\u043a\u0438\u0439)",
+                  );
+                  setDocResource("docs/tts/tts-guide-ru.md");
+                },
+              },
+              {
+                label: "TTS\u6307\u5357 (\u4e2d\u6587)",
+                id: "tts_guide_zh",
+                action: () => {
+                  setDocTitle("TTS\u6307\u5357 (\u4e2d\u6587)");
+                  setDocResource("docs/tts/tts-guide-zh.md");
+                },
+              },
+              {
+                label: "TTS \uAC00\uC774\uB4DC (\uD55C\uAD6D\uC5B4)",
+                id: "tts_guide_ko",
+                action: () => {
+                  setDocTitle("TTS \uAC00\uC774\uB4DC (\uD55C\uAD6D\uC5B4)");
+                  setDocResource("docs/tts/tts-guide-ko.md");
+                },
+              },
+            ],
+          },
+          {
+            label: "TTS Demo",
+            id: "tts_demo",
+            submenu: [
+              {
+                label: "English",
+                id: "tts_demo_en",
+                action: () => openDemo("en", "English"),
+              },
+              {
+                label: "Fran\u00e7ais",
+                id: "tts_demo_fr",
+                action: () => openDemo("fr", "Fran\u00e7ais"),
+              },
+              {
+                label: "Espa\u00f1ol",
+                id: "tts_demo_es",
+                action: () => openDemo("es", "Espa\u00f1ol"),
+              },
+              {
+                label: "Deutsch",
+                id: "tts_demo_de",
+                action: () => openDemo("de", "Deutsch"),
+              },
+              {
+                label: "\u65e5\u672c\u8a9e",
+                id: "tts_demo_ja",
+                action: () => openDemo("ja", "\u65e5\u672c\u8a9e"),
+              },
+              {
+                label: "\u0420\u0443\u0441\u0441\u043a\u0438\u0439",
+                id: "tts_demo_ru",
+                action: () =>
+                  openDemo("ru", "\u0420\u0443\u0441\u0441\u043a\u0438\u0439"),
+              },
+              {
+                label: "\u4e2d\u6587",
+                id: "tts_demo_zh",
+                action: () => openDemo("zh", "\u4e2d\u6587"),
+              },
+              {
+                label: "\uD55C\uAD6D\uC5B4",
+                id: "tts_demo_ko",
+                action: () => openDemo("ko", "\uD55C\uAD6D\uC5B4"),
+              },
+            ],
+          },
+        ],
+      },
+      {
         label: t("Menu.Help"),
         options: [
           {
@@ -289,75 +451,6 @@ function RootLayout() {
               setDocResource("docs/README.md");
             },
           },
-          { label: "divider" },
-          {
-            label: "TTS Guide (English)",
-            id: "tts_guide_en",
-            action: () => {
-              setDocTitle("TTS Guide (English)");
-              setDocResource("docs/tts/tts-guide.md");
-            },
-          },
-          {
-            label: "TTS Guide (Fran\u00e7ais)",
-            id: "tts_guide_fr",
-            action: () => {
-              setDocTitle("TTS Guide (Fran\u00e7ais)");
-              setDocResource("docs/tts/tts-guide-fr.md");
-            },
-          },
-          {
-            label: "TTS Guide (Espa\u00f1ol)",
-            id: "tts_guide_es",
-            action: () => {
-              setDocTitle("TTS Guide (Espa\u00f1ol)");
-              setDocResource("docs/tts/tts-guide-es.md");
-            },
-          },
-          {
-            label: "TTS Guide (Deutsch)",
-            id: "tts_guide_de",
-            action: () => {
-              setDocTitle("TTS Guide (Deutsch)");
-              setDocResource("docs/tts/tts-guide-de.md");
-            },
-          },
-          {
-            label: "TTS\u30ac\u30a4\u30c9 (\u65e5\u672c\u8a9e)",
-            id: "tts_guide_ja",
-            action: () => {
-              setDocTitle("TTS\u30ac\u30a4\u30c9 (\u65e5\u672c\u8a9e)");
-              setDocResource("docs/tts/tts-guide-ja.md");
-            },
-          },
-          {
-            label:
-              "\u0420\u0443\u043a\u043e\u0432\u043e\u0434\u0441\u0442\u0432\u043e TTS (\u0420\u0443\u0441\u0441\u043a\u0438\u0439)",
-            id: "tts_guide_ru",
-            action: () => {
-              setDocTitle(
-                "\u0420\u0443\u043a\u043e\u0432\u043e\u0434\u0441\u0442\u0432\u043e TTS (\u0420\u0443\u0441\u0441\u043a\u0438\u0439)",
-              );
-              setDocResource("docs/tts/tts-guide-ru.md");
-            },
-          },
-          {
-            label: "TTS\u6307\u5357 (\u4e2d\u6587)",
-            id: "tts_guide_zh",
-            action: () => {
-              setDocTitle("TTS\u6307\u5357 (\u4e2d\u6587)");
-              setDocResource("docs/tts/tts-guide-zh.md");
-            },
-          },
-          {
-            label: "TTS \uAC00\uC774\uB4DC (\uD55C\uAD6D\uC5B4)",
-            id: "tts_guide_ko",
-            action: () => {
-              setDocTitle("TTS \uAC00\uC774\uB4DC (\uD55C\uAD6D\uC5B4)");
-              setDocResource("docs/tts/tts-guide-ko.md");
-            },
-          },
-          { label: "divider" },
           {
             label: "License (GPL-3.0)",
             id: "license",
@@ -399,7 +492,7 @@ function RootLayout() {
         ],
       },
     ],
-    [t, checkForUpdates, createNewTab, keyMap, openNewFile],
+    [t, checkForUpdates, createNewTab, keyMap, openNewFile, openDemo],
   );
 
   const { data: menu } = useSWRImmutable(["menu", menuActions], () =>
