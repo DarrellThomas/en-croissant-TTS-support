@@ -1,0 +1,27 @@
+{
+  "_comment": "Maps R2 paths to original upstream URLs. Used by scripts/mirror-assets-to-r2.sh only.",
+  "engines": {
+    "stockfish-18/stockfish-windows-x86-64-avx2.zip": "https://github.com/official-stockfish/Stockfish/releases/latest/download/stockfish-windows-x86-64-avx2.zip",
+    "stockfish-18/stockfish-windows-x86-64-sse41-popcnt.zip": "https://github.com/official-stockfish/Stockfish/releases/latest/download/stockfish-windows-x86-64-sse41-popcnt.zip",
+    "stockfish-18/stockfish-macos-x86-64-sse41-popcnt.tar": "https://github.com/official-stockfish/Stockfish/releases/latest/download/stockfish-macos-x86-64-sse41-popcnt.tar",
+    "stockfish-18/stockfish-ubuntu-x86-64-avx2.tar": "https://github.com/official-stockfish/Stockfish/releases/latest/download/stockfish-ubuntu-x86-64-avx2.tar",
+    "stockfish-18/stockfish-ubuntu-x86-64-sse41-popcnt.tar": "https://github.com/official-stockfish/Stockfish/releases/latest/download/stockfish-ubuntu-x86-64-sse41-popcnt.tar",
+    "rubichess-20240817/RubiChess-20240817.zip": "https://github.com/Matthies/RubiChess/releases/download/20240817/RubiChess-20240817.zip",
+    "dragon-1/dragon.zip": "https://komodochess.com/pub/dragon.zip",
+    "komodo-14/komodo-14.zip": "https://komodochess.com/pub/komodo-14.zip",
+    "lc0-0.30.0/lc0-v0.30.0-windows-gpu-nvidia-cuda.zip": "https://db.encroissant.org/lc0-v0.30.0-windows-gpu-nvidia-cuda.zip"
+  },
+  "databases": {
+    "LumbrasGigaBase2025-06.db3": "https://db.encroissant.org/LumbrasGigaBase2025-06.db3",
+    "caissabase_2024.db3": "https://db.encroissant.org/caissabase_2024.db3",
+    "AJ-COR.db3": "https://db.encroissant.org/AJ-COR.db3",
+    "AJ-OTB.db3": "https://db.encroissant.org/AJ-OTB.db3",
+    "mb-3.db3": "https://db.encroissant.org/mb-3.db3"
+  },
+  "puzzles": {
+    "lichess-puzzles-2026.db3": "https://db.encroissant.org/Lichess Puzzles 2026.db3"
+  },
+  "docker": {
+    "opentts-en.tar.gz": "docker:synesthesiam/opentts:en"
+  }
+}

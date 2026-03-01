@@ -193,7 +193,7 @@ pub fn check_opentts_image() -> DepCheck {
                     ok: false,
                     label: "OpenTTS image not found".into(),
                     detail: "Image synesthesiam/opentts:en is not pulled".into(),
-                    fix_hint: "docker pull synesthesiam/opentts:en".into(),
+                    fix_hint: "Use the Setup Wizard to download the image".into(),
                 }
             } else {
                 DepCheck {
@@ -208,7 +208,7 @@ pub fn check_opentts_image() -> DepCheck {
             ok: false,
             label: "Could not check images".into(),
             detail: "Docker may not be running".into(),
-            fix_hint: "docker pull synesthesiam/opentts:en".into(),
+            fix_hint: "Use the Setup Wizard to download the image".into(),
         },
     }
 }
@@ -371,12 +371,33 @@ pub fn setup_kittentts_venv(app_handle: tauri::AppHandle) -> Result<String, Stri
         }
     }
 
+    // Find requirements.txt using same priority as other resources
+    let mut req_candidates: Vec<std::path::PathBuf> = Vec::new();
+    if let Ok(res_dir) = app_handle.path().resolve("scripts", tauri::path::BaseDirectory::Resource) {
+        req_candidates.push(res_dir.join("requirements.txt"));
+    }
+    #[cfg(target_os = "linux")]
+    req_candidates.push(std::path::PathBuf::from("/usr/lib/en-parlant/scripts/requirements.txt"));
+    req_candidates.push(std::path::PathBuf::from("scripts/requirements.txt"));
+
+    let requirements = req_candidates.iter()
+        .find(|p| p.exists())
+        .map(|p| p.to_string_lossy().to_string());
+
     // Install packages
     let pip = format!("{}/{}", venv_dir, VENV_PIP);
-    let install = Command::new(&pip)
-        .args(["install", "kittentts", "flask", "soundfile", "numpy"])
-        .output()
-        .map_err(|e| format!("Failed to run pip: {}", e))?;
+    let install = if let Some(req_path) = requirements {
+        Command::new(&pip)
+            .args(["install", "-r", &req_path])
+            .output()
+            .map_err(|e| format!("Failed to run pip: {}", e))?
+    } else {
+        // Fallback if requirements.txt not found
+        Command::new(&pip)
+            .args(["install", "kittentts", "flask", "soundfile", "numpy"])
+            .output()
+            .map_err(|e| format!("Failed to run pip: {}", e))?
+    };
 
     if install.status.success() {
         Ok("Packages installed successfully".to_string())
@@ -384,6 +405,26 @@ pub fn setup_kittentts_venv(app_handle: tauri::AppHandle) -> Result<String, Stri
         Err(format!(
             "pip install failed: {}",
             String::from_utf8_lossy(&install.stderr).trim()
+        ))
+    }
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn setup_opentts_load(tarball_path: String) -> Result<String, String> {
+    let load = Command::new("docker")
+        .args(["load", "-i", &tarball_path])
+        .output()
+        .map_err(|e| format!("Failed to run docker load: {}", e))?;
+
+    if load.status.success() {
+        // Clean up tarball after successful load
+        let _ = std::fs::remove_file(&tarball_path);
+        Ok("Image loaded successfully".to_string())
+    } else {
+        Err(format!(
+            "docker load failed: {}",
+            String::from_utf8_lossy(&load.stderr).trim()
         ))
     }
 }

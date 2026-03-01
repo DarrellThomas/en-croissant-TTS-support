@@ -67,6 +67,10 @@ pub async fn download_file(
 
     if url.ends_with(".zip") {
         unzip_file(path, file).await?;
+    } else if url.ends_with(".tar.gz") || url.ends_with(".tgz") {
+        let decoder = flate2::read::GzDecoder::new(Cursor::new(file));
+        let mut archive = tar::Archive::new(decoder);
+        archive.unpack(path)?;
     } else if url.ends_with(".tar") {
         let mut archive = tar::Archive::new(Cursor::new(file));
         archive.unpack(path)?;

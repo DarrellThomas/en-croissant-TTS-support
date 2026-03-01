@@ -125,7 +125,11 @@ setup_kittentts() {
     # Install packages
     info "Installing Python packages..."
     "$VENV_DIR/bin/pip" install --upgrade pip 2>&1 | tail -1
-    "$VENV_DIR/bin/pip" install kittentts flask soundfile numpy 2>&1 | tail -1
+    if [ -f "$SCRIPT_DIR/requirements.txt" ]; then
+        "$VENV_DIR/bin/pip" install -r "$SCRIPT_DIR/requirements.txt" 2>&1 | tail -1
+    else
+        "$VENV_DIR/bin/pip" install kittentts flask soundfile numpy 2>&1 | tail -1
+    fi
     ok "Packages installed"
 
     check_script
@@ -147,15 +151,25 @@ setup_opentts() {
         exit 1
     fi
 
-    # Pull image
+    # Download and load image from R2
     local image_id
     image_id=$(docker images -q synesthesiam/opentts:en 2>/dev/null || true)
     if [ -n "$image_id" ]; then
-        ok "OpenTTS image already pulled"
+        ok "OpenTTS image already loaded"
     else
-        info "Pulling OpenTTS image (~1.5 GB)..."
-        docker pull synesthesiam/opentts:en
-        ok "Image pulled"
+        local tarball="/tmp/opentts-en.tar.gz"
+        if [ -f "$tarball" ]; then
+            info "Using cached tarball at $tarball"
+        else
+            info "Downloading OpenTTS image (~1.5 GB) from enparlant.redshed.ai..."
+            curl -fSL --progress-bar -o "$tarball" \
+                "https://enparlant.redshed.ai/docker/opentts-en.tar.gz"
+            ok "Downloaded opentts-en.tar.gz"
+        fi
+        info "Loading image into Docker..."
+        docker load -i "$tarball"
+        rm -f "$tarball"
+        ok "Image loaded"
     fi
 
     echo -e "\n${GREEN}${BOLD}OpenTTS setup complete!${NC}"

@@ -15,10 +15,14 @@ import {
   IconAlertTriangle,
   IconCheck,
   IconCopy,
+  IconDownload,
   IconX,
 } from "@tabler/icons-react";
 import { invoke } from "@tauri-apps/api/core";
+import { appDataDir, join } from "@tauri-apps/api/path";
 import { useCallback, useEffect, useState } from "react";
+import { commands } from "@/bindings";
+import { useProgress } from "@/hooks/useProgress";
 
 interface DepCheck {
   ok: boolean;
@@ -272,11 +276,33 @@ function OpenTTSWizard({
 
   const allPassed = checks.docker?.ok && checks.running?.ok && checks.image?.ok;
 
-  const handlePullImage = async () => {
-    setLoading("pull");
+  const DOWNLOAD_ID = "opentts_image_download";
+  const { progress: dlProgress, isActive: dlActive } = useProgress(DOWNLOAD_ID);
+
+  const handleDownloadAndLoad = async () => {
+    setLoading("download");
     setSetupError(null);
     try {
-      await invoke("setup_opentts_pull");
+      const dataDir = await appDataDir();
+      const tarballPath = await join(dataDir, "opentts-en.tar.gz");
+
+      // Phase 1: Download tarball from R2 with progress tracking
+      const result = await commands.downloadFile(
+        DOWNLOAD_ID,
+        "https://enparlant.redshed.ai/docker/opentts-en.tar.gz",
+        tarballPath,
+        null,
+        false,
+        null,
+      );
+      if (result.status === "error") {
+        throw new Error(result.error);
+      }
+
+      // Phase 2: Load into Docker
+      setLoading("loading");
+      await invoke("setup_opentts_load", { tarballPath });
+
       await runChecks();
     } catch (e) {
       setSetupError(String(e));
@@ -316,7 +342,7 @@ function OpenTTSWizard({
 
         <Stepper.Step
           label="OpenTTS Image"
-          description={checks.image?.ok ? "Pulled" : "Not found"}
+          description={checks.image?.ok ? "Ready" : "Not found"}
           icon={stepIcon(checks.image)}
           color={stepColor(checks.image)}
         >
@@ -325,14 +351,29 @@ function OpenTTSWizard({
               <Stack gap="xs">
                 <Alert color="yellow" icon={<IconAlertTriangle size={16} />}>
                   The OpenTTS Docker image is ~1.5 GB. This may take a few
-                  minutes.
+                  minutes to download.
                 </Alert>
+                {loading === "download" && dlActive && (
+                  <Group gap="xs">
+                    <IconDownload size={16} />
+                    <Text size="sm">
+                      Downloading... {Math.round(dlProgress)}%
+                    </Text>
+                  </Group>
+                )}
+                {loading === "loading" && (
+                  <Group gap="xs">
+                    <Loader size="sm" />
+                    <Text size="sm">Loading image into Docker...</Text>
+                  </Group>
+                )}
                 <Button
                   size="sm"
-                  loading={loading === "pull"}
-                  onClick={handlePullImage}
+                  loading={loading === "download" || loading === "loading"}
+                  onClick={handleDownloadAndLoad}
+                  leftSection={<IconDownload size={16} />}
                 >
-                  Pull Image
+                  Download & Install Image
                 </Button>
                 {setupError && (
                   <Alert color="red" icon={<IconX size={16} />}>

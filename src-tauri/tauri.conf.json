@@ -38,6 +38,7 @@
       "../docs/": "docs/",
       "../scripts/kittentts-server.py": "scripts/kittentts-server.py",
       "../scripts/setup-tts.sh": "scripts/setup-tts.sh",
+      "../scripts/requirements.txt": "scripts/requirements.txt",
       "../scripts/.venv/": "scripts/.venv/",
       "../scripts/models/": "scripts/models/"
     },

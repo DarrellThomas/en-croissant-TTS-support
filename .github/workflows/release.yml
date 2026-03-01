@@ -79,7 +79,7 @@ jobs:
         if: matrix.platform == 'ubuntu-24.04' || contains(matrix.args, 'aarch64')
         run: |
           python3 -m venv scripts/.venv
-          scripts/.venv/bin/pip install --no-cache-dir kittentts flask soundfile numpy
+          scripts/.venv/bin/pip install --no-cache-dir -r scripts/requirements.txt
           scripts/.venv/bin/python -c "from kittentts import KittenTTS; KittenTTS()"
           mkdir -p scripts/models/hub
           cp -r ~/.cache/huggingface/hub/models--KittenML--kitten-tts-nano-0.1 scripts/models/hub/
@@ -89,7 +89,7 @@ jobs:
         if: matrix.platform == 'windows-latest'
         shell: pwsh
         run: |
-          pip install kittentts flask soundfile numpy pyinstaller
+          pip install -r scripts/requirements.txt pyinstaller
           python -c "from kittentts import KittenTTS; KittenTTS()"
           $modelDir = "$env:USERPROFILE\.cache\huggingface\hub\models--KittenML--kitten-tts-nano-0.1"
           pyinstaller --onefile --add-data "${modelDir};models/hub/models--KittenML--kitten-tts-nano-0.1" --name kittentts-server scripts/kittentts-server.py
