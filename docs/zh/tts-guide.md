@@ -1,13 +1,6 @@
-# 文字转语音朗读指南
+[English](../en/tts-guide.md) | [Français](../fr/tts-guide.md) | [Español](../es/tts-guide.md) | [Deutsch](../de/tts-guide.md) | [日本語](../ja/tts-guide.md) | [Русский](../ru/tts-guide.md) | **中文** | [한국어](../ko/tts-guide.md)
 
-*本指南还有以下语言版本：
-[English](tts-guide.md) |
-[Francais](tts-guide-fr.md) |
-[Espanol](tts-guide-es.md) |
-[Deutsch](tts-guide-de.md) |
-[日本語](tts-guide-ja.md) |
-[Русский](tts-guide-ru.md) |
-[한국어](tts-guide-ko.md)*
+# 文字转语音朗读指南
 
 ## 为什么TTS改变了你学习国际象棋的方式
 
@@ -39,7 +32,7 @@ En Parlant~配备了五个TTS提供商。你只需要一个就可以开始。
 
 需要互联网。最适合注重语音质量的用户。
 
-**[ElevenLabs设置指南](setup-elevenlabs.md)**（英文）
+**[ElevenLabs设置指南](../tts/setup-elevenlabs.md)**（英文）
 
 ### Google Cloud TTS
 
@@ -49,7 +42,7 @@ En Parlant~配备了五个TTS提供商。你只需要一个就可以开始。
 
 需要互联网。最适合大多数用户。
 
-**[Google Cloud设置指南](setup-google.md)**（英文）
+**[Google Cloud设置指南](../tts/setup-google.md)**（英文）
 
 ### KittenTTS
 
@@ -59,7 +52,7 @@ En Parlant~配备了五个TTS提供商。你只需要一个就可以开始。
 
 无需互联网。无需API密钥。最佳本地质量。
 
-**[KittenTTS设置指南](setup-kittentts.md)**（英文）
+**[KittenTTS设置指南](../tts/setup-kittentts.md)**（英文）
 
 ### System TTS
 
@@ -69,7 +62,7 @@ Linux上通常是eSpeak或speech-dispatcher；macOS是系统语音；Windows是S
 
 无需互联网。最适合快速测试。
 
-**[System TTS设置指南](setup-system.md)**（英文）
+**[System TTS设置指南](../tts/setup-system.md)**（英文）
 
 ### OpenTTS
 
@@ -79,7 +72,7 @@ Linux上通常是eSpeak或speech-dispatcher；macOS是系统语音；Windows是S
 
 无需互联网。无需API密钥。最适合注重隐私的用户。
 
-**[OpenTTS设置指南](setup-opentts.md)**（英文）
+**[OpenTTS设置指南](../tts/setup-opentts.md)**（英文）
 
 ### 我们的推荐
 
@@ -138,7 +131,7 @@ En Croissant是由[Francisco Salgueiro](https://github.com/franciscoBSalgueiro)�
 
 TTS插件由[Red Shed](https://redshed.ai)的Darrell在[Claude Code](https://www.anthropic.com/claude-code)的帮助下开发。五个提供商，多语言支持，八种语言的国际象棋术语翻译。
 
-我们使用AI来构建这个功能。[了解更多](../ai-note.md)。
+我们使用AI来构建这个功能。[了解更多](ai-note.md)。
 
 ## 联系我们
 

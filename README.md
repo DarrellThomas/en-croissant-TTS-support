@@ -10,7 +10,7 @@
     <br />
     <a href="docs/README.md">Documentation</a>
     ·
-    <a href="docs/tts/tts-guide.md">Full TTS Guide</a>
+    <a href="docs/en/tts-guide.md">Full TTS Guide</a>
     ·
     <a href="https://github.com/DarrellThomas/en-parlant/issues">Report a Bug</a>
   </p>
@@ -49,7 +49,7 @@ Everything in En Croissant, plus:
 
 > **Hardware note:** The local providers (KittenTTS and OpenTTS) run neural inference on your CPU. They need a modern multi-core processor (8+ cores recommended) to generate speech without noticeable lag.
 
-For a detailed comparison and full setup walkthroughs, see the [TTS Guide](docs/tts/tts-guide.md).
+For a detailed comparison and full setup walkthroughs, see the [TTS Guide](docs/en/tts-guide.md).
 
 ## Quick Start: KittenTTS (Local AI)
 

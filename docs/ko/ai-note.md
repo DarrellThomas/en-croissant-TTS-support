@@ -1,13 +1,6 @@
-# Darrell의 메시지
+[English](../en/ai-note.md) | [Français](../fr/ai-note.md) | [Español](../es/ai-note.md) | [Deutsch](../de/ai-note.md) | [日本語](../ja/ai-note.md) | [Русский](../ru/ai-note.md) | [中文](../zh/ai-note.md) | **한국어**
 
-*이 글은 다른 언어로도 읽을 수 있습니다:
-[English](ai-note.md) |
-[Francais](ai-note-fr.md) |
-[Espanol](ai-note-es.md) |
-[Deutsch](ai-note-de.md) |
-[日本語](ai-note-ja.md) |
-[Русский](ai-note-ru.md) |
-[中文](ai-note-zh.md)*
+# Darrell의 메시지
 
 En Parlant~는 Francisco Salgueiro가 만든 오픈소스 체스 학습 도구 [En Croissant](https://github.com/franciscoBSalgueiro/en-croissant)의 포크입니다. 이 포크는 텍스트 음성 변환 내레이션을 추가했습니다 — 5개 프로바이더, 8개 언어, 번역된 체스 용어 — 눈은 체스판에 둔 채로 주석을 들을 수 있도록. 이름은 프랑스어로 "말하면서"라는 뜻입니다. 이 크루아상은 대답하니까요.
 
@@ -69,7 +62,7 @@ AI가 생성한 코드가 수천 줄인데 인정은 제로인 저장소를 봐�
 
 ## 작업을 공개하세요
 
-"AI로 구축"이라고만 말하고 끝나는 프로젝트가 대부분입니다. 우리는 더 나아갔습니다. 저장소에는 실제 [Claude Code 워크플로우 문서](claude-workflow.md)가 포함되어 있습니다 — AI가 무엇을 알고 있는지, 무엇을 지시받는지, 세션이 어떻게 작동하는지, 인간이 어디에서 선을 긋는지. 매 세션을 이끄는 코딩 원칙도 저장소에 있으며, AI 시대에 어떤 고전적 규칙이 여전히 유효하고 어떤 것이 그렇지 않은지에 대한 솔직한 대화도 포함되어 있습니다.
+"AI로 구축"이라고만 말하고 끝나는 프로젝트가 대부분입니다. 우리는 더 나아갔습니다. 저장소에는 실제 [Claude Code 워크플로우 문서](../claude-workflow.md)가 포함되어 있습니다 — AI가 무엇을 알고 있는지, 무엇을 지시받는지, 세션이 어떻게 작동하는지, 인간이 어디에서 선을 긋는지. 매 세션을 이끄는 코딩 원칙도 저장소에 있으며, AI 시대에 어떤 고전적 규칙이 여전히 유효하고 어떤 것이 그렇지 않은지에 대한 솔직한 대화도 포함되어 있습니다.
 
 AI 기반 개발이 실제로 어떤 모습인지 궁금하다면 — 마케팅 버전이 아닌 진짜 조종석을 — 모든 것이 거기에 있습니다. 오픈소스는 열린 과정을 의미합니다.
 

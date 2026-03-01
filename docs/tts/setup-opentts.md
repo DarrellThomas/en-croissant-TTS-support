@@ -1,6 +1,6 @@
 # Setting Up OpenTTS
 
-*Back to the [TTS Guide](tts-guide.md)*
+*Back to the [TTS Guide](../en/tts-guide.md)*
 
 OpenTTS is an open-source TTS server that runs on your own computer using Docker. No account, no API key, no data leaving your machine. Setup takes about 2 minutes if you already have Docker installed.
 

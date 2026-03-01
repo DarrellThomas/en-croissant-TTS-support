@@ -1,13 +1,6 @@
-# A Note from Darrell
+**English** | [Français](../fr/ai-note.md) | [Español](../es/ai-note.md) | [Deutsch](../de/ai-note.md) | [日本語](../ja/ai-note.md) | [Русский](../ru/ai-note.md) | [中文](../zh/ai-note.md) | [한국어](../ko/ai-note.md)
 
-*This note is also available in:
-[Francais](ai-note-fr.md) |
-[Espanol](ai-note-es.md) |
-[Deutsch](ai-note-de.md) |
-[日本語](ai-note-ja.md) |
-[Русский](ai-note-ru.md) |
-[中文](ai-note-zh.md) |
-[한국어](ai-note-ko.md)*
+# A Note from Darrell
 
 En Parlant~ is a fork of [En Croissant](https://github.com/franciscoBSalgueiro/en-croissant), the open-source chess study tool by Francisco Salgueiro. This fork adds text-to-speech narration — five providers, eight languages, translated chess vocabulary — so you can hear annotations spoken aloud while your eyes stay on the board. The name means "while speaking" in French. Because this croissant talks back.
 
@@ -71,7 +64,7 @@ This project was built by a human and an AI working together. I'm proud of both 
 
 ## Show Your Work
 
-Most "built with AI" stops at the label. We went further. The repo includes the actual [Claude Code workflow document](claude-workflow.md) — what the AI knows, what it's told, how sessions work, where the human draws the line. The coding principles that guide every session are in the repo too, including an honest conversation about which classic rules still hold up in the AI era and which ones don't.
+Most "built with AI" stops at the label. We went further. The repo includes the actual [Claude Code workflow document](../claude-workflow.md) — what the AI knows, what it's told, how sessions work, where the human draws the line. The coding principles that guide every session are in the repo too, including an honest conversation about which classic rules still hold up in the AI era and which ones don't.
 
 If you're curious what AI-assisted development actually looks like — not the marketing version, the real cockpit — it's all there. Open source means open process.
 

@@ -1,13 +1,6 @@
-# Una nota de Darrell
+[English](../en/ai-note.md) | [Français](../fr/ai-note.md) | **Español** | [Deutsch](../de/ai-note.md) | [日本語](../ja/ai-note.md) | [Русский](../ru/ai-note.md) | [中文](../zh/ai-note.md) | [한국어](../ko/ai-note.md)
 
-*Esta nota tambien esta disponible en:
-[English](ai-note.md) |
-[Francais](ai-note-fr.md) |
-[Deutsch](ai-note-de.md) |
-[日本語](ai-note-ja.md) |
-[Русский](ai-note-ru.md) |
-[中文](ai-note-zh.md) |
-[한국어](ai-note-ko.md)*
+# Una nota de Darrell
 
 En Parlant~ es un fork de [En Croissant](https://github.com/franciscoBSalgueiro/en-croissant), la herramienta de estudio de ajedrez de codigo abierto de Francisco Salgueiro. Este fork agrega narracion text-to-speech — cinco proveedores, ocho idiomas, vocabulario de ajedrez traducido — para que puedas escuchar las anotaciones mientras tus ojos permanecen en el tablero. El nombre significa "hablando" en frances. Porque este croissant te responde.
 
@@ -69,7 +62,7 @@ Este proyecto fue construido por un humano y una IA trabajando juntos. Estoy org
 
 ## Muestra tu trabajo
 
-La mayoria de los proyectos "construidos con IA" se quedan en la etiqueta. Nosotros fuimos mas alla. El repositorio incluye el verdadero [documento de workflow de Claude Code](claude-workflow.md) — lo que la IA sabe, lo que se le dice, como funcionan las sesiones, donde el humano traza la linea. Los principios de programacion que guian cada sesion tambien estan en el repositorio, incluyendo una conversacion honesta sobre cuales reglas clasicas siguen vigentes en la era de la IA y cuales no.
+La mayoria de los proyectos "construidos con IA" se quedan en la etiqueta. Nosotros fuimos mas alla. El repositorio incluye el verdadero [documento de workflow de Claude Code](../claude-workflow.md) — lo que la IA sabe, lo que se le dice, como funcionan las sesiones, donde el humano traza la linea. Los principios de programacion que guian cada sesion tambien estan en el repositorio, incluyendo una conversacion honesta sobre cuales reglas clasicas siguen vigentes en la era de la IA y cuales no.
 
 Si tienes curiosidad por saber como se ve realmente el desarrollo asistido por IA — no la version de marketing, la cabina real — esta todo ahi. Codigo abierto significa proceso abierto.
 

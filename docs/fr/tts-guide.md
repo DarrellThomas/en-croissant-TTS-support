@@ -1,13 +1,6 @@
-# Guide de narration Text-to-Speech
+[English](../en/tts-guide.md) | **Français** | [Español](../es/tts-guide.md) | [Deutsch](../de/tts-guide.md) | [日本語](../ja/tts-guide.md) | [Русский](../ru/tts-guide.md) | [中文](../zh/tts-guide.md) | [한국어](../ko/tts-guide.md)
 
-*Ce guide est aussi disponible en :
-[English](tts-guide.md) |
-[Espanol](tts-guide-es.md) |
-[Deutsch](tts-guide-de.md) |
-[日本語](tts-guide-ja.md) |
-[Русский](tts-guide-ru.md) |
-[中文](tts-guide-zh.md) |
-[한국어](tts-guide-ko.md)*
+# Guide de narration Text-to-Speech
 
 ## Pourquoi le TTS change votre facon d'etudier les echecs
 
@@ -39,7 +32,7 @@ Le niveau gratuit offre 10 000 caracteres par mois (suffisant pour 2 a 5 parties
 
 Necessite internet. Ideal pour les amateurs de qualite vocale.
 
-**[Guide de configuration ElevenLabs](setup-elevenlabs.md)** *(en anglais)*
+**[Guide de configuration ElevenLabs](../tts/setup-elevenlabs.md)** *(en anglais)*
 
 ### Google Cloud TTS
 
@@ -49,7 +42,7 @@ La configuration prend environ 5 minutes : creez un compte Google Cloud, activez
 
 Necessite internet. Ideal pour la plupart des utilisateurs.
 
-**[Guide de configuration Google Cloud](setup-google.md)** *(en anglais)*
+**[Guide de configuration Google Cloud](../tts/setup-google.md)** *(en anglais)*
 
 ### KittenTTS
 
@@ -59,7 +52,7 @@ Le compromis est le materiel : KittenTTS utilise PyTorch pour l'inference CPU et
 
 Pas d'internet requis. Pas de cle API. Meilleure qualite locale.
 
-**[Guide de configuration KittenTTS](setup-kittentts.md)** *(en anglais)*
+**[Guide de configuration KittenTTS](../tts/setup-kittentts.md)** *(en anglais)*
 
 ### System TTS
 
@@ -69,7 +62,7 @@ Sur Linux c'est generalement eSpeak ou speech-dispatcher ; sur macOS c'est la vo
 
 Pas d'internet requis. Ideal pour un test rapide.
 
-**[Guide de configuration System TTS](setup-system.md)** *(en anglais)*
+**[Guide de configuration System TTS](../tts/setup-system.md)** *(en anglais)*
 
 ### OpenTTS
 
@@ -79,7 +72,7 @@ Le compromis est la qualite : ces moteurs sont plus anciens, donc le resultat es
 
 Pas d'internet requis. Pas de cle API. Ideal pour la confidentialite maximale.
 
-**[Guide de configuration OpenTTS](setup-opentts.md)** *(en anglais)*
+**[Guide de configuration OpenTTS](../tts/setup-opentts.md)** *(en anglais)*
 
 ### Notre recommandation
 
@@ -138,7 +131,7 @@ En Croissant est un outil d'etude d'echecs open-source cree par [Francisco Salgu
 
 Le plugin TTS a ete developpe par Darrell chez [Red Shed](https://redshed.ai), avec l'aide de [Claude Code](https://www.anthropic.com/claude-code). Cinq fournisseurs, support multi-langues, vocabulaire d'echecs traduit dans huit langues.
 
-Nous avons utilise l'IA pour construire ceci. [En savoir plus](../ai-note.md).
+Nous avons utilise l'IA pour construire ceci. [En savoir plus](ai-note.md).
 
 ## Nous contacter
 

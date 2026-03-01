@@ -18,7 +18,7 @@ En Parlant~ supports five TTS providers:
 
 > **Hardware note:** The local providers (KittenTTS and OpenTTS) run neural inference on your CPU. They need a modern multi-core processor (8+ cores recommended) to generate speech without noticeable lag. If your machine is older or low-power, use one of the cloud providers instead.
 
-See the [TTS Guide](tts-guide.md) for detailed setup instructions for each provider.
+See the [TTS Guide](../en/tts-guide.md) for detailed setup instructions for each provider.
 
 ## What It Does
 

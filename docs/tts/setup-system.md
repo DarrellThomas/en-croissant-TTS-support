@@ -1,6 +1,6 @@
 # Setting Up System TTS
 
-*Back to the [TTS Guide](tts-guide.md)*
+*Back to the [TTS Guide](../en/tts-guide.md)*
 
 System TTS uses your operating system's built-in speech synthesis. There is nothing to install — it works immediately.
 

@@ -1,13 +1,6 @@
-# Ein Wort von Darrell
+[English](../en/ai-note.md) | [Français](../fr/ai-note.md) | [Español](../es/ai-note.md) | **Deutsch** | [日本語](../ja/ai-note.md) | [Русский](../ru/ai-note.md) | [中文](../zh/ai-note.md) | [한국어](../ko/ai-note.md)
 
-*Diese Notiz ist auch verfugbar in:
-[English](ai-note.md) |
-[Francais](ai-note-fr.md) |
-[Espanol](ai-note-es.md) |
-[日本語](ai-note-ja.md) |
-[Русский](ai-note-ru.md) |
-[中文](ai-note-zh.md) |
-[한국어](ai-note-ko.md)*
+# Ein Wort von Darrell
 
 En Parlant~ ist ein Fork von [En Croissant](https://github.com/franciscoBSalgueiro/en-croissant), dem Open-Source-Schachstudientool von Francisco Salgueiro. Dieser Fork fugt Text-to-Speech-Narration hinzu — funf Anbieter, acht Sprachen, ubersetztes Schachvokabular — damit Sie Annotationen horen konnen, wahrend Ihre Augen auf dem Brett bleiben. Der Name bedeutet „beim Sprechen" auf Franzosisch. Weil dieses Croissant zuruckredet.
 
@@ -69,7 +62,7 @@ Dieses Projekt wurde von einem Menschen und einer KI gemeinsam gebaut. Ich bin s
 
 ## Zeigt eure Arbeit
 
-Die meisten Projekte, die „mit KI gebaut" wurden, horen beim Label auf. Wir sind weitergegangen. Das Repository enthalt das tatsachliche [Claude Code Workflow-Dokument](claude-workflow.md) — was die KI weiss, was ihr gesagt wird, wie Sitzungen ablaufen, wo der Mensch die Grenze zieht. Die Programmierprinzipien, die jede Sitzung leiten, sind ebenfalls im Repository, einschliesslich einer ehrlichen Diskussion daruber, welche klassischen Regeln im KI-Zeitalter noch gelten und welche nicht.
+Die meisten Projekte, die „mit KI gebaut" wurden, horen beim Label auf. Wir sind weitergegangen. Das Repository enthalt das tatsachliche [Claude Code Workflow-Dokument](../claude-workflow.md) — was die KI weiss, was ihr gesagt wird, wie Sitzungen ablaufen, wo der Mensch die Grenze zieht. Die Programmierprinzipien, die jede Sitzung leiten, sind ebenfalls im Repository, einschliesslich einer ehrlichen Diskussion daruber, welche klassischen Regeln im KI-Zeitalter noch gelten und welche nicht.
 
 Wenn ihr neugierig seid, wie KI-gestutztes Entwickeln wirklich aussieht — nicht die Marketing-Version, das echte Cockpit — es ist alles da. Open Source bedeutet offener Prozess.
 

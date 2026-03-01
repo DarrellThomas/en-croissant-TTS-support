@@ -31,7 +31,13 @@ import AboutModal from "@/components/About";
 import { DocViewer } from "@/components/DocViewer";
 import { SideBar } from "@/components/Sidebar";
 import TopBar from "@/components/TopBar";
-import { activeTabAtom, nativeBarAtom, tabsAtom } from "@/state/atoms";
+import {
+  activeTabAtom,
+  docLangAtom,
+  nativeBarAtom,
+  tabsAtom,
+  ttsLanguageAtom,
+} from "@/state/atoms";
 import { keyMapAtom } from "@/state/keybinds";
 import { openFile } from "@/utils/files";
 import { createTab } from "@/utils/tabs";
@@ -127,6 +133,8 @@ function RootLayout() {
 
   const [, setTabs] = useAtom(tabsAtom);
   const [, setActiveTab] = useAtom(activeTabAtom);
+  const [docLang, setDocLang] = useAtom(docLangAtom);
+  const [, setTtsLang] = useAtom(ttsLanguageAtom);
 
   const { t } = useTranslation();
 
@@ -321,75 +329,10 @@ function RootLayout() {
           {
             label: "Getting Started",
             id: "tts_getting_started",
-            submenu: [
-              {
-                label: "TTS Guide (English)",
-                id: "tts_guide_en",
-                action: () => {
-                  setDocTitle("TTS Guide (English)");
-                  setDocResource("docs/tts/tts-guide.md");
-                },
-              },
-              {
-                label: "TTS Guide (Fran\u00e7ais)",
-                id: "tts_guide_fr",
-                action: () => {
-                  setDocTitle("TTS Guide (Fran\u00e7ais)");
-                  setDocResource("docs/tts/tts-guide-fr.md");
-                },
-              },
-              {
-                label: "TTS Guide (Espa\u00f1ol)",
-                id: "tts_guide_es",
-                action: () => {
-                  setDocTitle("TTS Guide (Espa\u00f1ol)");
-                  setDocResource("docs/tts/tts-guide-es.md");
-                },
-              },
-              {
-                label: "TTS Guide (Deutsch)",
-                id: "tts_guide_de",
-                action: () => {
-                  setDocTitle("TTS Guide (Deutsch)");
-                  setDocResource("docs/tts/tts-guide-de.md");
-                },
-              },
-              {
-                label: "TTS\u30ac\u30a4\u30c9 (\u65e5\u672c\u8a9e)",
-                id: "tts_guide_ja",
-                action: () => {
-                  setDocTitle("TTS\u30ac\u30a4\u30c9 (\u65e5\u672c\u8a9e)");
-                  setDocResource("docs/tts/tts-guide-ja.md");
-                },
-              },
-              {
-                label:
-                  "\u0420\u0443\u043a\u043e\u0432\u043e\u0434\u0441\u0442\u0432\u043e TTS (\u0420\u0443\u0441\u0441\u043a\u0438\u0439)",
-                id: "tts_guide_ru",
-                action: () => {
-                  setDocTitle(
-                    "\u0420\u0443\u043a\u043e\u0432\u043e\u0434\u0441\u0442\u0432\u043e TTS (\u0420\u0443\u0441\u0441\u043a\u0438\u0439)",
-                  );
-                  setDocResource("docs/tts/tts-guide-ru.md");
-                },
-              },
-              {
-                label: "TTS\u6307\u5357 (\u4e2d\u6587)",
-                id: "tts_guide_zh",
-                action: () => {
-                  setDocTitle("TTS\u6307\u5357 (\u4e2d\u6587)");
-                  setDocResource("docs/tts/tts-guide-zh.md");
-                },
-              },
-              {
-                label: "TTS \uAC00\uC774\uB4DC (\uD55C\uAD6D\uC5B4)",
-                id: "tts_guide_ko",
-                action: () => {
-                  setDocTitle("TTS \uAC00\uC774\uB4DC (\uD55C\uAD6D\uC5B4)");
-                  setDocResource("docs/tts/tts-guide-ko.md");
-                },
-              },
-            ],
+            action: () => {
+              setDocTitle("Getting Started");
+              setDocResource(`docs/${docLang}/tts-guide.md`);
+            },
           },
           {
             label: "TTS Demo",
@@ -445,81 +388,6 @@ function RootLayout() {
               navigate({ to: "/settings", search: { tab: "sound" } });
             },
           },
-          { label: "divider", id: "tts_divider" },
-          {
-            label: "A Note from Darrell",
-            id: "tts_ai_note",
-            submenu: [
-              {
-                label: "English",
-                id: "ai_note_en",
-                action: () => {
-                  setDocTitle("A Note from Darrell");
-                  setDocResource("docs/ai-note.md");
-                },
-              },
-              {
-                label: "Fran\u00e7ais",
-                id: "ai_note_fr",
-                action: () => {
-                  setDocTitle("Un mot de Darrell");
-                  setDocResource("docs/ai-note-fr.md");
-                },
-              },
-              {
-                label: "Espa\u00f1ol",
-                id: "ai_note_es",
-                action: () => {
-                  setDocTitle("Una nota de Darrell");
-                  setDocResource("docs/ai-note-es.md");
-                },
-              },
-              {
-                label: "Deutsch",
-                id: "ai_note_de",
-                action: () => {
-                  setDocTitle("Ein Wort von Darrell");
-                  setDocResource("docs/ai-note-de.md");
-                },
-              },
-              {
-                label: "\u65e5\u672c\u8a9e",
-                id: "ai_note_ja",
-                action: () => {
-                  setDocTitle(
-                    "\u30c0\u30ec\u30eb\u304b\u3089\u306e\u30e1\u30c3\u30bb\u30fc\u30b8",
-                  );
-                  setDocResource("docs/ai-note-ja.md");
-                },
-              },
-              {
-                label: "\u0420\u0443\u0441\u0441\u043a\u0438\u0439",
-                id: "ai_note_ru",
-                action: () => {
-                  setDocTitle(
-                    "\u0417\u0430\u043c\u0435\u0442\u043a\u0430 \u043e\u0442 \u0414\u0430\u0440\u0440\u0435\u043b\u043b\u0430",
-                  );
-                  setDocResource("docs/ai-note-ru.md");
-                },
-              },
-              {
-                label: "\u4e2d\u6587",
-                id: "ai_note_zh",
-                action: () => {
-                  setDocTitle("\u6765\u81ea Darrell \u7684\u5bc4\u8bed");
-                  setDocResource("docs/ai-note-zh.md");
-                },
-              },
-              {
-                label: "\uD55C\uAD6D\uC5B4",
-                id: "ai_note_ko",
-                action: () => {
-                  setDocTitle("Darrell\uC758 \uBA54\uC2DC\uC9C0");
-                  setDocResource("docs/ai-note-ko.md");
-                },
-              },
-            ],
-          },
         ],
       },
       {
@@ -546,8 +414,161 @@ function RootLayout() {
             id: "architecture",
             action: () => {
               setDocTitle("Under the Hood");
-              setDocResource("docs/ARCHITECTURE.md");
+              setDocResource(`docs/${docLang}/architecture.md`);
             },
+          },
+          { label: "divider" },
+          {
+            label: "About AI",
+            id: "about_ai",
+            submenu: [
+              {
+                label: "A Note from Darrell",
+                id: "ai_note",
+                action: () => {
+                  setDocTitle("A Note from Darrell");
+                  setDocResource(`docs/${docLang}/ai-note.md`);
+                },
+              },
+              {
+                label: "AI Workflow",
+                id: "ai_workflow",
+                action: () => {
+                  setDocTitle("AI Workflow");
+                  setDocResource(`docs/${docLang}/ai-workflow.md`);
+                },
+              },
+            ],
+          },
+          { label: "divider" },
+          {
+            label: "Language / Langue",
+            id: "language_selector",
+            submenu: [
+              {
+                label: `${docLang === "en" ? "\u2713 " : ""}English`,
+                id: "lang_en",
+                action: () => {
+                  if (docLang === "en") return;
+                  ask("Switch to English?", {
+                    title: "Language / Langue",
+                  }).then((yes) => {
+                    if (yes) {
+                      setDocLang("en");
+                      setTtsLang("en");
+                    }
+                  });
+                },
+              },
+              {
+                label: `${docLang === "fr" ? "\u2713 " : ""}Fran\u00e7ais`,
+                id: "lang_fr",
+                action: () => {
+                  if (docLang === "fr") return;
+                  ask("Switch to Fran\u00e7ais (French)?", {
+                    title: "Language / Langue",
+                  }).then((yes) => {
+                    if (yes) {
+                      setDocLang("fr");
+                      setTtsLang("fr");
+                    }
+                  });
+                },
+              },
+              {
+                label: `${docLang === "es" ? "\u2713 " : ""}Espa\u00f1ol`,
+                id: "lang_es",
+                action: () => {
+                  if (docLang === "es") return;
+                  ask("Switch to Espa\u00f1ol (Spanish)?", {
+                    title: "Language / Langue",
+                  }).then((yes) => {
+                    if (yes) {
+                      setDocLang("es");
+                      setTtsLang("es");
+                    }
+                  });
+                },
+              },
+              {
+                label: `${docLang === "de" ? "\u2713 " : ""}Deutsch`,
+                id: "lang_de",
+                action: () => {
+                  if (docLang === "de") return;
+                  ask("Switch to Deutsch (German)?", {
+                    title: "Language / Langue",
+                  }).then((yes) => {
+                    if (yes) {
+                      setDocLang("de");
+                      setTtsLang("de");
+                    }
+                  });
+                },
+              },
+              {
+                label: `${docLang === "ja" ? "\u2713 " : ""}\u65e5\u672c\u8a9e`,
+                id: "lang_ja",
+                action: () => {
+                  if (docLang === "ja") return;
+                  ask("Switch to \u65e5\u672c\u8a9e (Japanese)?", {
+                    title: "Language / Langue",
+                  }).then((yes) => {
+                    if (yes) {
+                      setDocLang("ja");
+                      setTtsLang("ja");
+                    }
+                  });
+                },
+              },
+              {
+                label: `${docLang === "ru" ? "\u2713 " : ""}\u0420\u0443\u0441\u0441\u043a\u0438\u0439`,
+                id: "lang_ru",
+                action: () => {
+                  if (docLang === "ru") return;
+                  ask(
+                    "Switch to \u0420\u0443\u0441\u0441\u043a\u0438\u0439 (Russian)?",
+                    {
+                      title: "Language / Langue",
+                    },
+                  ).then((yes) => {
+                    if (yes) {
+                      setDocLang("ru");
+                      setTtsLang("ru");
+                    }
+                  });
+                },
+              },
+              {
+                label: `${docLang === "zh" ? "\u2713 " : ""}\u4e2d\u6587`,
+                id: "lang_zh",
+                action: () => {
+                  if (docLang === "zh") return;
+                  ask("Switch to \u4e2d\u6587 (Chinese)?", {
+                    title: "Language / Langue",
+                  }).then((yes) => {
+                    if (yes) {
+                      setDocLang("zh");
+                      setTtsLang("zh");
+                    }
+                  });
+                },
+              },
+              {
+                label: `${docLang === "ko" ? "\u2713 " : ""}\uD55C\uAD6D\uC5B4`,
+                id: "lang_ko",
+                action: () => {
+                  if (docLang === "ko") return;
+                  ask("Switch to \uD55C\uAD6D\uC5B4 (Korean)?", {
+                    title: "Language / Langue",
+                  }).then((yes) => {
+                    if (yes) {
+                      setDocLang("ko");
+                      setTtsLang("ko");
+                    }
+                  });
+                },
+              },
+            ],
           },
           { label: "divider" },
           {
@@ -582,7 +603,17 @@ function RootLayout() {
         ],
       },
     ],
-    [t, checkForUpdates, createNewTab, keyMap, openNewFile, openDemo],
+    [
+      t,
+      checkForUpdates,
+      createNewTab,
+      keyMap,
+      openNewFile,
+      openDemo,
+      docLang,
+      setDocLang,
+      setTtsLang,
+    ],
   );
 
   const { data: menu } = useSWRImmutable(["menu", menuActions], () =>

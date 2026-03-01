@@ -1,6 +1,6 @@
 # Setting Up ElevenLabs
 
-*Back to the [TTS Guide](tts-guide.md)*
+*Back to the [TTS Guide](../en/tts-guide.md)*
 
 ElevenLabs produces the highest quality voices available — expressive, human-like speech with real personality. Setup takes about 2 minutes.
 

@@ -1,3 +1,5 @@
+**English** | [Français](../fr/architecture.md) | [Español](../es/architecture.md) | [Deutsch](../de/architecture.md) | [日本語](../ja/architecture.md) | [Русский](../ru/architecture.md) | [中文](../zh/architecture.md) | [한국어](../ko/architecture.md)
+
 # En Parlant~ Architecture Primer
 
 **App Version:** v0.1.0 (fork: DarrellThomas/en-parlant)

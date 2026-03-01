@@ -1,13 +1,6 @@
-# Un mot de Darrell
+[English](../en/ai-note.md) | **Français** | [Español](../es/ai-note.md) | [Deutsch](../de/ai-note.md) | [日本語](../ja/ai-note.md) | [Русский](../ru/ai-note.md) | [中文](../zh/ai-note.md) | [한국어](../ko/ai-note.md)
 
-*Cette note est aussi disponible en :
-[English](ai-note.md) |
-[Espanol](ai-note-es.md) |
-[Deutsch](ai-note-de.md) |
-[日本語](ai-note-ja.md) |
-[Русский](ai-note-ru.md) |
-[中文](ai-note-zh.md) |
-[한국어](ai-note-ko.md)*
+# Un mot de Darrell
 
 En Parlant~ est un fork d'[En Croissant](https://github.com/franciscoBSalgueiro/en-croissant), l'outil d'etude d'echecs open-source de Francisco Salgueiro. Ce fork ajoute la narration text-to-speech — cinq fournisseurs, huit langues, vocabulaire d'echecs traduit — pour que vous puissiez entendre les annotations pendant que vos yeux restent sur l'echiquier. Le nom signifie « en parlant » en francais. Parce que ce croissant vous repond.
 
@@ -69,7 +62,7 @@ Ce projet a ete construit par un humain et une IA travaillant ensemble. Je suis 
 
 ## Montrez votre travail
 
-La plupart des projets « construits avec l'IA » s'arretent a l'etiquette. Nous sommes alles plus loin. Le depot inclut le veritable [document de workflow Claude Code](claude-workflow.md) — ce que l'IA sait, ce qu'on lui dit, comment les sessions fonctionnent, ou l'humain trace la ligne. Les principes de programmation qui guident chaque session sont aussi dans le depot, y compris une discussion honnete sur quelles regles classiques tiennent encore a l'ere de l'IA et lesquelles non.
+La plupart des projets « construits avec l'IA » s'arretent a l'etiquette. Nous sommes alles plus loin. Le depot inclut le veritable [document de workflow Claude Code](../claude-workflow.md) — ce que l'IA sait, ce qu'on lui dit, comment les sessions fonctionnent, ou l'humain trace la ligne. Les principes de programmation qui guident chaque session sont aussi dans le depot, y compris une discussion honnete sur quelles regles classiques tiennent encore a l'ere de l'IA et lesquelles non.
 
 Si vous etes curieux de savoir a quoi ressemble vraiment le developpement assiste par IA — pas la version marketing, le vrai cockpit — tout est la. Open source signifie processus ouvert.
 

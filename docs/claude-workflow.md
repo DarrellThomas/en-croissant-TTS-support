@@ -2,7 +2,7 @@
 
 *Back to the [Documentation Index](README.md)*
 
-The [AI note](ai-note.md) says we built this with Claude Code. This page shows you the actual cockpit.
+The [AI note](en/ai-note.md) says we built this with Claude Code. This page shows you the actual cockpit. For a deeper dive into what working with a coding AI looks like day-to-day — prompts, plan mode, context windows, skills — see the [AI Workflow](en/ai-workflow.md) document.
 
 Most "built with AI" claims stop at the label. Here's the full picture: what the AI knows, what it's told, how sessions work, and where the human draws the line. If you're building with AI yourself, or just curious what it actually looks like in practice, this is for you.
 

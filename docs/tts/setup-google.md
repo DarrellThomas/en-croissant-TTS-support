@@ -1,6 +1,6 @@
 # Setting Up Google Cloud TTS
 
-*Back to the [TTS Guide](tts-guide.md)*
+*Back to the [TTS Guide](../en/tts-guide.md)*
 
 Google Cloud TTS uses WaveNet neural networks to generate natural-sounding speech. The free tier is very generous — one million characters per month. This walkthrough takes about 5 minutes.
 

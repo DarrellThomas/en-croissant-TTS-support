@@ -1,13 +1,6 @@
-# 텍스트 음성 변환 내레이션 가이드
+[English](../en/tts-guide.md) | [Français](../fr/tts-guide.md) | [Español](../es/tts-guide.md) | [Deutsch](../de/tts-guide.md) | [日本語](../ja/tts-guide.md) | [Русский](../ru/tts-guide.md) | [中文](../zh/tts-guide.md) | **한국어**
 
-*이 가이드는 다른 언어로도 제공됩니다:
-[English](tts-guide.md) |
-[Francais](tts-guide-fr.md) |
-[Espanol](tts-guide-es.md) |
-[Deutsch](tts-guide-de.md) |
-[日本語](tts-guide-ja.md) |
-[Русский](tts-guide-ru.md) |
-[中文](tts-guide-zh.md)*
+# 텍스트 음성 변환 내레이션 가이드
 
 ## TTS가 체스 학습을 바꾸는 이유
 
@@ -39,7 +32,7 @@ En Parlant~에는 다섯 가지 TTS 프로바이더가 탑재되어 있습니다
 
 인터넷 필요. 음성 품질을 중시하는 분에게 최적.
 
-**[ElevenLabs 설정 가이드](setup-elevenlabs.md)** *(영어)*
+**[ElevenLabs 설정 가이드](../tts/setup-elevenlabs.md)** *(영어)*
 
 ### Google Cloud TTS
 
@@ -49,7 +42,7 @@ En Parlant~에는 다섯 가지 TTS 프로바이더가 탑재되어 있습니다
 
 인터넷 필요. 대부분의 사용자에게 최적.
 
-**[Google Cloud 설정 가이드](setup-google.md)** *(영어)*
+**[Google Cloud 설정 가이드](../tts/setup-google.md)** *(영어)*
 
 ### KittenTTS
 
@@ -59,7 +52,7 @@ En Parlant~에는 다섯 가지 TTS 프로바이더가 탑재되어 있습니다
 
 인터넷 불필요. API 키 불필요. 최고의 로컬 품질.
 
-**[KittenTTS 설정 가이드](setup-kittentts.md)** *(영어)*
+**[KittenTTS 설정 가이드](../tts/setup-kittentts.md)** *(영어)*
 
 ### System TTS
 
@@ -69,7 +62,7 @@ Linux에서는 eSpeak 또는 speech-dispatcher, macOS에서는 시스템 음성,
 
 인터넷 불필요. 빠른 테스트에 최적.
 
-**[System TTS 설정 가이드](setup-system.md)** *(영어)*
+**[System TTS 설정 가이드](../tts/setup-system.md)** *(영어)*
 
 ### OpenTTS
 
@@ -79,7 +72,7 @@ Docker를 통해 로컬에서 실행되는 오픈소스 TTS 서버. 데이터가
 
 인터넷 불필요. API 키 불필요. 최대 프라이버시에 최적.
 
-**[OpenTTS 설정 가이드](setup-opentts.md)** *(영어)*
+**[OpenTTS 설정 가이드](../tts/setup-opentts.md)** *(영어)*
 
 ### 추천
 
@@ -138,7 +131,7 @@ En Croissant는 [Francisco Salgueiro](https://github.com/franciscoBSalgueiro)가
 
 TTS 플러그인은 [Red Shed](https://redshed.ai)의 Darrell이 [Claude Code](https://www.anthropic.com/claude-code)의 도움을 받아 개발했습니다. 5개 프로바이더, 다국어 지원, 8개 언어 체스 용어 번역.
 
-우리는 AI를 사용하여 이것을 만들었습니다. [자세히 보기](../ai-note.md).
+우리는 AI를 사용하여 이것을 만들었습니다. [자세히 보기](ai-note.md).
 
 ## 문의
 

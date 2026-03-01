@@ -28,16 +28,12 @@ En Parlant~ is an open-source, cross-platform chess GUI that aims to be powerful
 ### Reference
 - [Database Format](reference/database-format.md)
 
+### Architecture
+- [Under the Hood](en/architecture.md) — available in 8 languages via the in-app language selector
+
 ### TTS (Text-to-Speech)
 - [TTS Overview](tts/tts-readme.md)
-- [TTS Setup Guide (English)](tts/tts-guide.md)
-- [Guide TTS (Francais)](tts/tts-guide-fr.md)
-- [Guia TTS (Espanol)](tts/tts-guide-es.md)
-- [TTS-Anleitung (Deutsch)](tts/tts-guide-de.md)
-- [TTSガイド (日本語)](tts/tts-guide-ja.md)
-- [Руководство TTS (Русский)](tts/tts-guide-ru.md)
-- [TTS指南 (中文)](tts/tts-guide-zh.md)
-- [TTS 가이드 (한국어)](tts/tts-guide-ko.md)
+- [TTS Setup Guide](en/tts-guide.md) — available in 8 languages via the in-app language selector
 
 ### TTS Provider Setup Guides
 - [ElevenLabs Setup](tts/setup-elevenlabs.md)
@@ -46,18 +42,10 @@ En Parlant~ is an open-source, cross-platform chess GUI that aims to be powerful
 - [System TTS Setup](tts/setup-system.md)
 - [OpenTTS Setup](tts/setup-opentts.md)
 
-### How We Build
-- [Claude Code Workflow](claude-workflow.md)
-
-### A Note from Darrell
-- [English](ai-note.md)
-- [Francais](ai-note-fr.md)
-- [Espanol](ai-note-es.md)
-- [Deutsch](ai-note-de.md)
-- [日本語](ai-note-ja.md)
-- [Русский](ai-note-ru.md)
-- [中文](ai-note-zh.md)
-- [한국어](ai-note-ko.md)
+### About AI
+- [A Note from Darrell](en/ai-note.md) — why this project exists and what AI-assisted development means
+- [AI Workflow](en/ai-workflow.md) — deep-dive into what working with a coding AI actually looks like
+- [Claude Code Workflow](claude-workflow.md) — the technical cockpit: what the AI knows, how sessions work
 
 ## Attribution
 

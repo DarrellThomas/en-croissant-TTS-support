@@ -1,6 +1,6 @@
 # Setting Up KittenTTS
 
-*Back to the [TTS Guide](tts-guide.md)*
+*Back to the [TTS Guide](../en/tts-guide.md)*
 
 KittenTTS runs a neural TTS model directly on your machine. No cloud, no API keys, no data leaving your computer — and the voice quality is genuinely good. Setup takes about 5 minutes. **English only for now.**
 

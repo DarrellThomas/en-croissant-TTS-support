@@ -1,13 +1,6 @@
-# 来自Darrell的寄语
+[English](../en/ai-note.md) | [Français](../fr/ai-note.md) | [Español](../es/ai-note.md) | [Deutsch](../de/ai-note.md) | [日本語](../ja/ai-note.md) | [Русский](../ru/ai-note.md) | **中文** | [한국어](../ko/ai-note.md)
 
-*本文还有以下语言版本：
-[English](ai-note.md) |
-[Francais](ai-note-fr.md) |
-[Espanol](ai-note-es.md) |
-[Deutsch](ai-note-de.md) |
-[日本語](ai-note-ja.md) |
-[Русский](ai-note-ru.md) |
-[한국어](ai-note-ko.md)*
+# 来自Darrell的寄语
 
 En Parlant~是[En Croissant](https://github.com/franciscoBSalgueiro/en-croissant)的分支，后者是Francisco Salgueiro开发的开源国际象棋学习工具。这个分支添加了文字转语音朗读功能——五个提供商、八种语言、翻译的国际象棋术语——让你在眼睛盯着棋盘的同时听到注释。名字在法语中意为"说话时"。因为这个可颂会说话。
 
@@ -69,7 +62,7 @@ Francisco Salgueiro经过多年深思熟虑的架构构建了En Croissant。深�
 
 ## 展示你的工作
 
-大多数"用AI构建"的项目止步于标签。我们走得更远。仓库包含了真实的[Claude Code工作流程文档](claude-workflow.md) — AI知道什么、被告知什么、会话如何运作、人类在哪里划定界限。指导每次会话的编程原则也在仓库中，包括一场关于哪些经典规则在AI时代仍然适用、哪些不再适用的坦诚讨论。
+大多数"用AI构建"的项目止步于标签。我们走得更远。仓库包含了真实的[Claude Code工作流程文档](../claude-workflow.md) — AI知道什么、被告知什么、会话如何运作、人类在哪里划定界限。指导每次会话的编程原则也在仓库中，包括一场关于哪些经典规则在AI时代仍然适用、哪些不再适用的坦诚讨论。
 
 如果你好奇AI辅助开发实际上是什么样子 — 不是营销版本，而是真正的驾驶舱 — 一切都在那里。开源意味着开放的过程。
 

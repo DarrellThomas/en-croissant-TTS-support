@@ -374,6 +374,14 @@ export const ttsKittenTTSThreadsAtom = atomWithStorage<number>(
   { getOnInit: true },
 );
 
+// Document display language — synced with TTS language via the Language menu
+export const docLangAtom = atomWithStorage<string>(
+  "doc-language",
+  "en",
+  undefined,
+  { getOnInit: true },
+);
+
 export const pieceSetAtom = atomWithStorage<string>("piece-set", "staunty");
 export const boardImageAtom = atomWithStorage<string>(
   "board-image",

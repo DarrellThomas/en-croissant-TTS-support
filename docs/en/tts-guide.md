@@ -1,13 +1,6 @@
-# Text-to-Speech Narration Guide
+**English** | [Français](../fr/tts-guide.md) | [Español](../es/tts-guide.md) | [Deutsch](../de/tts-guide.md) | [日本語](../ja/tts-guide.md) | [Русский](../ru/tts-guide.md) | [中文](../zh/tts-guide.md) | [한국어](../ko/tts-guide.md)
 
-*This guide is also available in:
-[Francais](tts-guide-fr.md) |
-[Espanol](tts-guide-es.md) |
-[Deutsch](tts-guide-de.md) |
-[日本語](tts-guide-ja.md) |
-[Русский](tts-guide-ru.md) |
-[中文](tts-guide-zh.md) |
-[한국어](tts-guide-ko.md)*
+# Text-to-Speech Narration Guide
 
 ## Why TTS Changes How You Study Chess
 
@@ -39,7 +32,7 @@ The free tier gives you 10,000 characters per month (enough for 2-5 annotated ga
 
 Requires internet. Best for voice quality enthusiasts.
 
-**[ElevenLabs Setup Guide](setup-elevenlabs.md)**
+**[ElevenLabs Setup Guide](../tts/setup-elevenlabs.md)**
 
 ### Google Cloud TTS
 
@@ -49,7 +42,7 @@ Setup takes about 5 minutes: create a Google Cloud account, enable the Text-to-S
 
 Requires internet. Best for most users.
 
-**[Google Cloud Setup Guide](setup-google.md)**
+**[Google Cloud Setup Guide](../tts/setup-google.md)**
 
 ### KittenTTS
 
@@ -61,7 +54,7 @@ The first time each annotation is spoken there's a brief generation delay (1-2 s
 
 No internet required. No API keys. Best local quality.
 
-**[KittenTTS Setup Guide](setup-kittentts.md)**
+**[KittenTTS Setup Guide](../tts/setup-kittentts.md)**
 
 ### System TTS
 
@@ -71,7 +64,7 @@ On Linux this is typically eSpeak or speech-dispatcher; on macOS it's the system
 
 No internet required. Best for quick testing.
 
-**[System TTS Setup Guide](setup-system.md)**
+**[System TTS Setup Guide](../tts/setup-system.md)**
 
 ### OpenTTS
 
@@ -81,7 +74,7 @@ The trade-off is voice quality: these are older neural and rule-based engines, s
 
 No internet required. No API keys. Best for maximum privacy with many voice options.
 
-**[OpenTTS Setup Guide](setup-opentts.md)**
+**[OpenTTS Setup Guide](../tts/setup-opentts.md)**
 
 ### Our Recommendation
 
@@ -140,7 +133,7 @@ En Croissant is an open-source chess study tool created by [Francisco Salgueiro]
 
 The TTS plugin was developed by Darrell at [Red Shed](https://redshed.ai), with the help of [Claude Code](https://www.anthropic.com/claude-code). Five providers, multi-language support, translated chess vocabulary across eight languages, local AI inference, dependency management — built from source, tested by hand, and contributed with care.
 
-We used AI to help build this. [Read about that here](../ai-note.md).
+We used AI to help build this. [Read about that here](ai-note.md).
 
 That's the beauty of open source. Someone builds something great. Someone else adds to it. Everyone benefits.
 

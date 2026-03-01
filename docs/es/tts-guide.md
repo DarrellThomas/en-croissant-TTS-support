@@ -1,13 +1,6 @@
-# Guia de narracion Text-to-Speech
+[English](../en/tts-guide.md) | [Français](../fr/tts-guide.md) | **Español** | [Deutsch](../de/tts-guide.md) | [日本語](../ja/tts-guide.md) | [Русский](../ru/tts-guide.md) | [中文](../zh/tts-guide.md) | [한국어](../ko/tts-guide.md)
 
-*Esta guia tambien esta disponible en:
-[English](tts-guide.md) |
-[Francais](tts-guide-fr.md) |
-[Deutsch](tts-guide-de.md) |
-[日本語](tts-guide-ja.md) |
-[Русский](tts-guide-ru.md) |
-[中文](tts-guide-zh.md) |
-[한국어](tts-guide-ko.md)*
+# Guia de narracion Text-to-Speech
 
 ## Por que el TTS cambia tu forma de estudiar ajedrez
 
@@ -39,7 +32,7 @@ El nivel gratuito ofrece 10.000 caracteres al mes (suficiente para 2-5 partidas 
 
 Requiere internet. Ideal para entusiastas de la calidad vocal.
 
-**[Guia de configuracion de ElevenLabs](setup-elevenlabs.md)** *(en ingles)*
+**[Guia de configuracion de ElevenLabs](../tts/setup-elevenlabs.md)** *(en ingles)*
 
 ### Google Cloud TTS
 
@@ -49,7 +42,7 @@ La configuracion tarda unos 5 minutos: crea una cuenta de Google Cloud, habilita
 
 Requiere internet. Ideal para la mayoria de usuarios.
 
-**[Guia de configuracion de Google Cloud](setup-google.md)** *(en ingles)*
+**[Guia de configuracion de Google Cloud](../tts/setup-google.md)** *(en ingles)*
 
 ### KittenTTS
 
@@ -59,7 +52,7 @@ La desventaja es el hardware: KittenTTS usa PyTorch para inferencia en CPU y nec
 
 No requiere internet. Sin clave API. Mejor calidad local.
 
-**[Guia de configuracion de KittenTTS](setup-kittentts.md)** *(en ingles)*
+**[Guia de configuracion de KittenTTS](../tts/setup-kittentts.md)** *(en ingles)*
 
 ### System TTS
 
@@ -69,7 +62,7 @@ En Linux es tipicamente eSpeak o speech-dispatcher; en macOS es la voz del siste
 
 No requiere internet. Ideal para pruebas rapidas.
 
-**[Guia de configuracion de System TTS](setup-system.md)** *(en ingles)*
+**[Guia de configuracion de System TTS](../tts/setup-system.md)** *(en ingles)*
 
 ### OpenTTS
 
@@ -79,7 +72,7 @@ La desventaja es la calidad: estos motores son mas antiguos, asi que el resultad
 
 No requiere internet. Sin clave API. Ideal para maxima privacidad.
 
-**[Guia de configuracion de OpenTTS](setup-opentts.md)** *(en ingles)*
+**[Guia de configuracion de OpenTTS](../tts/setup-opentts.md)** *(en ingles)*
 
 ### Nuestra recomendacion
 
@@ -138,7 +131,7 @@ En Croissant es una herramienta de estudio de ajedrez de codigo abierto creada p
 
 El plugin TTS fue desarrollado por Darrell en [Red Shed](https://redshed.ai), con la ayuda de [Claude Code](https://www.anthropic.com/claude-code). Cinco proveedores, soporte multi-idioma, vocabulario de ajedrez traducido en ocho idiomas.
 
-Usamos IA para construir esto. [Lee mas aqui](../ai-note.md).
+Usamos IA para construir esto. [Lee mas aqui](ai-note.md).
 
 ## Contacto
 

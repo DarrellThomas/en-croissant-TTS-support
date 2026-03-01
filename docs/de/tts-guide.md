@@ -1,13 +1,6 @@
-# Text-to-Speech Narrations-Anleitung
+[English](../en/tts-guide.md) | [Français](../fr/tts-guide.md) | [Español](../es/tts-guide.md) | **Deutsch** | [日本語](../ja/tts-guide.md) | [Русский](../ru/tts-guide.md) | [中文](../zh/tts-guide.md) | [한국어](../ko/tts-guide.md)
 
-*Diese Anleitung ist auch verfugbar in:
-[English](tts-guide.md) |
-[Francais](tts-guide-fr.md) |
-[Espanol](tts-guide-es.md) |
-[日本語](tts-guide-ja.md) |
-[Русский](tts-guide-ru.md) |
-[中文](tts-guide-zh.md) |
-[한국어](tts-guide-ko.md)*
+# Text-to-Speech Narrations-Anleitung
 
 ## Warum TTS Ihr Schachstudium verandert
 
@@ -39,7 +32,7 @@ Das kostenlose Kontingent bietet 10.000 Zeichen pro Monat (ausreichend fur 2-5 k
 
 Erfordert Internet. Ideal fur Sprachqualitats-Enthusiasten.
 
-**[ElevenLabs Einrichtungsanleitung](setup-elevenlabs.md)** *(auf Englisch)*
+**[ElevenLabs Einrichtungsanleitung](../tts/setup-elevenlabs.md)** *(auf Englisch)*
 
 ### Google Cloud TTS
 
@@ -49,7 +42,7 @@ Die Einrichtung dauert etwa 5 Minuten. Keine Kosten, es sei denn, Sie uberschrei
 
 Erfordert Internet. Ideal fur die meisten Benutzer.
 
-**[Google Cloud Einrichtungsanleitung](setup-google.md)** *(auf Englisch)*
+**[Google Cloud Einrichtungsanleitung](../tts/setup-google.md)** *(auf Englisch)*
 
 ### KittenTTS
 
@@ -59,7 +52,7 @@ Der Kompromiss ist die Hardware: KittenTTS verwendet PyTorch fur CPU-Inferenz un
 
 Kein Internet erforderlich. Kein API-Schlussel. Beste lokale Qualitat.
 
-**[KittenTTS Einrichtungsanleitung](setup-kittentts.md)** *(auf Englisch)*
+**[KittenTTS Einrichtungsanleitung](../tts/setup-kittentts.md)** *(auf Englisch)*
 
 ### System TTS
 
@@ -69,7 +62,7 @@ Unter Linux typischerweise eSpeak oder speech-dispatcher; unter macOS die System
 
 Kein Internet erforderlich. Ideal fur schnelle Tests.
 
-**[System TTS Einrichtungsanleitung](setup-system.md)** *(auf Englisch)*
+**[System TTS Einrichtungsanleitung](../tts/setup-system.md)** *(auf Englisch)*
 
 ### OpenTTS
 
@@ -79,7 +72,7 @@ Der Kompromiss ist die Qualitat: altere Engines, daher roboterhafter als ElevenL
 
 Kein Internet erforderlich. Kein API-Schlussel. Ideal fur maximale Privatsphare.
 
-**[OpenTTS Einrichtungsanleitung](setup-opentts.md)** *(auf Englisch)*
+**[OpenTTS Einrichtungsanleitung](../tts/setup-opentts.md)** *(auf Englisch)*
 
 ### Unsere Empfehlung
 
@@ -138,7 +131,7 @@ En Croissant ist ein Open-Source-Schachstudientool von [Francisco Salgueiro](htt
 
 Das TTS-Plugin wurde von Darrell bei [Red Shed](https://redshed.ai) entwickelt, mit Hilfe von [Claude Code](https://www.anthropic.com/claude-code). Funf Anbieter, Mehrsprachen-Unterstutzung, ubersetztes Schachvokabular in acht Sprachen.
 
-Wir haben KI benutzt, um dies zu bauen. [Mehr erfahren](../ai-note.md).
+Wir haben KI benutzt, um dies zu bauen. [Mehr erfahren](ai-note.md).
 
 ## Kontakt
 
