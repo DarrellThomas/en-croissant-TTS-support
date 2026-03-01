@@ -44,6 +44,7 @@ jobs:
             gir1.2-webkit2-4.1=2.44.0-2 \
             libappindicator3-dev \
             librsvg2-dev \
+            libspeechd-dev \
             patchelf
 
       - name: Rust setup
@@ -98,6 +99,10 @@ jobs:
           $modelDir = "$env:USERPROFILE\.cache\huggingface\hub\models--KittenML--kitten-tts-nano-0.1"
           pyinstaller --onefile --add-data "${modelDir};models/hub/models--KittenML--kitten-tts-nano-0.1" --name kittentts-server scripts/kittentts-server.py
           Copy-Item dist/kittentts-server.exe scripts/kittentts-server.exe
+
+      - name: Ensure resource stub dirs exist
+        shell: bash
+        run: mkdir -p scripts/.venv scripts/models
 
       - name: Build the app
         uses: tauri-apps/tauri-action@v0
