@@ -43,6 +43,25 @@ if [ -d "scripts/.venv" ]; then
   cp -r scripts/.venv "$RES_DIR/scripts/.venv"
 fi
 
+# Icons (install into hicolor theme so desktop environments pick them up)
+for size in 32 128 256; do
+  dest="/usr/share/icons/hicolor/${size}x${size}/apps"
+  mkdir -p "$dest"
+  rm -f "$dest/en-croissant.png"
+  if [ "$size" = "256" ]; then
+    cp "src-tauri/icons/128x128@2x.png" "$dest/en-parlant.png"
+  elif [ "$size" = "128" ]; then
+    cp "src-tauri/icons/128x128.png" "$dest/en-parlant.png"
+  elif [ "$size" = "32" ]; then
+    cp "src-tauri/icons/32x32.png" "$dest/en-parlant.png"
+  fi
+done
+# Also install a scalable-size icon
+mkdir -p /usr/share/icons/hicolor/512x512/apps
+cp "src-tauri/icons/icon.png" /usr/share/icons/hicolor/512x512/apps/en-parlant.png
+# Update icon cache
+gtk-update-icon-cache /usr/share/icons/hicolor/ 2>/dev/null || true
+
 # Desktop entry (remove old, install new)
 rm -f /usr/share/applications/en-croissant-TTS.desktop
 cat > /usr/share/applications/en-parlant.desktop <<'EOF'
@@ -50,6 +69,7 @@ cat > /usr/share/applications/en-parlant.desktop <<'EOF'
 Type=Application
 Name=En Parlant~
 Exec=en-parlant %f
+Icon=en-parlant
 Comment=Chess Database with TTS
 Categories=Game;BoardGame;
 Terminal=false

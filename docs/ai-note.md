@@ -1,0 +1,79 @@
+# A Note from the Fork Maintainer
+
+## Deep Blue, and Everything After
+
+May 11, 1997. Deep Blue beats Kasparov. Game six. The coverage read like an obituary for the human brain. End of an era, all that. Kasparov stormed off, convinced IBM cheated.
+
+But Kasparov didn't quit chess. That part always gets left out. He kept playing. Got better. Studied what the machine did and absorbed it. Then he came up with something nobody expected: Advanced Chess. Humans and computers playing together, as a team. Turns out a strong human paired with a machine could beat the machine alone. The human brought the intuition. The machine brought the grunt work. Together they were something new.
+
+He called it the centaur model. Nearly thirty years later I'm sitting in a pine cabin in East Texas building a chess app with an AI that never gets tired of reading Rust error messages, and I think Kasparov nailed it.
+
+## Built with Claude Code
+
+This fork of En Croissant was built with [Claude Code](https://claude.ai/claude-code), Anthropic's AI coding assistant. Every Rust command, every React component, every bash script in the TTS system. Pair-programmed, human and AI. I'm not going to pretend otherwise.
+
+This is not AI slop. This is co-development. And there's a real difference.
+
+AI slop is typing "make me a chess app" and shipping whatever comes back. Co-development is a human with decades of engineering experience and strong opinions about architecture sitting down with an AI and arguing about error handling. The human says "no, that's wrong, here's why." The AI says "fair, but what about this edge case." The human brings the vision. The AI brings the velocity. Neither builds this thing alone.
+
+## Standing on Francisco's Shoulders
+
+Francisco Salgueiro built En Croissant over years of thoughtful architecture. Late nights debugging Tauri quirks. Careful UI work with Mantine. A PGN parser that actually works. Engine integration, database management, puzzle support. All of it. He built something he cared about and it shows.
+
+I asked him about integrating text-to-speech. Premium voices, multiple providers, narration that makes studying games feel like listening to a broadcast. That wasn't his style, and I respect that. Fair enough. That's how open source works. I get to take his work and build in a different direction. But I owe him the honesty of saying it straight: without En Croissant, En Parlant~ doesn't exist. Period.
+
+What Francisco accomplished through years of dedicated craftsmanship, I accomplished in a weekend with a six-pack of beer and an AI that never gets tired.
+
+That's not a brag. That's just where we are now.
+
+And I don't know what to do with that, honestly. What does craftsmanship mean when the craft gets accelerated by 10x? What does expertise mean when a machine can pattern-match through problems that took humans years? I don't have neat answers for any of it. But I'd rather sit with the discomfort than pretend it's not there.
+
+## The State of Things
+
+The chess community gets a better product because tools like this exist. The gap between "I wish this app could narrate moves" and "it narrates moves in eight languages with five TTS providers" went from months to days. The gap between "dependencies silently fail" and "a setup wizard walks you through it" went from a weekend to an afternoon.
+
+This is happening everywhere. Every domain. Every craft. Software that took teams now takes one person. Features that took sprints now take sessions.
+
+Some of that is great. A solo dev with a good idea can compete with a funded team now. Open-source projects iterate faster than ever. Tools get better, users benefit.
+
+Some of it is genuinely unsettling. When the cost of building drops toward zero, what happens to the people who made a living in that cost? When everyone can ship this fast, what separates good software from bad? I think the answer is taste, judgment, and giving a damn. Those are still human. But I'm not going to sit here and tell you the transition is painless.
+
+## Why Chess
+
+Chess is a refuge. The one place where I have to think for myself. No autocomplete. No suggestions. Just 64 squares and 32 pieces and whatever my brain can do with them.
+
+The board doesn't care about my tooling. Doesn't care about my GPU or my inference speed. It just asks: can you see what's happening here? That's it. Pattern recognition and calculation under pressure. No shortcuts.
+
+Chess is where I go to remember what it feels like to use my own mind.
+
+Use the machines where they make you stronger. Let them handle the parts that don't require your soul. But keep something where the thinking is entirely yours. One practice. One discipline. One set of 64 squares where you can't delegate, can't prompt your way to the answer.
+
+## A Note on Honesty
+
+I've seen repos with thousands of lines of AI-generated code and zero acknowledgment. People passing off Claude's output as their own in interviews, in client work, in open-source contributions. I get it. There's a stigma. People hear "AI-assisted" and think lesser.
+
+Here's the thing though. I'm an airline captain. Thirty-five years in the seat. My cockpit is stuffed with automation. Autopilot, auto-throttle, fly-by-wire, GPS, synthetic vision. Nobody has ever asked me if I'm "really" flying the airplane. The tools don't diminish the skill. They change what the skill is. Judgment, situational awareness, decision-making when nothing is clear. That part is still mine. The tools just let me operate at a level I couldn't reach barehanded.
+
+Software is going through the same shift aviation went through decades ago. The hand-flying purists will always exist, and I am one of them. If you're on one of my planes, every now and then you'll catch me hand-flying the whole thing. Takeoff to touchdown. Because I can. Because that skill matters. But I also know when to let the automation work. Knowing the difference? That's the real skill.
+
+This project was built by a human and an AI working together. I'm proud of both halves of that.
+
+## Be Safe Out There
+
+If you're building with AI, be honest about it. If you're standing on someone else's work, say so. If the pace of change makes you uneasy, good. The people who aren't uneasy aren't paying attention.
+
+We grow. We adapt. A machine beat the world chess champion in 1997 and instead of the game dying, it got bigger than ever. More players, more study, more depth. We're at that same inflection point right now. Every field. All at once.
+
+The question isn't whether AI changes everything. It already did. The question is whether we're honest about it. Whether we build with craft. Whether we know what to hold onto.
+
+Build good things. Give credit. And find your own 64 squares.
+
+We are all Kasparov now. Staring at the board. Wondering what comes next.
+
+Be safe out there.
+
+-- Darrell
+
+---
+
+*En Parlant~ is a fork of [En Croissant](https://github.com/franciscoBSalgueiro/en-croissant) by Francisco Salgueiro, built with [Claude Code](https://claude.ai/claude-code) by Anthropic. The name means "while speaking" in French. Because this croissant talks back.*

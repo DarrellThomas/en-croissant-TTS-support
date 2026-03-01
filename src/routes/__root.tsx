@@ -445,6 +445,15 @@ function RootLayout() {
               navigate({ to: "/settings", search: { tab: "sound" } });
             },
           },
+          { label: "divider", id: "tts_divider" },
+          {
+            label: "A Note About AI",
+            id: "tts_ai_note",
+            action: () => {
+              setDocTitle("A Note About AI");
+              setDocResource("docs/ai-note.md");
+            },
+          },
         ],
       },
       {
