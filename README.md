@@ -1,60 +1,69 @@
 <br />
 <div align="center">
-  <a href="https://github.com/franciscoBSalgueiro/en-croissant">
-    <img width="115" height="115" src="https://github.com/franciscoBSalgueiro/en-croissant/blob/master/src-tauri/icons/icon.png" alt="Logo">
-  </a>
+  <img width="115" height="115" src="src-tauri/icons/icon.png" alt="En Parlant~ Logo">
 
-<h3 align="center">En Croissant</h3>
+<h3 align="center">En Parlant~</h3>
 
   <p align="center">
-    The Ultimate Chess Toolkit
-    <br />
-    <a href="https://www.encroissant.org"><strong>encroissant.org</strong></a>
+    A TTS fork of <a href="https://github.com/franciscoBSalgueiro/en-croissant">En Croissant</a> — The Ultimate Chess Toolkit
     <br />
     <br />
-    <a href="https://discord.gg/tdYzfDbSSW">Discord Server</a>
+    <a href="docs/README.md">Documentation</a>
     ·
-    <a href="https://www.encroissant.org/download">Download</a>
-    .
-    <a href="https://www.encroissant.org/docs">Explore the docs</a>
+    <a href="TTS-GUIDE.md">TTS Setup Guide</a>
+    ·
+    <a href="https://github.com/DarrellThomas/en-parlant/issues">Report a Bug</a>
   </p>
 </div>
 
-En-Croissant is an open-source, cross-platform chess GUI that aims to be powerful, customizable and easy to use.
+En Parlant~ ("speaking" in French) adds text-to-speech narration to [En Croissant](https://www.encroissant.org), the open-source, cross-platform chess GUI. Hear moves announced as you step through games, with multi-language support and multiple TTS providers.
 
 ## Features
 
+Everything in En Croissant, plus:
+
+- **Move narration** — moves spoken aloud as you navigate through games
+- **Auto-narrate** — TTS triggers automatically on each move
+- **Multiple TTS providers** — ElevenLabs, Google Cloud, KittenTTS (local), OpenTTS (local), or system TTS
+- **Multi-language** — English, French, Spanish, German, Japanese, Russian, Chinese, Korean
+- **Chess vocabulary** — SAN notation converted to natural spoken language per locale
+- **Audio cache** — previously synthesized moves are replayed instantly
+
+### From En Croissant
+
 - Store and analyze your games from [lichess.org](https://lichess.org) and [chess.com](https://chess.com)
-- Multi-engine analysis. Supports all UCI engines
+- Multi-engine analysis with all UCI engines
 - Prepare a repertoire and train it with spaced repetition
 - Simple engine and database installation and management
 - Absolute or partial position search in the database
 
-<img src="https://github.com/franciscoBSalgueiro/encroisssant-site/blob/master/public/showcase.webp" />
-
 ## Building from source
 
-Refer to the [Tauri documentation](https://tauri.app/v1/guides/getting-started/prerequisites) for the requirements on your platform.
-
-En-Croissant uses pnpm as the package manager for dependencies. Refer to the [pnpm install instructions](https://pnpm.io/installation) for how to install it on your platform.
+Requires Node.js 22+, pnpm, and Rust. See the [Tauri v2 prerequisites](https://v2.tauri.app/start/prerequisites/).
 
 ```bash
-git clone https://github.com/franciscoBSalgueiro/en-croissant
-cd en-croissant
+git clone https://github.com/DarrellThomas/en-parlant
+cd en-parlant
 pnpm install
-pnpm build
+pnpm tauri build --no-bundle
 ```
 
-The built app can be found at `src-tauri/target/release`
+The binary will be at `src-tauri/target/release/en-parlant`.
 
-## Donate
+To install system-wide (Linux):
 
-If you wish to support the development of this GUI, you can do so [here](https://encroissant.org/support). All donations are greatly appreciated!
+```bash
+sudo ./install.sh
+```
+
+## Credits
+
+En Parlant~ is built on [En Croissant](https://github.com/franciscoBSalgueiro/en-croissant) by [Francisco Salgueiro](https://github.com/franciscoBSalgueiro). The original project and community can be found at [encroissant.org](https://www.encroissant.org).
 
 ## Contributing
 
-For contributing to this project please refer to the [Contributing guide](./CONTRIBUTING.md).
+See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## License
 
-This software is licensed under GPL-3.0 License.
+GPL-3.0 — same as upstream En Croissant.
