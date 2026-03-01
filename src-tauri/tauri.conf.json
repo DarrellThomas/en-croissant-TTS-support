@@ -35,14 +35,18 @@
     },
     "resources": {
       "../sound/": "sound/",
-      "../docs/": "docs/"
+      "../docs/": "docs/",
+      "../scripts/kittentts-server.py": "scripts/kittentts-server.py",
+      "../scripts/setup-tts.sh": "scripts/setup-tts.sh",
+      "../scripts/.venv/": "scripts/.venv/",
+      "../scripts/models/": "scripts/models/"
     },
     "targets": "all",
     "createUpdaterArtifacts": "v1Compatible"
   },
   "build": {
-    "beforeDevCommand": "pnpm start-vite",
-    "beforeBuildCommand": "pnpm build-vite",
+    "beforeDevCommand": "node -e \"['scripts/.venv','scripts/models'].forEach(d=>require('fs').mkdirSync(d,{recursive:true}))\" && pnpm start-vite",
+    "beforeBuildCommand": "node -e \"['scripts/.venv','scripts/models'].forEach(d=>require('fs').mkdirSync(d,{recursive:true}))\" && pnpm build-vite",
     "frontendDist": "../dist",
     "devUrl": "http://localhost:1420"
   },

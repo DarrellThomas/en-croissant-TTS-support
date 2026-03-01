@@ -309,7 +309,7 @@ export const ttsLanguageAtom = atomWithStorage<string>(
 );
 export const ttsProviderAtom = atomWithStorage<string>(
   "tts-provider",
-  "system",
+  "kittentts",
   undefined,
   { getOnInit: true },
 );

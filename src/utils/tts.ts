@@ -8,6 +8,7 @@ import {
   ttsEnabledAtom,
   ttsGoogleApiKeyAtom,
   ttsGoogleGenderAtom,
+  ttsKittenTTSThreadsAtom,
   ttsKittenTTSUrlAtom,
   ttsKittenTTSVoiceAtom,
   ttsLanguageAtom,
@@ -687,6 +688,59 @@ export async function stopSystemTTS(): Promise<void> {
   await invoke("system_tts_stop");
 }
 
+// --- KittenTTS auto-start ---
+
+let kittenTTSAutoStartAttempted = false;
+
+async function ensureKittenTTSRunning(): Promise<boolean> {
+  if (kittenTTSAutoStartAttempted) return true;
+  kittenTTSAutoStartAttempted = true;
+
+  const store = getDefaultStore();
+  const serverUrl = store.get(ttsKittenTTSUrlAtom) || "http://localhost:8192";
+
+  // Health check: is the server already running?
+  try {
+    const bytes: number[] = await invoke("fetch_tts_audio", {
+      url: `${serverUrl}/api/voices`,
+    });
+    if (bytes.length > 0) return true;
+  } catch {
+    // Server not running — try to start it
+  }
+
+  try {
+    const threads = store.get(ttsKittenTTSThreadsAtom) || null;
+    await invoke("kittentts_start", { threads });
+  } catch (e) {
+    console.error("Failed to auto-start KittenTTS:", e);
+    showTtsNotification(
+      "KittenTTS could not start",
+      "Open Settings > Sound to set up KittenTTS, or switch to System TTS.",
+    );
+    return false;
+  }
+
+  // Poll until server responds (up to 15s)
+  for (let i = 0; i < 15; i++) {
+    await new Promise((r) => setTimeout(r, 1000));
+    try {
+      const bytes: number[] = await invoke("fetch_tts_audio", {
+        url: `${serverUrl}/api/voices`,
+      });
+      if (bytes.length > 0) return true;
+    } catch {
+      // keep waiting
+    }
+  }
+
+  showTtsNotification(
+    "KittenTTS is taking too long to start",
+    "The server may still be loading the model. Try again in a moment, or switch to System TTS.",
+  );
+  return false;
+}
+
 // --- Public API ---
 
 export function stopSpeaking() {
@@ -736,6 +790,9 @@ export async function speakText(text: string): Promise<void> {
 
   let gender = "MALE";
   if (provider === "kittentts") {
+    // Auto-start the server if not running
+    const serverReady = await ensureKittenTTSRunning();
+    if (!serverReady) return;
     kittenTTSUrl = store.get(ttsKittenTTSUrlAtom) || "http://localhost:8192";
     voiceId = store.get(ttsKittenTTSVoiceAtom) || "expr-voice-2-m";
   } else if (provider === "opentts") {

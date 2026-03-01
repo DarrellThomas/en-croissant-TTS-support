@@ -1,7 +1,7 @@
 use serde::Serialize;
 use std::process::Command;
 use std::sync::Mutex;
-use tauri::State;
+use tauri::{Manager, State};
 
 // --- Fetch audio from localhost TTS servers (bypasses browser fetch issues) ---
 
@@ -43,27 +43,73 @@ struct KittenTtsPaths {
     script: Option<String>,
     python: Option<String>,
     venv_dir: Option<String>,
+    models_dir: Option<String>,
 }
 
-fn find_kittentts_paths() -> KittenTtsPaths {
-    let script_paths = [
-        "/usr/lib/en-parlant/scripts/kittentts-server.py",
-        "scripts/kittentts-server.py",
-    ];
-    let venv_pythons = [
-        "/usr/lib/en-parlant/scripts/.venv/bin/python",
-        "scripts/.venv/bin/python",
-    ];
-    let venv_dirs = [
-        "/usr/lib/en-parlant/scripts/.venv",
-        "scripts/.venv",
-    ];
+/// Python binary name within a venv, platform-aware.
+#[cfg(not(target_os = "windows"))]
+const VENV_PYTHON: &str = "bin/python";
+#[cfg(target_os = "windows")]
+const VENV_PYTHON: &str = "Scripts/python.exe";
 
-    let script = script_paths.iter().find(|p| std::path::Path::new(p).exists()).map(|p| p.to_string());
-    let python = venv_pythons.iter().find(|p| std::path::Path::new(p).exists()).map(|p| p.to_string());
-    let venv_dir = venv_dirs.iter().find(|p| std::path::Path::new(p).exists()).map(|p| p.to_string());
+/// Pip binary name within a venv, platform-aware.
+#[cfg(not(target_os = "windows"))]
+const VENV_PIP: &str = "bin/pip";
+#[cfg(target_os = "windows")]
+const VENV_PIP: &str = "Scripts/pip.exe";
 
-    KittenTtsPaths { script, python, venv_dir }
+fn find_kittentts_paths(app_handle: &tauri::AppHandle) -> KittenTtsPaths {
+    let mut script_candidates: Vec<std::path::PathBuf> = Vec::new();
+    let mut venv_candidates: Vec<std::path::PathBuf> = Vec::new();
+    let mut models_candidates: Vec<std::path::PathBuf> = Vec::new();
+
+    // Highest priority: Tauri bundled resources
+    if let Ok(res_dir) = app_handle.path().resolve("scripts", tauri::path::BaseDirectory::Resource) {
+        script_candidates.push(res_dir.join("kittentts-server.py"));
+        venv_candidates.push(res_dir.join(".venv"));
+        models_candidates.push(res_dir.join("models"));
+
+        // Windows: check for PyInstaller exe
+        #[cfg(target_os = "windows")]
+        script_candidates.push(res_dir.join("kittentts-server.exe"));
+    }
+
+    // System install location (Linux)
+    #[cfg(target_os = "linux")]
+    {
+        let sys = std::path::PathBuf::from("/usr/lib/en-parlant/scripts");
+        script_candidates.push(sys.join("kittentts-server.py"));
+        venv_candidates.push(sys.join(".venv"));
+        models_candidates.push(sys.join("models"));
+    }
+
+    // Dev fallback (relative to CWD)
+    script_candidates.push(std::path::PathBuf::from("scripts/kittentts-server.py"));
+    venv_candidates.push(std::path::PathBuf::from("scripts/.venv"));
+    models_candidates.push(std::path::PathBuf::from("scripts/models"));
+
+    // Windows: also check for exe in dev
+    #[cfg(target_os = "windows")]
+    script_candidates.push(std::path::PathBuf::from("scripts/kittentts-server.exe"));
+
+    let script = script_candidates.iter()
+        .find(|p| p.exists())
+        .map(|p| p.to_string_lossy().to_string());
+
+    let venv_dir = venv_candidates.iter()
+        .find(|p| p.exists())
+        .map(|p| p.to_string_lossy().to_string());
+
+    let python = venv_candidates.iter()
+        .map(|v| v.join(VENV_PYTHON))
+        .find(|p| p.exists())
+        .map(|p| p.to_string_lossy().to_string());
+
+    let models_dir = models_candidates.iter()
+        .find(|p| p.exists())
+        .map(|p| p.to_string_lossy().to_string());
+
+    KittenTtsPaths { script, python, venv_dir, models_dir }
 }
 
 // --- Dependency check commands ---
@@ -160,7 +206,8 @@ pub fn check_opentts_image() -> DepCheck {
 #[tauri::command]
 #[specta::specta]
 pub fn check_python_installed() -> DepCheck {
-    match Command::new("python3").arg("--version").output() {
+    let python_cmd = if cfg!(target_os = "windows") { "python" } else { "python3" };
+    match Command::new(python_cmd).arg("--version").output() {
         Ok(output) if output.status.success() => {
             let ver = String::from_utf8_lossy(&output.stdout).trim().to_string();
             DepCheck {
@@ -174,15 +221,19 @@ pub fn check_python_installed() -> DepCheck {
             ok: false,
             label: "Python 3 not installed".into(),
             detail: "Python 3.10+ is required for KittenTTS".into(),
-            fix_hint: "sudo apt install python3 python3-venv".into(),
+            fix_hint: if cfg!(target_os = "windows") {
+                "Install Python from python.org".into()
+            } else {
+                "sudo apt install python3 python3-venv".into()
+            },
         },
     }
 }
 
 #[tauri::command]
 #[specta::specta]
-pub fn check_kittentts_venv() -> DepCheck {
-    let paths = find_kittentts_paths();
+pub fn check_kittentts_venv(app_handle: tauri::AppHandle) -> DepCheck {
+    let paths = find_kittentts_paths(&app_handle);
     match paths.venv_dir {
         Some(dir) => DepCheck {
             ok: true,
@@ -201,8 +252,8 @@ pub fn check_kittentts_venv() -> DepCheck {
 
 #[tauri::command]
 #[specta::specta]
-pub fn check_kittentts_packages() -> DepCheck {
-    let paths = find_kittentts_paths();
+pub fn check_kittentts_packages(app_handle: tauri::AppHandle) -> DepCheck {
+    let paths = find_kittentts_paths(&app_handle);
     let python = match paths.python {
         Some(p) => p,
         None => {
@@ -256,8 +307,8 @@ pub fn check_kittentts_packages() -> DepCheck {
 
 #[tauri::command]
 #[specta::specta]
-pub fn check_kittentts_script() -> DepCheck {
-    let paths = find_kittentts_paths();
+pub fn check_kittentts_script(app_handle: tauri::AppHandle) -> DepCheck {
+    let paths = find_kittentts_paths(&app_handle);
     match paths.script {
         Some(path) => DepCheck {
             ok: true,
@@ -278,18 +329,24 @@ pub fn check_kittentts_script() -> DepCheck {
 
 #[tauri::command]
 #[specta::specta]
-pub fn setup_kittentts_venv() -> Result<String, String> {
-    // Determine the venv directory — prefer installed location, fall back to dev
-    let venv_dir = if std::path::Path::new("/usr/lib/en-parlant/scripts").exists() {
-        "/usr/lib/en-parlant/scripts/.venv"
+pub fn setup_kittentts_venv(app_handle: tauri::AppHandle) -> Result<String, String> {
+    let paths = find_kittentts_paths(&app_handle);
+
+    // Determine the venv directory — prefer found location, try system install, fall back to dev
+    let venv_dir = if let Some(ref dir) = paths.venv_dir {
+        dir.clone()
+    } else if std::path::Path::new("/usr/lib/en-parlant/scripts").exists() {
+        "/usr/lib/en-parlant/scripts/.venv".to_string()
     } else {
-        "scripts/.venv"
+        "scripts/.venv".to_string()
     };
 
+    let python_cmd = if cfg!(target_os = "windows") { "python" } else { "python3" };
+
     // Create venv if it doesn't exist
-    if !std::path::Path::new(venv_dir).exists() {
-        let create = Command::new("python3")
-            .args(["-m", "venv", venv_dir])
+    if !std::path::Path::new(&venv_dir).exists() {
+        let create = Command::new(python_cmd)
+            .args(["-m", "venv", &venv_dir])
             .output()
             .map_err(|e| format!("Failed to create venv: {}", e))?;
         if !create.status.success() {
@@ -301,7 +358,7 @@ pub fn setup_kittentts_venv() -> Result<String, String> {
     }
 
     // Install packages
-    let pip = format!("{}/bin/pip", venv_dir);
+    let pip = format!("{}/{}", venv_dir, VENV_PIP);
     let install = Command::new(&pip)
         .args(["install", "kittentts", "flask", "soundfile", "numpy"])
         .output()
@@ -390,32 +447,55 @@ pub fn opentts_stop() -> Result<String, String> {
 
 #[tauri::command]
 #[specta::specta]
-pub fn kittentts_start(state: State<'_, TtsServerState>, threads: Option<u32>) -> Result<String, String> {
+pub fn kittentts_start(app_handle: tauri::AppHandle, state: State<'_, TtsServerState>, threads: Option<u32>) -> Result<String, String> {
     let mut pid_lock = state.kittentts_pid.lock().map_err(|e| e.to_string())?;
 
     // Check if already running
     if let Some(pid) = *pid_lock {
-        // Verify the process is still alive
-        let check = Command::new("kill")
-            .args(["-0", &pid.to_string()])
-            .output();
-        if check.map(|o| o.status.success()).unwrap_or(false) {
+        if is_process_alive(pid) {
             return Ok("already running".to_string());
         }
         *pid_lock = None;
     }
 
-    let paths = find_kittentts_paths();
+    let paths = find_kittentts_paths(&app_handle);
 
     let script = paths.script.ok_or("KittenTTS server script not found")?;
-    let python = paths.python.unwrap_or_else(|| "python3".to_string());
 
-    let mut cmd = Command::new(&python);
-    cmd.arg(&script);
+    // Windows: if we found a .exe, run it directly (PyInstaller bundle)
+    #[cfg(target_os = "windows")]
+    let is_exe = script.ends_with(".exe");
+    #[cfg(not(target_os = "windows"))]
+    let is_exe = false;
+
+    let mut cmd = if is_exe {
+        Command::new(&script)
+    } else {
+        let python = paths.python.unwrap_or_else(|| {
+            if cfg!(target_os = "windows") { "python".to_string() } else { "python3".to_string() }
+        });
+        let mut c = Command::new(&python);
+        c.arg(&script);
+        c
+    };
+
     if let Some(t) = threads {
         if t > 0 {
             cmd.args(["--threads", &t.to_string()]);
         }
+    }
+
+    // Point HuggingFace cache at bundled models if available
+    if let Some(ref models) = paths.models_dir {
+        cmd.env("HF_HOME", models);
+    }
+
+    // Windows: hide the console window
+    #[cfg(target_os = "windows")]
+    {
+        use std::os::windows::process::CommandExt;
+        const CREATE_NO_WINDOW: u32 = 0x08000000;
+        cmd.creation_flags(CREATE_NO_WINDOW);
     }
 
     let child = cmd
@@ -436,13 +516,53 @@ pub fn kittentts_stop(state: State<'_, TtsServerState>) -> Result<String, String
     let mut pid_lock = state.kittentts_pid.lock().map_err(|e| e.to_string())?;
 
     if let Some(pid) = pid_lock.take() {
-        let _ = Command::new("kill").arg(pid.to_string()).output();
+        kill_process(pid);
         Ok("stopped".to_string())
     } else {
         // Try to kill by port as fallback
-        let _ = Command::new("sh")
-            .args(["-c", "fuser -k 8192/tcp 2>/dev/null"])
-            .output();
+        #[cfg(not(target_os = "windows"))]
+        {
+            let _ = Command::new("sh")
+                .args(["-c", "fuser -k 8192/tcp 2>/dev/null"])
+                .output();
+        }
         Ok("stopped".to_string())
+    }
+}
+
+// --- Platform helpers ---
+
+fn is_process_alive(pid: u32) -> bool {
+    #[cfg(not(target_os = "windows"))]
+    {
+        Command::new("kill")
+            .args(["-0", &pid.to_string()])
+            .output()
+            .map(|o| o.status.success())
+            .unwrap_or(false)
+    }
+    #[cfg(target_os = "windows")]
+    {
+        Command::new("tasklist")
+            .args(["/FI", &format!("PID eq {}", pid), "/NH"])
+            .output()
+            .map(|o| {
+                let out = String::from_utf8_lossy(&o.stdout);
+                out.contains(&pid.to_string())
+            })
+            .unwrap_or(false)
+    }
+}
+
+fn kill_process(pid: u32) {
+    #[cfg(not(target_os = "windows"))]
+    {
+        let _ = Command::new("kill").arg(pid.to_string()).output();
+    }
+    #[cfg(target_os = "windows")]
+    {
+        let _ = Command::new("taskkill")
+            .args(["/F", "/PID", &pid.to_string()])
+            .output();
     }
 }

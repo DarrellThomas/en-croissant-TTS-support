@@ -43,6 +43,11 @@ if [ -d "scripts/.venv" ]; then
   cp -r scripts/.venv "$RES_DIR/scripts/.venv"
 fi
 
+# Copy bundled KittenTTS model if it exists (from CI build)
+if [ -d "scripts/models" ]; then
+  cp -r scripts/models "$RES_DIR/scripts/models"
+fi
+
 # Icons (install into hicolor theme so desktop environments pick them up)
 for size in 32 128 256; do
   dest="/usr/share/icons/hicolor/${size}x${size}/apps"

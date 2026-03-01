@@ -35,5 +35,9 @@ scripts/.venv/
 # Local issue tracking
 UPSTREAM-ISSUES.md
 
+# KittenTTS build artifacts (created by CI)
+scripts/models/
+scripts/kittentts-server.exe
+
 # Draft notes (not ready for release)
 AI-NOTE.md
