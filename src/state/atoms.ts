@@ -244,6 +244,12 @@ export const showCoordinatesAtom = atomWithStorage<"no" | "edge" | "all">(
   undefined,
   { getOnInit: true },
 );
+export const ranksPositionAtom = atomWithStorage<"left" | "right">(
+  "ranks-position",
+  "right",
+  undefined,
+  { getOnInit: true },
+);
 export const soundCollectionAtom = atomWithStorage<string>(
   "sound-collection",
   "standard",

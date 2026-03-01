@@ -195,8 +195,9 @@ piece.fading {
 }
 
 .cg-wrap coords.ranks.left {
-  left: -15px;
-  align-items: flex-end;
+  left: 1%;
+  right: auto;
+  align-items: flex-start;
 }
 
 .cg-wrap coords.files {

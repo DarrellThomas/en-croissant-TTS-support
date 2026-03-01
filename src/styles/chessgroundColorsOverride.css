@@ -36,10 +36,15 @@ cg-board square.current-premove {
   background-color: rgba(20, 30, 85, 0.5);
 }
 
-/** Edge coordinate colors - uniform color for readability */
-.cg-wrap coords.ranks coord,
-.cg-wrap coords.files coord {
+/** Edge coordinate colors — contrast against the square they sit on */
+.cg-wrap coords.ranks coord.coord-light,
+.cg-wrap coords.files coord.coord-light {
   color: var(--board-coord-color-black, rgba(72, 72, 72, 0.8));
+}
+
+.cg-wrap coords.ranks coord.coord-dark,
+.cg-wrap coords.files coord.coord-dark {
+  color: var(--board-coord-color-white, rgba(255, 255, 255, 0.8));
 }
 
 .cg-wrap.orientation-white coords.rank1 coord:nth-child(2n + 1),

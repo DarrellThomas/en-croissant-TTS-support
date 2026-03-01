@@ -11,6 +11,7 @@ import { Chessground } from "@/chessground/Chessground";
 import {
   jumpToNextPuzzleAtom,
   moveHighlightAtom,
+  ranksPositionAtom,
   showCoordinatesAtom,
 } from "@/state/atoms";
 import { chessboard } from "@/styles/Chessboard.css";
@@ -74,6 +75,7 @@ function PuzzleBoard({
   const dests = chessgroundDests(pos!);
   const turn = pos?.turn || "white";
   const showCoordinates = useAtomValue(showCoordinatesAtom);
+  const ranksPosition = useAtomValue(ranksPositionAtom);
 
   function checkMove(move: Move) {
     if (!pos) return;
@@ -142,6 +144,7 @@ function PuzzleBoard({
           }}
           coordinates={showCoordinates !== "no"}
           coordinatesOnSquares={showCoordinates === "all"}
+          ranksPosition={ranksPosition}
           orientation={orientation}
           movable={{
             free: false,

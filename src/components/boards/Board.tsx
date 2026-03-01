@@ -45,6 +45,7 @@ import {
   practiceCardStartTimeAtom,
   practiceSessionStatsAtom,
   practiceStateAtom,
+  ranksPositionAtom,
   showArrowsAtom,
   showConsecutiveArrowsAtom,
   showCoordinatesAtom,
@@ -149,6 +150,7 @@ function Board({
   const autoPromote = useAtomValue(autoPromoteAtom);
   const forcedEP = useAtomValue(forcedEnPassantAtom);
   const showCoordinates = useAtomValue(showCoordinatesAtom);
+  const ranksPosition = useAtomValue(ranksPositionAtom);
   const materialDisplay = useAtomValue(materialDisplayAtom);
 
   let dests: Map<SquareName, SquareName[]> = pos
@@ -539,6 +541,7 @@ function Board({
                 animation={{ enabled: !editingMode }}
                 coordinates={showCoordinates !== "no"}
                 coordinatesOnSquares={showCoordinates === "all"}
+                ranksPosition={ranksPosition}
                 movable={{
                   free: editingMode,
                   color: movableColor,

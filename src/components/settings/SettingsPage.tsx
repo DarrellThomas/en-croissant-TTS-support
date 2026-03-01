@@ -45,6 +45,7 @@ import {
   moveNotationTypeAtom,
   nativeBarAtom,
   previewBoardOnHoverAtom,
+  ranksPositionAtom,
   showArrowsAtom,
   showConsecutiveArrowsAtom,
   showCoordinatesAtom,
@@ -190,6 +191,7 @@ export default function Page() {
   const [moveMethod, setMoveMethod] = useAtom(moveMethodAtom);
   const [moveNotationType, setMoveNotationType] = useAtom(moveNotationTypeAtom);
   const [showCoordinates, setShowCoordinates] = useAtom(showCoordinatesAtom);
+  const [ranksPosition, setRanksPosition] = useAtom(ranksPositionAtom);
   const [materialDisplay, setMaterialDisplay] = useAtom(materialDisplayAtom);
 
   const settings: SettingItem[] = useMemo(
@@ -314,6 +316,25 @@ export default function Page() {
             allowDeselect={false}
             value={showCoordinates}
             onChange={(val) => setShowCoordinates(val as "no" | "edge" | "all")}
+          />
+        ),
+      },
+      {
+        id: "ranks-position",
+        category: "board",
+        title: "Rank Position",
+        description:
+          "Show rank numbers (1-8) on the left or right side of the board",
+        keywords: ["coordinates", "ranks", "position", "left", "right"],
+        render: () => (
+          <Select
+            data={[
+              { label: "Left", value: "left" },
+              { label: "Right", value: "right" },
+            ]}
+            allowDeselect={false}
+            value={ranksPosition}
+            onChange={(val) => setRanksPosition(val as "left" | "right")}
           />
         ),
       },
@@ -795,6 +816,7 @@ export default function Page() {
       moveMethod,
       isNative,
       showCoordinates,
+      ranksPosition,
       materialDisplay,
       filesDirectory,
       databasesDirectory,
@@ -808,6 +830,7 @@ export default function Page() {
       setEnginesDirectory,
       setPuzzlesDirectory,
       setShowCoordinates,
+      setRanksPosition,
       setMaterialDisplay,
     ],
   );
