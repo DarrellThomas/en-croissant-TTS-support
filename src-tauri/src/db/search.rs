@@ -417,7 +417,7 @@ pub async fn search_position(
         .inner_join(events::table.on(games::event_id.eq(events::id)))
         .inner_join(sites::table.on(games::site_id.eq(sites::id)))
         .filter(games::id.eq_any(ids))
-        .order(sql::<Integer>("COALESCE(white_elo, 0) + COALESCE(black_elo, 0)").desc())
+        .order(sql::<Integer>("COALESCE(WhiteElo, 0) + COALESCE(BlackElo, 0)").desc())
         .load(db)?;
     let normalized_games = normalize_games(games);
     let file_path = file.clone();
