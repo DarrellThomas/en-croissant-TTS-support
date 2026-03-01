@@ -186,7 +186,14 @@ fn get_move_after_match(
 
         if is_irreversible {
             let board = chess.board();
-            if !query.is_reachable_by(&get_material_count(board), get_pawn_home(board)) {
+            let current_material = get_material_count(board);
+            // Account for promotions: each pawn can gain up to 8 material (queen - pawn = 9 - 1)
+            let pawn_bonus = board.material().map(|m| m.pawn * 8);
+            let max_reachable: MaterialCount = ByColor {
+                white: current_material.white.saturating_add(pawn_bonus.white),
+                black: current_material.black.saturating_add(pawn_bonus.black),
+            };
+            if !query.is_reachable_by(&max_reachable, get_pawn_home(board)) {
                 return Ok(None);
             }
         }
