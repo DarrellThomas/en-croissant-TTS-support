@@ -36,6 +36,22 @@ use crate::{
     AppState,
 };
 
+/// Normalize non-standard UCI output: convert `score <number>` to `score cp <number>`
+/// when `cp` or `mate` is missing after `score`.
+fn normalize_uci_line(line: &str) -> String {
+    const SCORE: &str = "score ";
+    let Some(idx) = line.find(SCORE) else {
+        return line.to_string();
+    };
+    let after = &line[idx + SCORE.len()..];
+    let first = after.as_bytes().first().copied().unwrap_or(0);
+    if first == b'-' || first.is_ascii_digit() {
+        format!("{}score cp {}", &line[..idx], after)
+    } else {
+        line.to_string()
+    }
+}
+
 pub struct EngineProcess {
     base: BaseEngine,
     last_depth: u32,
@@ -349,7 +365,7 @@ pub async fn get_best_moves(
 
     while let Some(line) = reader.next_line().await? {
         let mut proc = process.lock().await;
-        match parse_one(&line) {
+        match parse_one(&normalize_uci_line(&line)) {
             UciMessage::Info(attrs) => {
                 if let Ok(best_moves) =
                     parse_uci_attrs(attrs, &proc.options.fen.parse()?, &proc.options.moves)
@@ -542,7 +558,7 @@ pub async fn analyze_game(
 
         let mut current_analysis = MoveAnalysis::default();
         while let Ok(Some(line)) = reader.next_line().await {
-            match parse_one(&line) {
+            match parse_one(&normalize_uci_line(&line)) {
                 UciMessage::Info(attrs) => {
                     if let Ok(best_moves) =
                         parse_uci_attrs(attrs, &proc.options.fen.parse()?, moves)
