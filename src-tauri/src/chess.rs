@@ -113,6 +113,10 @@ impl EngineProcess {
         }
 
         if options.fen != self.options.fen || options.moves != self.options.moves {
+            if options.fen != self.options.fen && !self.options.fen.is_empty() {
+                self.base.send("ucinewgame").await?;
+                self.base.send("isready").await?;
+            }
             self.set_position(&options.fen, &options.moves).await?;
         }
         self.last_depth = 0;
