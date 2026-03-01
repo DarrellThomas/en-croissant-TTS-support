@@ -25,10 +25,14 @@ export function EnginesSelect({
   return (
     <Select
       allowDeselect={false}
-      data={engines?.map((engine) => ({
-        label: engine.name,
-        value: engine.id,
-      }))}
+      data={engines
+        ?.filter(
+          (engine, i, arr) => arr.findIndex((e) => e.id === engine.id) === i,
+        )
+        .map((engine) => ({
+          label: engine.name,
+          value: engine.id,
+        }))}
       value={engine?.id ?? ""}
       onChange={(e) => {
         setEngine(engines.find((engine) => engine.id === e) ?? null);

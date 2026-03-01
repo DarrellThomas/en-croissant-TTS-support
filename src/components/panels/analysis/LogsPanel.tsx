@@ -34,7 +34,9 @@ export default function LogsPanel() {
             allowDeselect={false}
             value={engine?.id ?? ""}
             onChange={(id) => setEngine(localEngines.find((e) => e.id === id))}
-            data={localEngines.map((e) => ({ value: e.id, label: e.name }))}
+            data={localEngines
+              .filter((e, i, arr) => arr.findIndex((x) => x.id === e.id) === i)
+              .map((e) => ({ value: e.id, label: e.name }))}
           />
         }
       />

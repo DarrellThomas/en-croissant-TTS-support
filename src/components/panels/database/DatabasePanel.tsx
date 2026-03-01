@@ -142,6 +142,7 @@ function DatabasePanel() {
 
   const dbSelectData = (databases ?? [])
     .filter((d) => d.type === "success")
+    .filter((d, i, arr) => arr.findIndex((x) => x.file === d.file) === i)
     .map((d) => ({ value: d.file, label: d.title || d.filename }));
 
   useEffect(() => {
