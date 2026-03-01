@@ -2,6 +2,8 @@
     all(not(debug_assertions), target_os = "windows"),
     windows_subsystem = "windows"
 )]
+#![allow(clippy::result_large_err)]
+#![allow(clippy::too_many_arguments)]
 
 mod chess;
 mod db;
@@ -32,6 +34,7 @@ use progress::{clear_progress, get_progress, ProgressEvent, ProgressStore};
 
 use log::LevelFilter;
 use oauth::AuthState;
+#[cfg(debug_assertions)]
 use specta_typescript::{BigIntExportBehavior, Typescript};
 use sysinfo::SystemExt;
 use tauri::{Manager, Window};

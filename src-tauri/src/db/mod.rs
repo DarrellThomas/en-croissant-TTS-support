@@ -35,7 +35,7 @@ use shakmaty::{
 use specta::Type;
 use std::{
     fs::{remove_file, File, OpenOptions},
-    path::PathBuf,
+    path::{Path, PathBuf},
     sync::atomic::{AtomicUsize, Ordering},
     time::{Duration, Instant},
 };
@@ -511,7 +511,7 @@ pub async fn convert_pgn(
 }
 
 pub fn generate_search_index(
-    db_path: &PathBuf,
+    db_path: &Path,
     state: &tauri::State<'_, AppState>,
 ) -> Result<(), Error> {
     let db = &mut get_db_or_create(
@@ -524,7 +524,7 @@ pub fn generate_search_index(
     info!("Generating search index at {:?}", index_path);
     let start = Instant::now();
 
-    let games: Vec<(
+    type GameRow = (
         i32,
         i32,
         i32,
@@ -535,7 +535,8 @@ pub fn generate_search_index(
         i32,
         i32,
         i32,
-    )> = games::table
+    );
+    let games: Vec<GameRow> = games::table
         .select((
             games::id,
             games::white_id,
