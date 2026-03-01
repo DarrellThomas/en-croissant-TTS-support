@@ -33,17 +33,15 @@ AI slop is typing "make me a chess app" and shipping whatever comes back. Co-dev
 
 Francisco Salgueiro built En Croissant over years of thoughtful architecture. Late nights debugging Tauri quirks. Careful UI work with Mantine. A PGN parser that actually works. Engine integration, database management, puzzle support. All of it. He built something he cared about and it shows.
 
-I asked him about integrating text-to-speech. Premium voices, multiple providers, narration that makes studying games feel like listening to a broadcast. That wasn't his style, and I respect that. Fair enough. That's how open source works. I get to take his work and build in a different direction. But I owe him the honesty of saying it straight: without En Croissant, En Parlant~ doesn't exist. Period.
+I submitted a pull request to add text-to-speech narration. Francisco reviewed it and decided it wasn't the direction he wanted for En Croissant. That's a maintainer's call to make, and I respect it — he knows his project better than anyone. That's how open source works. The GPL lets me fork and build in a different direction, and I'm grateful for that freedom. But I owe him the honesty of saying it straight: without En Croissant, En Parlant~ doesn't exist. Period.
 
-What Francisco accomplished through years of dedicated craftsmanship, I added to his work in a weekend with a pot of coffee, and an AI that never gets tired.
+Here's what sits with me, though. Francisco spent years building something with care — making hard decisions, learning the framework, shaping the architecture through hundreds of commits. The TTS feature I added builds on top of all that work. It wouldn't exist without the foundation he laid. An AI helped me move fast, but moving fast on top of someone else's years of effort is not the same thing as doing what they did.
 
-That's not a brag. That's just where we are now.
-
-And I don't know what to do with that, honestly. What does craftsmanship mean when the craft gets accelerated by 10x? What does expertise mean when a machine can pattern-match through problems that took humans years? I don't have neat answers for any of it. But I'd rather sit with the discomfort than pretend it's not there.
+And I don't know what to do with that, honestly. What does craftsmanship mean when someone can extend it at 10x speed? What does it mean to stand on someone's shoulders when the ladder got this tall this fast? I don't have neat answers for any of it. But I'd rather sit with the discomfort than pretend it's not there.
 
 ## The State of Things
 
-The chess community gets a better product because tools like this exist. The gap between "I wish this app could narrate moves" and "it narrates moves in eight languages with five TTS providers" went from months to days. The gap between "dependencies silently fail" and "a setup wizard walks you through it" went from a weekend to an afternoon.
+The chess community gets a better product because tools like Claude Code exist. The gap between "I wish this app could narrate moves" and "it narrates moves in eight languages with five TTS providers" went from months to days. The gap between "dependencies silently fail" and "a setup wizard walks you through it" went from a weekend to an afternoon.
 
 This is happening everywhere. Every domain. Every craft. Software that took teams now takes one person. Features that took sprints now take sessions.
 
@@ -53,7 +51,7 @@ Some of it is genuinely unsettling. When the cost of building drops toward zero,
 
 ## Why Chess
 
-Chess is a refuge. The one place where I have to think for myself. No autocomplete. No suggestions. Just 64 squares and 32 pieces and whatever my brain can do with them.
+Chess is a refuge for me. I'm not a Grand Master, and I find myself always learning over the decades. It is the one place where I have to think for myself. No autocomplete. No suggestions. Just 64 squares and 32 pieces and whatever my brain can do with them.
 
 The board doesn't care about my tooling. Doesn't care about my GPU or my inference speed. It just asks: can you see what's happening here? That's it. Pattern recognition and calculation under pressure. No shortcuts.
 
@@ -65,9 +63,9 @@ Use the machines where they make you stronger. Let them handle the parts that do
 
 I've seen repos with thousands of lines of AI-generated code and zero acknowledgment. People passing off Claude's output as their own in interviews, in client work, in open-source contributions. I get it. There's a stigma. People hear "AI-assisted" and think lesser.
 
-Here's the thing though. I'm an airline captain. Thirty-five years in the seat. My cockpit is stuffed with automation. Autopilot, auto-throttle, fly-by-wire, GPS, synthetic vision. Nobody has ever asked me if I'm "really" flying the airplane. The tools don't diminish the skill. They change what the skill is. Judgment, situational awareness, decision-making when nothing is clear. That part is still mine. The tools just let me operate at a level I couldn't reach barehanded.
+Here's the thing though. I'm an airline captain. Thirty-nine years flying. My cockpit is stuffed with automation. Autopilot, auto-throttle, fly-by-wire, GPS, synthetic vision. Nobody has ever asked me if I'm "really" flying the airplane. The tools don't diminish the skill. They change what the skill is. Judgment, situational awareness, decision-making when nothing is clear. That part is still mine. The tools just let me operate at a level I couldn't reach barehanded.
 
-Software is going through the same shift aviation went through decades ago. The hand-flying purists will always exist, and I am one of them. If you're on one of my planes, every now and then you'll catch me hand-flying the whole thing. Takeoff to touchdown. Because I can. Because that skill matters. But I also know when to let the automation work. Knowing the difference? That's the real skill.
+Software is going through the same shift aviation went through decades ago. The hand-flying purists will always exist, and I am one of them! If you're on one of my planes, every now and then you'll catch me hand-flying the whole thing. Takeoff to touchdown. Because I can. Because that skill matters. But I also know when to let the automation work. Knowing the difference? That's the real skill.
 
 This project was built by a human and an AI working together. I'm proud of both halves of that.
 
