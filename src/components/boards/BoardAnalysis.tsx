@@ -59,18 +59,22 @@ function BoardAnalysis() {
   const setAnnotation = useStore(store, (s) => s.setAnnotation);
 
   const saveFile = useCallback(async () => {
-    saveToFile({
+    await saveToFile({
       dir: documentDir,
       setCurrentTab,
       tab: currentTab,
       store,
     });
   }, [setCurrentTab, currentTab, documentDir, store]);
+
+  const saveFileRef = useRef(saveFile);
+  saveFileRef.current = saveFile;
+
   useEffect(() => {
     if (currentTab?.file && autoSave && dirty) {
-      saveFile();
+      saveFileRef.current();
     }
-  }, [currentTab?.file, saveFile, autoSave, dirty]);
+  }, [currentTab?.file, autoSave, dirty]);
 
   const addGame = useCallback(() => {
     if (!currentTab?.file) return;
