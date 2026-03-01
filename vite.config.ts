@@ -43,5 +43,6 @@ export default defineConfig({
     },
     define: {
         "import.meta.env.VITE_PLATFORM": JSON.stringify(os.platform()),
+        "import.meta.env.VITE_BUILD_TIME": JSON.stringify(new Date().toISOString()),
     },
 });

@@ -37,6 +37,9 @@ function AboutModal({
       title="En Parlant~"
     >
       <Text>Version: {info?.version}</Text>
+      <Text>
+        Built: {new Date(import.meta.env.VITE_BUILD_TIME).toLocaleString()}
+      </Text>
       <Text>Tauri version: {info?.tauri}</Text>
       <Text>
         OS: {info?.os} {info?.architecture} {info?.osVersion}

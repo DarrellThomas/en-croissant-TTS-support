@@ -541,6 +541,14 @@ function RootLayout() {
               setDocResource("docs/LICENSE");
             },
           },
+          {
+            label: "Under the Hood",
+            id: "architecture",
+            action: () => {
+              setDocTitle("Under the Hood");
+              setDocResource("docs/ARCHITECTURE.md");
+            },
+          },
           { label: "divider" },
           {
             label: t("Menu.Help.ClearSavedData"),
