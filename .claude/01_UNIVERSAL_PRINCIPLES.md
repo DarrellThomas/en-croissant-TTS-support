@@ -6,7 +6,7 @@
 
 ## A Note on Origins and Context
 
-Most of what follows comes from Robert C. Martin's *Clean Code* (2008) and related works. These were written for Java teams maintaining large codebases over years, in a world where code was expensive to write and cheap to read. The principles underneath are often timeless. The specific rules sometimes aren't.
+Most of what follows comes from Robert C. Martin's *Clean Code* (2008) and related works. These were written for Java teams maintaining large codebases over years, in a world where code was expensive to write and cheap to read. The principles underneath are often timeless. The specific rules sometimes aren't. The AI-era principles and quotations attributed to "Nate" come from [Nate B. Jones](https://www.natebjones.com), an AI educator known for his practical, hype-free approach to AI implementation.
 
 We now build in a world where code is cheap to write and the bottleneck is judgment about *what* to write. An AI pair-programmer can refactor an entire file in seconds, find and update every instance of a pattern instantly, and hold an entire codebase in context. The cost of "fixing it later" has collapsed. That changes the calculus on several classic rules.
 
