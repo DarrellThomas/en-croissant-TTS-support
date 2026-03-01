@@ -334,6 +334,9 @@ async function getCloudEvaluation(
   url.searchParams.append("multiPv", multipv.toString());
 
   const response = await fetch(url.toString(), { headers: apiHeaders() });
+  if (!response.ok) {
+    throw new Error(`Lichess cloud eval: HTTP ${response.status}`);
+  }
   const data = (await response.json()) as LichessCloudData;
   cache.set(`${fen}-${multipv}`, data);
   return data;
@@ -362,12 +365,10 @@ export async function getLichessGames(
         : undefined,
     ),
   });
-  const data = await res.json();
-
   if (!res.ok) {
-    throw new Error(`${data}`);
+    throw new Error(`Lichess explorer: HTTP ${res.status}`);
   }
-  return data;
+  return await res.json();
 }
 
 export async function getMasterGames(
@@ -388,11 +389,10 @@ export async function getMasterGames(
         : undefined,
     ),
   });
-  const data = await res.json();
   if (!res.ok) {
-    throw new Error(`${data}`);
+    throw new Error(`Lichess masters: HTTP ${res.status}`);
   }
-  return data;
+  return await res.json();
 }
 
 export async function getPlayerGames(
@@ -401,20 +401,22 @@ export async function getPlayerGames(
   color: Color,
   token?: string,
 ) {
-  return (
-    await fetch(
-      `${explorerURL}/player?fen=${fen}&player=${player}&color=${color}`,
-      {
-        headers: apiHeaders(
-          token
-            ? {
-                Authorization: `Bearer ${token}`,
-              }
-            : undefined,
-        ),
-      },
-    )
-  ).json();
+  const res = await fetch(
+    `${explorerURL}/player?fen=${fen}&player=${player}&color=${color}`,
+    {
+      headers: apiHeaders(
+        token
+          ? {
+              Authorization: `Bearer ${token}`,
+            }
+          : undefined,
+      ),
+    },
+  );
+  if (!res.ok) {
+    throw new Error(`Lichess player explorer: HTTP ${res.status}`);
+  }
+  return await res.json();
 }
 
 export async function downloadLichess(
