@@ -71,6 +71,14 @@ jobs:
       - name: Install app dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Install espeak-ng (Linux)
+        if: matrix.platform == 'ubuntu-24.04'
+        run: sudo apt-get install -y espeak-ng
+
+      - name: Install espeak (macOS)
+        if: matrix.platform == 'macos-latest' && contains(matrix.args, 'aarch64')
+        run: brew install espeak-ng
+
       - name: Bundle KittenTTS (Linux/macOS ARM)
         if: matrix.platform == 'ubuntu-24.04' || contains(matrix.args, 'aarch64')
         run: |
