@@ -33,17 +33,15 @@ La basura de IA es escribir "hazme una app de ajedrez" y enviar lo que sea que r
 
 Francisco Salgueiro construyo En Croissant a lo largo de anos de arquitectura reflexiva. Noches en vela depurando las peculiaridades de Tauri. Trabajo cuidadoso de interfaz con Mantine. Un parser PGN que realmente funciona. Integracion de motores, gestion de bases de datos, soporte de puzzles. Todo. Construyo algo que le importaba y se nota.
 
-Le pregunte sobre integrar text-to-speech. Voces premium, multiples proveedores, narracion que hace que estudiar partidas se sienta como escuchar una transmision. Ese no era su estilo, y lo respeto. Asi funciona el codigo abierto. Puedo tomar su trabajo y construir en una direccion diferente. Pero le debo la honestidad de decirlo directamente: sin En Croissant, En Parlant~ no existe. Punto.
+Envie un pull request para agregar narracion text-to-speech. Francisco lo reviso y decidio que no era la direccion que queria para En Croissant. Esa es una decision de mantenedor, y la respeto — el conoce su proyecto mejor que nadie. Asi funciona el codigo abierto. La GPL me permite hacer un fork y construir en una direccion diferente, y agradezco esa libertad. Pero le debo la honestidad de decirlo directamente: sin En Croissant, En Parlant~ no existe. Punto.
 
-Lo que Francisco logro en anos de artesania dedicada, yo lo amplie en un fin de semana con una cafetera, y una IA que nunca se cansa.
+Esto es lo que me queda dando vueltas. Francisco paso anos construyendo algo con cuidado — tomando decisiones dificiles, aprendiendo el framework, dando forma a la arquitectura a traves de cientos de commits. La funcionalidad TTS que agregue se construye sobre todo ese trabajo. No existiria sin las bases que el puso. Una IA me ayudo a moverme rapido, pero moverse rapido sobre el esfuerzo de anos de otra persona no es lo mismo que hacer lo que esa persona hizo.
 
-No es una fanfarronada. Es simplemente donde estamos ahora.
-
-Y no se que hacer con eso, honestamente. ¿Que significa la artesania cuando el oficio se acelera 10x? No tengo respuestas ordenadas. Pero prefiero sentarme con la incomodidad que pretender que no esta ahi.
+Y no se que hacer con eso, honestamente. ¿Que significa la artesania cuando alguien puede extenderla a velocidad 10x? ¿Que significa pararse sobre los hombros de alguien cuando la escalera crecio tan alto tan rapido? No tengo respuestas ordenadas. Pero prefiero sentarme con la incomodidad que pretender que no esta ahi.
 
 ## El estado de las cosas
 
-La comunidad de ajedrez obtiene un mejor producto porque herramientas como esta existen. La brecha entre "ojala esta app pudiera narrar movimientos" y "narra movimientos en ocho idiomas con cinco proveedores TTS" paso de meses a dias.
+La comunidad de ajedrez obtiene un mejor producto porque herramientas como Claude Code existen. La brecha entre "ojala esta app pudiera narrar movimientos" y "narra movimientos en ocho idiomas con cinco proveedores TTS" paso de meses a dias.
 
 Esto esta sucediendo en todas partes. Cada dominio. Cada oficio.
 
@@ -53,7 +51,7 @@ Algo es genuinamente inquietante. Cuando el costo de construir cae hacia cero, �
 
 ## Por que el ajedrez
 
-El ajedrez es un refugio. El unico lugar donde tengo que pensar por mi mismo. Sin autocompletado. Sin sugerencias. Solo 64 casillas y 32 piezas y lo que mi cerebro pueda hacer con ellas.
+El ajedrez es un refugio para mi. No soy Gran Maestro, y me encuentro siempre aprendiendo a lo largo de las decadas. Es el unico lugar donde tengo que pensar por mi mismo. Sin autocompletado. Sin sugerencias. Solo 64 casillas y 32 piezas y lo que mi cerebro pueda hacer con ellas.
 
 Al tablero no le importan mis herramientas. No le importa mi GPU ni mi velocidad de inferencia. Solo pregunta: ¿puedes ver lo que esta pasando aqui? Eso es todo.
 
@@ -61,7 +59,11 @@ El ajedrez es donde voy para recordar lo que se siente usar mi propia mente.
 
 ## Una nota sobre la honestidad
 
-He visto repositorios con miles de lineas de codigo generado por IA y cero reconocimiento. Soy capitan de aerolinea. Treinta y cinco anos en el asiento. Mi cabina esta llena de automatizacion. Piloto automatico, auto-throttle, fly-by-wire, GPS, vision sintetica. Nadie me ha preguntado nunca si estoy "realmente" pilotando el avion. Las herramientas no disminuyen la habilidad. Cambian lo que es la habilidad.
+He visto repositorios con miles de lineas de codigo generado por IA y cero reconocimiento. Gente haciendo pasar la produccion de Claude como propia en entrevistas, en trabajo para clientes, en contribuciones de codigo abierto. Lo entiendo. Hay un estigma. La gente escucha "asistido por IA" y piensa que es menor.
+
+Pero aqui esta la cosa. Soy capitan de aerolinea. Treinta y nueve anos volando. Mi cabina esta llena de automatizacion. Piloto automatico, auto-throttle, fly-by-wire, GPS, vision sintetica. Nadie me ha preguntado nunca si estoy "realmente" pilotando el avion. Las herramientas no disminuyen la habilidad. Cambian lo que es la habilidad. El juicio, la conciencia situacional, la toma de decisiones cuando nada esta claro. Esa parte sigue siendo mia. Las herramientas solo me permiten operar a un nivel que no podria alcanzar a manos desnudas.
+
+El software esta pasando por el mismo cambio que la aviacion paso hace decadas. Los puristas del vuelo manual siempre existiran, ¡y soy uno de ellos! Si estas en uno de mis aviones, de vez en cuando me veras pilotando todo manualmente. Del despegue al aterrizaje. Porque puedo. Porque esa habilidad importa. Pero tambien se cuando dejar que la automatizacion trabaje. ¿Saber la diferencia? Esa es la verdadera habilidad.
 
 Este proyecto fue construido por un humano y una IA trabajando juntos. Estoy orgulloso de ambas mitades.
 

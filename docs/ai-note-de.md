@@ -33,15 +33,15 @@ KI-Mull ist „mach mir eine Schach-App" einzutippen und auszuliefern, was zuruc
 
 Francisco Salgueiro baute En Croissant uber Jahre durchdachter Architektur. Spate Nachte beim Debuggen von Tauri-Eigenheiten. Sorgfaltige UI-Arbeit mit Mantine. Ein PGN-Parser, der tatsachlich funktioniert. Engine-Integration, Datenbankverwaltung, Puzzle-Support. Alles. Er hat etwas gebaut, das ihm am Herzen lag, und das sieht man.
 
-Ich fragte ihn nach der Integration von Text-to-Speech. Das war nicht sein Stil, und ich respektiere das. So funktioniert Open Source. Aber ich schulde ihm die Ehrlichkeit, es direkt zu sagen: ohne En Croissant existiert En Parlant~ nicht. Punkt.
+Ich reichte einen Pull Request ein, um Text-to-Speech-Narration hinzuzufugen. Francisco prufte ihn und entschied, dass das nicht die Richtung war, die er fur En Croissant wollte. Das ist die Entscheidung eines Maintainers, und ich respektiere sie — er kennt sein Projekt besser als jeder andere. So funktioniert Open Source. Die GPL erlaubt mir zu forken und in eine andere Richtung zu bauen, und ich bin dankbar fur diese Freiheit. Aber ich schulde ihm die Ehrlichkeit, es direkt zu sagen: ohne En Croissant existiert En Parlant~ nicht. Punkt.
 
-Was Francisco in Jahren engagierter Handwerkskunst erreichte, habe ich an einem Wochenende mit einer Kanne Kaffee und einer KI, die nie mude wird, zu seiner Arbeit hinzugefugt.
+Hier ist, was mich beschaftigt. Francisco hat Jahre damit verbracht, etwas mit Sorgfalt zu bauen — schwierige Entscheidungen zu treffen, das Framework zu lernen, die Architektur durch Hunderte von Commits zu formen. Das TTS-Feature, das ich hinzugefugt habe, baut auf all dieser Arbeit auf. Es wurde ohne das Fundament, das er gelegt hat, nicht existieren. Eine KI hat mir geholfen, schnell voranzukommen, aber schnell voranzukommen auf der Basis von jemandes jahrelanger Arbeit ist nicht dasselbe wie das zu tun, was er getan hat.
 
-Das ist keine Prahlerei. Das ist einfach, wo wir jetzt stehen.
+Und ich weiss ehrlich gesagt nicht, was ich damit anfangen soll. Was bedeutet Handwerkskunst, wenn jemand sie mit 10-facher Geschwindigkeit erweitern kann? Was bedeutet es, auf jemandes Schultern zu stehen, wenn die Leiter so schnell so hoch gewachsen ist? Ich habe keine sauberen Antworten. Aber ich sitze lieber mit dem Unbehagen, als so zu tun, als ware es nicht da.
 
 ## Der Stand der Dinge
 
-Die Schachgemeinschaft bekommt ein besseres Produkt, weil Werkzeuge wie dieses existieren. Die Lucke zwischen „ich wunschte, diese App konnte Zuge vorlesen" und „sie liest Zuge in acht Sprachen mit funf TTS-Anbietern vor" schrumpfte von Monaten auf Tage.
+Die Schachgemeinschaft bekommt ein besseres Produkt, weil Werkzeuge wie Claude Code existieren. Die Lucke zwischen „ich wunschte, diese App konnte Zuge vorlesen" und „sie liest Zuge in acht Sprachen mit funf TTS-Anbietern vor" schrumpfte von Monaten auf Tage.
 
 Das passiert uberall. Jede Domane. Jedes Handwerk.
 
@@ -51,15 +51,19 @@ Einiges ist echt beunruhigend. Wenn die Kosten des Bauens gegen null fallen, was
 
 ## Warum Schach
 
-Schach ist ein Zufluchtsort. Der einzige Ort, wo ich selbst denken muss. Kein Autocomplete. Keine Vorschlage. Nur 64 Felder und 32 Figuren und was auch immer mein Gehirn damit anfangen kann.
+Schach ist ein Zufluchtsort fur mich. Ich bin kein Grossmeister, und ich lerne immer noch, uber die Jahrzehnte hinweg. Es ist der einzige Ort, wo ich selbst denken muss. Kein Autocomplete. Keine Vorschlage. Nur 64 Felder und 32 Figuren und was auch immer mein Gehirn damit anfangen kann.
 
-Das Brett interessiert sich nicht fur meine Tools. Es fragt nur: kannst du sehen, was hier passiert? Das ist alles.
+Das Brett interessiert sich nicht fur meine Tools. Nicht fur meine GPU oder meine Inferenzgeschwindigkeit. Es fragt nur: kannst du sehen, was hier passiert? Das ist alles.
 
 Schach ist, wo ich hingehe, um mich daran zu erinnern, wie es sich anfuhlt, meinen eigenen Verstand zu benutzen.
 
 ## Eine Anmerkung zur Ehrlichkeit
 
-Ich bin Flugkapitan. Funfunddreissig Jahre im Cockpit. Mein Cockpit ist vollgestopft mit Automatisierung. Autopilot, Autothrottle, Fly-by-Wire, GPS, synthetische Sicht. Niemand hat mich je gefragt, ob ich „wirklich" das Flugzeug fliege. Die Werkzeuge verringern nicht die Kompetenz. Sie verandern, was die Kompetenz ist.
+Ich habe Repos gesehen mit Tausenden Zeilen KI-generiertem Code und null Anerkennung. Leute, die Claudes Output als ihren eigenen ausgeben in Vorstellungsgesprachen, in Kundenarbeit, in Open-Source-Beitragen. Ich verstehe das. Es gibt ein Stigma. Die Leute horen „KI-gestutzt" und denken weniger.
+
+Aber hier ist die Sache. Ich bin Flugkapitan. Neununddreissig Jahre Fliegerei. Mein Cockpit ist vollgestopft mit Automatisierung. Autopilot, Autothrottle, Fly-by-Wire, GPS, synthetische Sicht. Niemand hat mich je gefragt, ob ich „wirklich" das Flugzeug fliege. Die Werkzeuge verringern nicht die Kompetenz. Sie verandern, was die Kompetenz ist. Urteilsvermogen, Situationsbewusstsein, Entscheidungsfindung, wenn nichts klar ist. Dieser Teil gehort immer noch mir. Die Werkzeuge lassen mich einfach auf einem Niveau operieren, das ich mit blossen Handen nicht erreichen konnte.
+
+Software durchlauft gerade denselben Wandel, den die Luftfahrt vor Jahrzehnten durchlaufen hat. Die Puristen des Handfliegens wird es immer geben, und ich bin einer von ihnen! Wenn ihr in einem meiner Flugzeuge sitzt, werdet ihr mich ab und zu das ganze Ding von Hand fliegen sehen. Vom Start bis zur Landung. Weil ich es kann. Weil diese Fahigkeit zahlt. Aber ich weiss auch, wann ich die Automatisierung arbeiten lassen muss. Den Unterschied kennen? Das ist die wahre Kompetenz.
 
 Dieses Projekt wurde von einem Menschen und einer KI gemeinsam gebaut. Ich bin stolz auf beide Halften.
 

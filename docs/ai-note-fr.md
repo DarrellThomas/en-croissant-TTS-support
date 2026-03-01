@@ -33,17 +33,15 @@ Le slop IA, c'est taper « fais-moi une appli d'echecs » et livrer ce qui revie
 
 Francisco Salgueiro a construit En Croissant au fil d'annees d'architecture reflechie. Des nuits blanches a deboguer les caprices de Tauri. Un travail d'interface soigne avec Mantine. Un parseur PGN qui fonctionne vraiment. Integration moteur, gestion de base de donnees, support des puzzles. Tout. Il a construit quelque chose qui lui tenait a coeur et ca se voit.
 
-Je lui ai demande si on pouvait integrer le text-to-speech. Des voix premium, plusieurs fournisseurs, une narration qui donne l'impression d'ecouter un commentaire radio en etudiant des parties. Ce n'etait pas son style, et je respecte ca. C'est comme ca que marche l'open source. Je peux prendre son travail et construire dans une direction differente. Mais je lui dois l'honnetete de le dire franchement : sans En Croissant, En Parlant~ n'existe pas. Point.
+J'ai soumis une pull request pour ajouter la narration text-to-speech. Francisco l'a examinee et a decide que ce n'etait pas la direction qu'il souhaitait pour En Croissant. C'est une decision de mainteneur, et je la respecte — il connait son projet mieux que quiconque. C'est comme ca que marche l'open source. La GPL me permet de forker et de construire dans une direction differente, et je suis reconnaissant de cette liberte. Mais je lui dois l'honnetete de le dire franchement : sans En Croissant, En Parlant~ n'existe pas. Point.
 
-Ce que Francisco a accompli en des annees de savoir-faire dedie, j'y ai ajoute en un week-end avec une cafetiere, et une IA qui ne se fatigue jamais.
+Voici ce qui me reste en tete, cependant. Francisco a passe des annees a construire quelque chose avec soin — prenant des decisions difficiles, apprenant le framework, faconnant l'architecture a travers des centaines de commits. La fonctionnalite TTS que j'ai ajoutee repose sur tout ce travail. Elle n'existerait pas sans les fondations qu'il a posees. Une IA m'a aide a aller vite, mais aller vite sur le travail de quelqu'un d'autre accumule pendant des annees, ce n'est pas la meme chose que faire ce qu'il a fait.
 
-Ce n'est pas de la vantardise. C'est juste la ou on en est maintenant.
-
-Et je ne sais pas quoi faire avec ca, honnetement. Que signifie le savoir-faire quand l'artisanat est accelere de 10x ? Que signifie l'expertise quand une machine peut resoudre par correspondance de motifs des problemes qui prenaient des annees ? Je n'ai pas de reponses nettes. Mais je prefere vivre avec l'inconfort plutot que de pretendre qu'il n'est pas la.
+Et je ne sais pas quoi faire avec ca, honnetement. Que signifie le savoir-faire quand quelqu'un peut l'etendre a une vitesse 10x ? Que signifie se tenir sur les epaules de quelqu'un quand l'echelle est devenue si haute si vite ? Je n'ai pas de reponses nettes. Mais je prefere vivre avec l'inconfort plutot que de pretendre qu'il n'est pas la.
 
 ## L'etat des choses
 
-La communaute des echecs obtient un meilleur produit parce que des outils comme celui-ci existent. L'ecart entre « j'aimerais que cette appli puisse narrer les coups » et « elle narre les coups en huit langues avec cinq fournisseurs TTS » est passe de mois a jours.
+La communaute des echecs obtient un meilleur produit parce que des outils comme Claude Code existent. L'ecart entre « j'aimerais que cette appli puisse narrer les coups » et « elle narre les coups en huit langues avec cinq fournisseurs TTS » est passe de mois a jours.
 
 Ca se passe partout. Chaque domaine. Chaque metier. Des logiciels qui necessitaient des equipes ne necessitent plus qu'une personne.
 
@@ -53,7 +51,7 @@ Une partie est genuinement perturbante. Quand le cout de construction tombe vers
 
 ## Pourquoi les echecs
 
-Les echecs sont un refuge. Le seul endroit ou je dois penser par moi-meme. Pas d'autocompletion. Pas de suggestions. Juste 64 cases et 32 pieces et tout ce que mon cerveau peut en faire.
+Les echecs sont un refuge pour moi. Je ne suis pas Grand Maitre, et je me retrouve toujours a apprendre au fil des decennies. C'est le seul endroit ou je dois penser par moi-meme. Pas d'autocompletion. Pas de suggestions. Juste 64 cases et 32 pieces et tout ce que mon cerveau peut en faire.
 
 L'echiquier se moque de mes outils. Se moque de mon GPU ou de ma vitesse d'inference. Il demande juste : peux-tu voir ce qui se passe ici ? C'est tout. Reconnaissance de motifs et calcul sous pression. Pas de raccourcis.
 
@@ -61,7 +59,11 @@ Les echecs, c'est la ou je vais pour me rappeler ce que ca fait d'utiliser mon p
 
 ## Une note sur l'honnetete
 
-J'ai vu des depots avec des milliers de lignes de code genere par IA et zero reconnaissance. Je suis un commandant de bord. Trente-cinq ans aux commandes. Mon cockpit est bourre d'automatisation. Pilote automatique, auto-manettes, commandes de vol electroniques, GPS, vision synthetique. Personne ne m'a jamais demande si je « pilotais vraiment » l'avion. Les outils ne diminuent pas la competence. Ils changent ce qu'est la competence.
+J'ai vu des depots avec des milliers de lignes de code genere par IA et zero reconnaissance. Des gens qui font passer le travail de Claude pour le leur dans des entretiens, du travail client, des contributions open-source. Je comprends. Il y a un stigmate. Les gens entendent « assiste par IA » et pensent que c'est moindre.
+
+Mais voila. Je suis un commandant de bord. Trente-neuf ans de vol. Mon cockpit est bourre d'automatisation. Pilote automatique, auto-manettes, commandes de vol electroniques, GPS, vision synthetique. Personne ne m'a jamais demande si je « pilotais vraiment » l'avion. Les outils ne diminuent pas la competence. Ils changent ce qu'est la competence. Le jugement, la conscience de la situation, la prise de decision quand rien n'est clair. Ca reste a moi. Les outils me permettent juste d'operer a un niveau que je ne pourrais pas atteindre a mains nues.
+
+Le logiciel traverse le meme virage que l'aviation a traverse il y a des decennies. Les puristes du pilotage manuel existeront toujours, et je suis l'un d'eux ! Si vous etes dans un de mes avions, de temps en temps vous me verrez piloter a la main du decollage a l'atterrissage. Parce que je peux. Parce que cette competence compte. Mais je sais aussi quand laisser l'automatisation travailler. Connaitre la difference ? C'est ca la vraie competence.
 
 Ce projet a ete construit par un humain et une IA travaillant ensemble. Je suis fier des deux moities.
 
