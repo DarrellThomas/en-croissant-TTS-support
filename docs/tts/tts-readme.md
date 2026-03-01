@@ -1,12 +1,12 @@
 # Text-to-Speech Narration for Chess Annotations
 
-This fork adds **TTS narration** to En Croissant-TTS, turning annotated PGN files into spoken chess lessons. Step through any game and hear every comment read aloud with correct chess pronunciation.
+This fork adds **TTS narration** to En Parlant~, turning annotated PGN files into spoken chess lessons. Step through any game and hear every comment read aloud with correct chess pronunciation.
 
 Built for studying annotated master games and reviewing your own game debriefs without staring at the screen.
 
 ## Providers
 
-En Croissant-TTS supports five TTS providers:
+En Parlant~ supports five TTS providers:
 
 | Provider | Type | Quality | Setup | Languages |
 |----------|------|---------|-------|-----------|
@@ -88,7 +88,7 @@ On first launch, KittenTTS downloads the nano model (~25MB) from HuggingFace. Th
 
 ## Dependency Management
 
-KittenTTS and OpenTTS require external dependencies (Python packages and Docker, respectively). En Croissant-TTS includes three layers of dependency management:
+KittenTTS and OpenTTS require external dependencies (Python packages and Docker, respectively). En Parlant~ includes three layers of dependency management:
 
 ### In-App Setup Wizard
 

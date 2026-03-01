@@ -451,10 +451,10 @@ function RootLayout() {
         label: t("Menu.Help"),
         options: [
           {
-            label: "En Croissant-TTS Docs",
+            label: "En Parlant~ Docs",
             id: "documentation",
             action: () => {
-              setDocTitle("En Croissant-TTS Docs");
+              setDocTitle("En Parlant~ Docs");
               setDocResource("docs/README.md");
             },
           },
@@ -486,7 +486,7 @@ function RootLayout() {
             label: t("Menu.Help.OpenLogs"),
             id: "logs",
             action: async () => {
-              const path = await resolve(await appLogDir(), "en-croissant.log");
+              const path = await resolve(await appLogDir(), "en-parlant.log");
               notifications.show({
                 title: "Logs",
                 message: `Opened logs in ${path}`,

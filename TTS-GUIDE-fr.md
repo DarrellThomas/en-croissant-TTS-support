@@ -76,7 +76,7 @@ Cela indique a Google quel service vous souhaitez utiliser.
 
 ### Etape 4 : Creer une API key
 
-L'API key est ce qu'En Croissant utilise pour communiquer avec les serveurs de Google.
+L'API key est ce qu'En Parlant~ utilise pour communiquer avec les serveurs de Google.
 
 1. Dans la barre de recherche en haut, tapez **"Credentials"** et cliquez sur **Credentials** sous "APIs & Services"
 2. En haut de la page, cliquez sur **+ Create Credentials**
@@ -87,11 +87,11 @@ L'API key est ce qu'En Croissant utilise pour communiquer avec les serveurs de G
 
 > **Recommande : Restreignez votre cle.** Apres avoir cree la cle, vous la verrez dans la liste sur la page Credentials. Cliquez sur le nom de la cle pour ouvrir ses parametres. Sous **API restrictions**, selectionnez **Restrict key**, puis choisissez **Cloud Text-to-Speech API** dans le menu deroulant et cliquez sur **Save**. Ainsi, meme si quelqu'un obtient votre cle, il ne pourra l'utiliser que pour le TTS — rien d'autre.
 
-### Etape 5 : Configurer En Croissant
+### Etape 5 : Configurer En Parlant~
 
 Vous y etes presque !
 
-1. Ouvrez En Croissant et allez dans **Settings** (icone d'engrenage) > onglet **Sound**
+1. Ouvrez En Parlant~ et allez dans **Settings** (icone d'engrenage) > onglet **Sound**
 2. Faites defiler jusqu'a la section TTS
 3. Reglez **TTS Provider** sur **Google Cloud**
 4. Cliquez dans le champ **Google Cloud API Key** et collez votre cle (Ctrl+V)
@@ -121,9 +121,9 @@ ElevenLabs est plus simple a configurer mais dispose d'une offre gratuite plus r
 4. La cle ressemble a ceci : `sk_...about 30 characters...`
 5. **Cliquez sur l'icone de copie** pour la copier dans votre presse-papiers
 
-### Etape 3 : Configurer En Croissant
+### Etape 3 : Configurer En Parlant~
 
-1. Ouvrez En Croissant et allez dans **Settings** (icone d'engrenage) > onglet **Sound**
+1. Ouvrez En Parlant~ et allez dans **Settings** (icone d'engrenage) > onglet **Sound**
 2. Faites defiler jusqu'a la section TTS
 3. Reglez **TTS Provider** sur **ElevenLabs**
 4. Cliquez dans le champ **ElevenLabs API Key** et collez votre cle (Ctrl+V)

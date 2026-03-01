@@ -1,6 +1,6 @@
 # Databases
 
-En Croissant-TTS comes with a selection of databases to download with a single click.
+En Parlant~ comes with a selection of databases to download with a single click.
 
 ## Available Databases
 

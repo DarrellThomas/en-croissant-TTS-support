@@ -29,7 +29,7 @@ Once you try it, going back to silent annotations feels like watching a movie on
 
 ## Choosing a Provider
 
-En Croissant-TTS ships with five TTS providers. They range from zero-setup OS-native speech to premium cloud AI voices, with local ML models in between. You only need one provider to get started. Pick whichever suits you best.
+En Parlant~ ships with five TTS providers. They range from zero-setup OS-native speech to premium cloud AI voices, with local ML models in between. You only need one provider to get started. Pick whichever suits you best.
 
 |                        | System (OS Native)            | KittenTTS (Local AI)             | Google Cloud                  | ElevenLabs                    | OpenTTS (Docker)                   |
 |------------------------|-------------------------------|----------------------------------|-------------------------------|-------------------------------|------------------------------------|
@@ -91,7 +91,7 @@ This tells Google which service you want to use.
 
 ### Step 4: Create an API key
 
-The API key is what En Croissant-TTS uses to talk to Google's servers.
+The API key is what En Parlant~ uses to talk to Google's servers.
 
 1. In the top search bar, type **"Credentials"** and click **Credentials** under "APIs & Services"
 2. Near the top of the page, click **+ Create Credentials**
@@ -102,11 +102,11 @@ The API key is what En Croissant-TTS uses to talk to Google's servers.
 
 > **Recommended: Restrict your key.** After creating the key, you'll see it listed on the Credentials page. Click the key name to open its settings. Under **API restrictions**, select **Restrict key**, then choose **Cloud Text-to-Speech API** from the dropdown and click **Save**. This means even if someone gets your key, they can only use it for TTS — nothing else.
 
-### Step 5: Configure En Croissant-TTS
+### Step 5: Configure En Parlant~
 
 Almost there!
 
-1. Open En Croissant-TTS and go to **Settings** (gear icon) > **Sound** tab
+1. Open En Parlant~ and go to **Settings** (gear icon) > **Sound** tab
 2. Scroll down to the TTS section
 3. Set **TTS Provider** to **Google Cloud**
 4. Click inside the **Google Cloud API Key** field and paste your key (Ctrl+V)
@@ -136,9 +136,9 @@ ElevenLabs is simpler to set up but has a smaller free tier (10,000 characters/m
 4. The key looks like: `sk_...about 30 characters...`
 5. **Click the copy icon** to copy it to your clipboard
 
-### Step 3: Configure En Croissant-TTS
+### Step 3: Configure En Parlant~
 
-1. Open En Croissant-TTS and go to **Settings** (gear icon) > **Sound** tab
+1. Open En Parlant~ and go to **Settings** (gear icon) > **Sound** tab
 2. Scroll down to the TTS section
 3. Set **TTS Provider** to **ElevenLabs**
 4. Click inside the **ElevenLabs API Key** field and paste your key (Ctrl+V)
@@ -177,9 +177,9 @@ Other language packs are available: `de`, `fr`, `es`, `ru`, `nl`, `sv`, `it`, an
 docker run -d -p 5500:5500 --name opentts synesthesiam/opentts:all
 ```
 
-### Step 3: Configure En Croissant-TTS
+### Step 3: Configure En Parlant~
 
-1. Open En Croissant-TTS and go to **Settings** (gear icon) > **Sound** tab
+1. Open En Parlant~ and go to **Settings** (gear icon) > **Sound** tab
 2. Scroll down to the TTS section
 3. Set **TTS Provider** to **OpenTTS (Self-Hosted)**
 4. Confirm the **OpenTTS Server URL** is `http://localhost:5500`
@@ -221,7 +221,7 @@ KittenTTS requires Python 3.10+ and a few Python packages. You can set this up t
 
 **Option A: In-app setup wizard (recommended)**
 
-1. Open En Croissant-TTS and go to **Settings > Sound**
+1. Open En Parlant~ and go to **Settings > Sound**
 2. Set **TTS Provider** to **KittenTTS (English Only)**
 3. If dependencies are missing, a yellow "Setup Guide" alert appears
 4. Click the alert to open the setup wizard
@@ -230,7 +230,7 @@ KittenTTS requires Python 3.10+ and a few Python packages. You can set this up t
 **Option B: Terminal setup script**
 
 ```bash
-cd /path/to/en-croissant-TTS
+cd /path/to/en-parlant
 ./scripts/setup-tts.sh --kittentts
 ```
 
@@ -239,14 +239,14 @@ This creates a Python virtual environment and installs the required packages (ki
 **Option C: Manual setup**
 
 ```bash
-cd /path/to/en-croissant-TTS/scripts
+cd /path/to/en-parlant/scripts
 python3 -m venv .venv
 .venv/bin/pip install kittentts flask soundfile numpy
 ```
 
-### Step 2: Configure En Croissant-TTS
+### Step 2: Configure En Parlant~
 
-1. Open En Croissant-TTS and go to **Settings** (gear icon) > **Sound** tab
+1. Open En Parlant~ and go to **Settings** (gear icon) > **Sound** tab
 2. Set **TTS Provider** to **KittenTTS (English Only)**
 3. The server starts automatically when you select this provider
 4. Wait a few seconds for the model to load (first run downloads from HuggingFace)
@@ -265,9 +265,9 @@ You should hear a chess move spoken aloud with natural, expressive AI speech.
 
 System TTS uses your operating system's built-in speech synthesis. There is nothing to install.
 
-### Configure En Croissant-TTS
+### Configure En Parlant~
 
-1. Open En Croissant-TTS and go to **Settings** (gear icon) > **Sound** tab
+1. Open En Parlant~ and go to **Settings** (gear icon) > **Sound** tab
 2. Set **TTS Provider** to **System (OS Native)**
 3. The voice dropdown shows all voices available on your system
 4. Click the **Test** button to preview

@@ -221,7 +221,7 @@ fn main() {
     let log_targets = [
         TargetKind::Stdout,
         TargetKind::LogDir {
-            file_name: Some(String::from("en-croissant.log")),
+            file_name: Some(String::from("en-parlant.log")),
         },
     ];
 

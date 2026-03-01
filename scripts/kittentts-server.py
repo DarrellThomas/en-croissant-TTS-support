@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-KittenTTS HTTP Server for En Croissant-TTS
+KittenTTS HTTP Server for En Parlant~
 
 A lightweight HTTP wrapper around KittenTTS that exposes a simple REST API
-for text-to-speech synthesis. En Croissant-TTS connects to this server
+for text-to-speech synthesis. En Parlant~ connects to this server
 when "KittenTTS" is selected as the TTS provider.
 
 Setup:

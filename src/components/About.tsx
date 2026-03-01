@@ -34,7 +34,7 @@ function AboutModal({
       centered
       opened={opened}
       onClose={() => setOpened(false)}
-      title="En Croissant-TTS"
+      title="En Parlant~"
     >
       <Text>Version: {info?.version}</Text>
       <Text>Tauri version: {info?.tauri}</Text>
@@ -45,11 +45,11 @@ function AboutModal({
       <br />
 
       <Anchor
-        href="https://github.com/DarrellThomas/en-croissant-TTS"
+        href="https://github.com/DarrellThomas/en-parlant"
         target="_blank"
         rel="noreferrer"
       >
-        github.com/DarrellThomas/en-croissant-TTS
+        github.com/DarrellThomas/en-parlant
       </Anchor>
 
       <br />

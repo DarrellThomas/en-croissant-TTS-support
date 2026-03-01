@@ -47,7 +47,7 @@ Sign up at [elevenlabs.io](https://elevenlabs.io). The free tier gives you ~10,0
 
 ### 2. Configure in Settings
 
-Open En Croissant and go to **Settings > Sound**:
+Open En Parlant~ and go to **Settings > Sound**:
 
 | Setting | Description |
 |---------|-------------|

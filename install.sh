@@ -1,34 +1,36 @@
 #!/bin/bash
-# Install en-croissant-TTS locally
+# Install en-parlant locally
 # Usage: sudo ./install.sh
 #
 # Binary goes to /usr/bin/
-# Resources (docs, sound) go to /usr/lib/en-croissant-TTS/
+# Resources (docs, sound) go to /usr/lib/en-parlant/
 # (Tauri resolveResource looks in /usr/lib/<productName>/ on Linux)
 
 set -e
 
 RELEASE_DIR="src-tauri/target/release"
-RES_DIR="/usr/lib/en-croissant-TTS"
+RES_DIR="/usr/lib/en-parlant"
 
 if [ "$(id -u)" -ne 0 ]; then
   echo "Run with sudo: sudo ./install.sh"
   exit 1
 fi
 
-if [ ! -f "$RELEASE_DIR/en-croissant-TTS" ]; then
+if [ ! -f "$RELEASE_DIR/en-parlant" ]; then
   echo "Binary not found. Run 'pnpm tauri build --no-bundle' first."
   exit 1
 fi
 
-# Clean previous install
+# Clean previous install (both old and new names)
 rm -f /usr/bin/en-croissant-TTS
+rm -f /usr/bin/en-parlant
+rm -rf /usr/lib/en-croissant-TTS
 rm -rf "$RES_DIR"
 rm -rf /opt/en-croissant-TTS
 
 # Binary
-cp "$RELEASE_DIR/en-croissant-TTS" /usr/bin/en-croissant-TTS
-chmod 755 /usr/bin/en-croissant-TTS
+cp "$RELEASE_DIR/en-parlant" /usr/bin/en-parlant
+chmod 755 /usr/bin/en-parlant
 
 # Resources (copy from source — --no-bundle doesn't copy resources to release dir)
 mkdir -p "$RES_DIR"
@@ -41,19 +43,20 @@ if [ -d "scripts/.venv" ]; then
   cp -r scripts/.venv "$RES_DIR/scripts/.venv"
 fi
 
-# Desktop entry
-cat > /usr/share/applications/en-croissant-TTS.desktop <<'EOF'
+# Desktop entry (remove old, install new)
+rm -f /usr/share/applications/en-croissant-TTS.desktop
+cat > /usr/share/applications/en-parlant.desktop <<'EOF'
 [Desktop Entry]
 Type=Application
-Name=En Croissant-TTS
-Exec=en-croissant-TTS %f
+Name=En Parlant~
+Exec=en-parlant %f
 Comment=Chess Database with TTS
 Categories=Game;BoardGame;
 Terminal=false
 MimeType=application/x-chess-pgn;
 EOF
 
-echo "Installed en-croissant-TTS"
-echo "  Binary:    /usr/bin/en-croissant-TTS"
+echo "Installed en-parlant"
+echo "  Binary:    /usr/bin/en-parlant"
 echo "  Resources: $RES_DIR/"
-echo "  Desktop:   /usr/share/applications/en-croissant-TTS.desktop"
+echo "  Desktop:   /usr/share/applications/en-parlant.desktop"

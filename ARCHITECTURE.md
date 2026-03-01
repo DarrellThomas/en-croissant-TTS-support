@@ -1,7 +1,7 @@
-# En Croissant Architecture Primer
+# En Parlant~ Architecture Primer
 
 **Date:** 2026-02-27
-**App Version:** v0.14.2 (fork: DarrellThomas/en-croissant)
+**App Version:** v0.14.2 (fork: DarrellThomas/en-parlant)
 **Stack:** Tauri v2 (Rust) + React 19 (TypeScript) + Vite
 
 ---

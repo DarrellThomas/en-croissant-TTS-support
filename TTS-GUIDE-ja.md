@@ -76,7 +76,7 @@ Google は無料枠であっても請求先アカウントの設定を求めま�
 
 ### ステップ 4: API key を作成する
 
-API key は、En Croissant が Google のサーバーと通信するために使用するものです。
+API key は、En Parlant~ が Google のサーバーと通信するために使用するものです。
 
 1. 画面上部の検索バーに **"Credentials"** と入力し、"APIs & Services" の下にある **Credentials** をクリックします
 2. ページ上部付近の **+ Create Credentials** をクリックします
@@ -87,11 +87,11 @@ API key は、En Croissant が Google のサーバーと通信するために使
 
 > **推奨: キーを制限しましょう。** キーを作成すると、Credentials ページに一覧表示されます。キーの名前をクリックして設定を開きます。**API restrictions** の項目で **Restrict key** を選択し、ドロップダウンから **Cloud Text-to-Speech API** を選んで **Save** をクリックします。こうすることで、万が一キーが漏洩しても、TTS 以外の用途には使えなくなります。
 
-### ステップ 5: En Croissant の設定
+### ステップ 5: En Parlant~ の設定
 
 あと少しで完了です！
 
-1. En Croissant を開き、**Settings**（歯車アイコン）> **Sound** タブに移動します
+1. En Parlant~ を開き、**Settings**（歯車アイコン）> **Sound** タブに移動します
 2. TTS セクションまでスクロールします
 3. **TTS Provider** を **Google Cloud** に設定します
 4. **Google Cloud API Key** フィールドをクリックし、キーを貼り付けます（Ctrl+V）
@@ -121,9 +121,9 @@ ElevenLabs はセットアップがより簡単ですが、無料枠は小さめ
 4. キーは `sk_...約30文字...` のような文字列です
 5. **コピーアイコン**をクリックして、クリップボードにコピーします
 
-### ステップ 3: En Croissant の設定
+### ステップ 3: En Parlant~ の設定
 
-1. En Croissant を開き、**Settings**（歯車アイコン）> **Sound** タブに移動します
+1. En Parlant~ を開き、**Settings**（歯車アイコン）> **Sound** タブに移動します
 2. TTS セクションまでスクロールします
 3. **TTS Provider** を **ElevenLabs** に設定します
 4. **ElevenLabs API Key** フィールドをクリックし、キーを貼り付けます（Ctrl+V）

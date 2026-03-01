@@ -47,15 +47,15 @@ struct KittenTtsPaths {
 
 fn find_kittentts_paths() -> KittenTtsPaths {
     let script_paths = [
-        "/usr/lib/en-croissant-TTS/scripts/kittentts-server.py",
+        "/usr/lib/en-parlant/scripts/kittentts-server.py",
         "scripts/kittentts-server.py",
     ];
     let venv_pythons = [
-        "/usr/lib/en-croissant-TTS/scripts/.venv/bin/python",
+        "/usr/lib/en-parlant/scripts/.venv/bin/python",
         "scripts/.venv/bin/python",
     ];
     let venv_dirs = [
-        "/usr/lib/en-croissant-TTS/scripts/.venv",
+        "/usr/lib/en-parlant/scripts/.venv",
         "scripts/.venv",
     ];
 
@@ -280,8 +280,8 @@ pub fn check_kittentts_script() -> DepCheck {
 #[specta::specta]
 pub fn setup_kittentts_venv() -> Result<String, String> {
     // Determine the venv directory — prefer installed location, fall back to dev
-    let venv_dir = if std::path::Path::new("/usr/lib/en-croissant-TTS/scripts").exists() {
-        "/usr/lib/en-croissant-TTS/scripts/.venv"
+    let venv_dir = if std::path::Path::new("/usr/lib/en-parlant/scripts").exists() {
+        "/usr/lib/en-parlant/scripts/.venv"
     } else {
         "scripts/.venv"
     };

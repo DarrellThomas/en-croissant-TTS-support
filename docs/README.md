@@ -1,8 +1,8 @@
-# En Croissant-TTS Documentation
+# En Parlant~ Documentation
 
-## What is En Croissant-TTS?
+## What is En Parlant~?
 
-En Croissant-TTS is an open-source, cross-platform chess GUI that aims to be powerful, customizable and easy to use. It functions as a chess database and analysis tool, bridging the user experience of online chess websites with the powerful features only a desktop application can offer.
+En Parlant~ is an open-source, cross-platform chess GUI that aims to be powerful, customizable and easy to use. It functions as a chess database and analysis tool, bridging the user experience of online chess websites with the powerful features only a desktop application can offer.
 
 ### Key Features
 
@@ -41,7 +41,7 @@ En Croissant-TTS is an open-source, cross-platform chess GUI that aims to be pow
 
 ## Attribution
 
-En Croissant-TTS is a fork of [En Croissant](https://www.encroissant.org), created by [Francisco Salgueiro](https://github.com/franciscoBSalgueiro). Francisco built an exceptional open-source chess platform — powerful, thoughtfully designed, and freely available under the GPL-3.0 license. This fork exists because of his work and generosity. The core application, database system, analysis engine, repertoire trainer, and all the features documented here are his creation. We are deeply grateful for the foundation he built.
+En Parlant~ is a fork of [En Croissant](https://www.encroissant.org), created by [Francisco Salgueiro](https://github.com/franciscoBSalgueiro). Francisco built an exceptional open-source chess platform — powerful, thoughtfully designed, and freely available under the GPL-3.0 license. This fork exists because of his work and generosity. The core application, database system, analysis engine, repertoire trainer, and all the features documented here are his creation. We are deeply grateful for the foundation he built.
 
 The TTS (Text-to-Speech) narration feature was developed by Darrell at [Red Shed](mailto:darrell@redshed.ai), with the help of [Claude Code](https://claude.ai/claude-code).
 
@@ -51,6 +51,6 @@ This project is licensed under the GPL-3.0, same as the original En Croissant. S
 
 ## Links
 
-- **This fork:** <https://github.com/DarrellThomas/en-croissant-TTS>
+- **This fork:** <https://github.com/DarrellThomas/en-parlant>
 - **Original En Croissant:** <https://www.encroissant.org>
 - **Francisco's GitHub:** <https://github.com/franciscoBSalgueiro/en-croissant>

@@ -30,7 +30,7 @@ TTS를 활성화하면, 기보를 넘기기만 해도 주석이 *음성으로 �
 
 ## 프로바이더 선택
 
-En Croissant-TTS에는 다섯 가지 TTS 프로바이더가 탑재되어 있습니다. OS 기본 음성부터 프리미엄 클라우드 AI 음성까지, 그리고 그 사이에 로컬 ML 모델이 있습니다. 시작하는 데 필요한 프로바이더는 하나뿐입니다. 자신에게 맞는 것을 선택하세요.
+En Parlant~에는 다섯 가지 TTS 프로바이더가 탑재되어 있습니다. OS 기본 음성부터 프리미엄 클라우드 AI 음성까지, 그리고 그 사이에 로컬 ML 모델이 있습니다. 시작하는 데 필요한 프로바이더는 하나뿐입니다. 자신에게 맞는 것을 선택하세요.
 
 |                        | System (OS 기본)              | KittenTTS (로컬 AI)              | Google Cloud                  | ElevenLabs                    | OpenTTS (Docker)                   |
 |------------------------|-------------------------------|----------------------------------|-------------------------------|-------------------------------|------------------------------------|
@@ -92,7 +92,7 @@ Google은 무료 한도라도 결제 계정을 요구합니다. **월 100만 글
 
 ### 4단계: API 키 생성
 
-API 키는 En Croissant-TTS가 Google 서버와 통신하기 위해 사용하는 것입니다.
+API 키는 En Parlant~가 Google 서버와 통신하기 위해 사용하는 것입니다.
 
 1. 상단 검색창에 **"Credentials"**를 입력하고 "APIs & Services" 아래의 **Credentials**를 클릭합니다
 2. 페이지 상단 근처의 **+ Create Credentials**를 클릭합니다
@@ -103,11 +103,11 @@ API 키는 En Croissant-TTS가 Google 서버와 통신하기 위해 사용하는
 
 > **권장: 키를 제한하세요.** 키를 생성하면 Credentials 페이지에 목록으로 표시됩니다. 키 이름을 클릭하여 설정을 엽니다. **API restrictions** 항목에서 **Restrict key**를 선택한 다음 드롭다운에서 **Cloud Text-to-Speech API**를 선택하고 **Save**를 클릭합니다. 이렇게 하면 키가 유출되더라도 TTS 이외의 용도로는 사용할 수 없습니다.
 
-### 5단계: En Croissant-TTS 설정
+### 5단계: En Parlant~ 설정
 
 거의 다 되었습니다!
 
-1. En Croissant-TTS를 열고 **Settings** (톱니바퀴 아이콘) > **Sound** 탭으로 이동합니다
+1. En Parlant~를 열고 **Settings** (톱니바퀴 아이콘) > **Sound** 탭으로 이동합니다
 2. TTS 섹션까지 스크롤합니다
 3. **TTS Provider**를 **Google Cloud**로 설정합니다
 4. **Google Cloud API Key** 필드를 클릭하고 키를 붙여넣습니다 (Ctrl+V)
@@ -137,9 +137,9 @@ ElevenLabs는 설정이 더 간단하지만 무료 한도가 작습니다 (월 1
 4. 키는 `sk_...약 30자...`와 같은 형태입니다
 5. **복사 아이콘**을 클릭하여 클립보드에 복사합니다
 
-### 3단계: En Croissant-TTS 설정
+### 3단계: En Parlant~ 설정
 
-1. En Croissant-TTS를 열고 **Settings** (톱니바퀴 아이콘) > **Sound** 탭으로 이동합니다
+1. En Parlant~를 열고 **Settings** (톱니바퀴 아이콘) > **Sound** 탭으로 이동합니다
 2. TTS 섹션까지 스크롤합니다
 3. **TTS Provider**를 **ElevenLabs**로 설정합니다
 4. **ElevenLabs API Key** 필드를 클릭하고 키를 붙여넣습니다 (Ctrl+V)
@@ -178,9 +178,9 @@ docker run -d -p 5500:5500 --name opentts synesthesiam/opentts:en
 docker run -d -p 5500:5500 --name opentts synesthesiam/opentts:all
 ```
 
-### 3단계: En Croissant-TTS 설정
+### 3단계: En Parlant~ 설정
 
-1. En Croissant-TTS를 열고 **Settings** (톱니바퀴 아이콘) > **Sound** 탭으로 이동합니다
+1. En Parlant~를 열고 **Settings** (톱니바퀴 아이콘) > **Sound** 탭으로 이동합니다
 2. TTS 섹션까지 스크롤합니다
 3. **TTS Provider**를 **OpenTTS (Self-Hosted)**로 설정합니다
 4. **OpenTTS Server URL**이 `http://localhost:5500`인지 확인합니다
@@ -222,7 +222,7 @@ KittenTTS에는 Python 3.10+ 이상과 몇 가지 Python 패키지가 필요합�
 
 **방법 A: 앱 내 설정 마법사 (권장)**
 
-1. En Croissant-TTS를 열고 **Settings > Sound**로 이동합니다
+1. En Parlant~를 열고 **Settings > Sound**로 이동합니다
 2. **TTS Provider**를 **KittenTTS (English Only)**로 설정합니다
 3. 의존성이 없으면 노란색 "Setup Guide" 알림이 나타납니다
 4. 알림을 클릭하면 설정 마법사가 열립니다
@@ -231,7 +231,7 @@ KittenTTS에는 Python 3.10+ 이상과 몇 가지 Python 패키지가 필요합�
 **방법 B: 터미널 설정 스크립트**
 
 ```bash
-cd /path/to/en-croissant-TTS
+cd /path/to/en-parlant
 ./scripts/setup-tts.sh --kittentts
 ```
 
@@ -240,14 +240,14 @@ Python 가상 환경을 생성하고 필요한 패키지(kittentts, flask, sound
 **방법 C: 수동 설정**
 
 ```bash
-cd /path/to/en-croissant-TTS/scripts
+cd /path/to/en-parlant/scripts
 python3 -m venv .venv
 .venv/bin/pip install kittentts flask soundfile numpy
 ```
 
-### 2단계: En Croissant-TTS 설정
+### 2단계: En Parlant~ 설정
 
-1. En Croissant-TTS를 열고 **Settings** (톱니바퀴 아이콘) > **Sound** 탭으로 이동합니다
+1. En Parlant~를 열고 **Settings** (톱니바퀴 아이콘) > **Sound** 탭으로 이동합니다
 2. **TTS Provider**를 **KittenTTS (English Only)**로 설정합니다
 3. 프로바이더를 선택하면 서버가 자동으로 시작됩니다
 4. 모델이 로드될 때까지 몇 초 기다립니다 (첫 실행 시 HuggingFace에서 다운로드)
@@ -266,9 +266,9 @@ python3 -m venv .venv
 
 System TTS는 운영 체제에 내장된 음성 합성을 사용합니다. 설치할 것이 없습니다.
 
-### En Croissant-TTS 설정
+### En Parlant~ 설정
 
-1. En Croissant-TTS를 열고 **Settings** (톱니바퀴 아이콘) > **Sound** 탭으로 이동합니다
+1. En Parlant~를 열고 **Settings** (톱니바퀴 아이콘) > **Sound** 탭으로 이동합니다
 2. **TTS Provider**를 **System (OS Native)**으로 설정합니다
 3. 음성 드롭다운에 시스템에서 사용 가능한 모든 음성이 표시됩니다
 4. **Test** 버튼을 클릭하여 미리 듣기합니다

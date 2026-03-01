@@ -1,10 +1,10 @@
 [package]
-name = "en-croissant"
+name = "en-parlant"
 version = "0.1.0"
 description = "A Modern Chess Database with TTS"
 authors = ["Darrell Thomas"]
 license = "GPL-3.0-only"
-repository = "https://github.com/DarrellThomas/en-croissant-TTS"
+repository = "https://github.com/DarrellThomas/en-parlant"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
