@@ -196,9 +196,43 @@ sudo ./install.sh     # system install (Linux)
 
 ---
 
-## 8. AGENT MAINTAINABILITY
+## 8. VERSION CONTROL
 
-### 8.1 Documentation
+### 8.1 Semantic Versioning
+
+En Parlant~ uses **SemVer** (`MAJOR.MINOR.PATCH`):
+
+| Bump | When | Example |
+|------|------|---------|
+| **PATCH** (0.1.0 → 0.1.1) | Bug fixes, typos, small corrections. Nothing new, nothing breaking. | Fix board coordinates, fix crash on save |
+| **MINOR** (0.1.x → 0.2.0) | New features or enhancements, backwards-compatible. Resets PATCH to 0. | Add TTS provider, add self-hosted downloads |
+| **MAJOR** (0.x.y → 1.0.0) | Breaking changes — settings reset, config format changed, removed features. Resets MINOR and PATCH to 0. | Database format migration, binary rename |
+
+### 8.2 Release Workflow
+
+- **Every push to master gets a PATCH bump** (0.1.0 → 0.1.1 → 0.1.2 → ... → 0.1.xxx)
+- Version lives in both `package.json` and `src-tauri/Cargo.toml` — keep them in sync
+- To release: bump version, commit, tag `vX.Y.Z`, push tag — the Release workflow builds binaries for all platforms
+- The download page at `enparlant.redshed.ai/download` must be updated to match the latest tag
+- Pre-1.0: the project is in active development, API/features may change between minor versions
+
+### 8.3 Tagging Convention
+
+```bash
+# Bump version in package.json + Cargo.toml, then:
+git add package.json src-tauri/Cargo.toml
+git commit -m "Bump version to 0.1.x"
+git tag -a v0.1.x -m "v0.1.x — short description"
+git push && git push origin v0.1.x
+```
+
+Tags matching `v*` trigger the Release workflow (`.github/workflows/release.yml`).
+
+---
+
+## 9. AGENT MAINTAINABILITY
+
+### 9.1 Documentation
 
 - [x] README with setup instructions
 - [x] Architecture document (`ARCHITECTURE.md`)
@@ -206,14 +240,14 @@ sudo ./install.sh     # system install (Linux)
 - [x] Persistent memory file (MEMORY.md)
 - [x] TTS technical documentation (`docs/tts/tts-readme.md`)
 
-### 8.2 Context Preservation
+### 9.2 Context Preservation
 
 - Memory file carries project knowledge across sessions
 - Build gotchas documented (pnpm, getOnInit, CSS coordinate fix)
 - Fork relationship and upstream status documented
 - Decision log lives in commit messages and this file
 
-### 8.3 Key Knowledge for Agents
+### 9.3 Key Knowledge for Agents
 
 Things an AI agent must know to work on this codebase without breaking it:
 
@@ -225,7 +259,7 @@ Things an AI agent must know to work on this codebase without breaking it:
 
 ---
 
-## 9. PROJECT-SPECIFIC CODE SMELLS
+## 10. PROJECT-SPECIFIC CODE SMELLS
 
 - TTS atom without `getOnInit: true` — will silently read default values instead of localStorage
 - Hardcoded provider URLs — should come from atoms/settings
@@ -235,7 +269,7 @@ Things an AI agent must know to work on this codebase without breaking it:
 
 ---
 
-## 10. DEFINITION OF DONE
+## 11. DEFINITION OF DONE
 
 A feature is complete when:
 
