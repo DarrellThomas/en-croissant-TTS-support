@@ -1,4 +1,17 @@
-# A Note from the Fork Maintainer
+# A Note from Darrell
+
+*This note is also available in:
+[Francais](ai-note-fr.md) |
+[Espanol](ai-note-es.md) |
+[Deutsch](ai-note-de.md) |
+[日本語](ai-note-ja.md) |
+[Русский](ai-note-ru.md) |
+[中文](ai-note-zh.md) |
+[한국어](ai-note-ko.md)*
+
+En Parlant~ is a fork of [En Croissant](https://github.com/franciscoBSalgueiro/en-croissant), the open-source chess study tool by Francisco Salgueiro. This fork adds text-to-speech narration — five providers, eight languages, translated chess vocabulary — so you can hear annotations spoken aloud while your eyes stay on the board. The name means "while speaking" in French. Because this croissant talks back.
+
+This note is about how it was built, and what I think that means.
 
 ## Deep Blue, and Everything After
 
@@ -10,7 +23,7 @@ He called it the centaur model. Nearly thirty years later I'm sitting in a pine 
 
 ## Built with Claude Code
 
-This fork of En Croissant was built with [Claude Code](https://claude.ai/claude-code), Anthropic's AI coding assistant. Every Rust command, every React component, every bash script in the TTS system. Pair-programmed, human and AI. I'm not going to pretend otherwise.
+This fork of En Croissant was built with [Claude Code](https://www.anthropic.com/claude-code), Anthropic's AI coding assistant. Every Rust command, every React component, every bash script in the TTS system. Pair-programmed, human and AI. I'm not going to pretend otherwise.
 
 This is not AI slop. This is co-development. And there's a real difference.
 
@@ -22,7 +35,7 @@ Francisco Salgueiro built En Croissant over years of thoughtful architecture. La
 
 I asked him about integrating text-to-speech. Premium voices, multiple providers, narration that makes studying games feel like listening to a broadcast. That wasn't his style, and I respect that. Fair enough. That's how open source works. I get to take his work and build in a different direction. But I owe him the honesty of saying it straight: without En Croissant, En Parlant~ doesn't exist. Period.
 
-What Francisco accomplished through years of dedicated craftsmanship, I accomplished in a weekend with a six-pack of beer and an AI that never gets tired.
+What Francisco accomplished through years of dedicated craftsmanship, I added to his work in a weekend with a pot of coffee, and an AI that never gets tired.
 
 That's not a brag. That's just where we are now.
 
@@ -76,4 +89,4 @@ Be safe out there.
 
 ---
 
-*En Parlant~ is a fork of [En Croissant](https://github.com/franciscoBSalgueiro/en-croissant) by Francisco Salgueiro, built with [Claude Code](https://claude.ai/claude-code) by Anthropic. The name means "while speaking" in French. Because this croissant talks back.*
+*En Parlant~ is a fork of [En Croissant](https://github.com/franciscoBSalgueiro/en-croissant) by Francisco Salgueiro, built with [Claude Code](https://www.anthropic.com/claude-code) by Anthropic. The name means "while speaking" in French. Because this croissant talks back.*
