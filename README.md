@@ -10,7 +10,7 @@
     <br />
     <a href="docs/README.md">Documentation</a>
     ·
-    <a href="TTS-GUIDE.md">Full TTS Guide</a>
+    <a href="docs/tts/tts-guide.md">Full TTS Guide</a>
     ·
     <a href="https://github.com/DarrellThomas/en-parlant/issues">Report a Bug</a>
   </p>
@@ -41,13 +41,15 @@ Everything in En Croissant, plus:
 
 | Provider | Cost | Quality | Languages | Offline | Setup |
 |----------|------|---------|-----------|---------|-------|
-| **System (OS Native)** | Free | Basic | OS-dependent | Yes | None |
-| **KittenTTS** | Free | Very good | English only | Yes | Python + model |
+| **ElevenLabs** | Free tier (10K chars/mo) | Exceptional | 8 languages | No | API key |
 | **Google Cloud** | Free tier (1M chars/mo) | Very good | 8 languages | No | API key |
-| **ElevenLabs** | Free tier (10K chars/mo) | Excellent | 8 languages | No | API key |
-| **OpenTTS** | Free | Functional | European best | Yes | Docker |
+| **KittenTTS** | Free | Good | English only | Yes | Python + model |
+| **System (OS Native)** | Free | Passable | OS-dependent | Yes | None |
+| **OpenTTS** | Free | Poor | European best | Yes | Docker |
 
-For a detailed comparison and full setup walkthroughs, see the [TTS Guide](TTS-GUIDE.md).
+> **Hardware note:** The local providers (KittenTTS and OpenTTS) run neural inference on your CPU. They need a modern multi-core processor (8+ cores recommended) to generate speech without noticeable lag.
+
+For a detailed comparison and full setup walkthroughs, see the [TTS Guide](docs/tts/tts-guide.md).
 
 ## Quick Start: KittenTTS (Local AI)
 
@@ -118,7 +120,7 @@ Google's WaveNet voices sound natural and support all 8 languages. The free tier
 3. In En Parlant~: **Settings > Sound > TTS Provider** → Google Cloud
 4. Paste your API key and click **Test**
 
-See the [full walkthrough](TTS-GUIDE.md#setting-up-google-cloud-tts) for step-by-step instructions with screenshots.
+See the [full walkthrough](docs/tts/setup-google.md) for step-by-step instructions.
 
 ## Quick Start: ElevenLabs
 
