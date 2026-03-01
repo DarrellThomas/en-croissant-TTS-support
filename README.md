@@ -10,7 +10,7 @@
     <br />
     <a href="docs/README.md">Documentation</a>
     ·
-    <a href="TTS-GUIDE.md">TTS Setup Guide</a>
+    <a href="TTS-GUIDE.md">Full TTS Guide</a>
     ·
     <a href="https://github.com/DarrellThomas/en-parlant/issues">Report a Bug</a>
   </p>
@@ -37,7 +37,108 @@ Everything in En Croissant, plus:
 - Simple engine and database installation and management
 - Absolute or partial position search in the database
 
-## Building from source
+## TTS Providers at a Glance
+
+| Provider | Cost | Quality | Languages | Offline | Setup |
+|----------|------|---------|-----------|---------|-------|
+| **System (OS Native)** | Free | Basic | OS-dependent | Yes | None |
+| **KittenTTS** | Free | Very good | English only | Yes | Python + model |
+| **Google Cloud** | Free tier (1M chars/mo) | Very good | 8 languages | No | API key |
+| **ElevenLabs** | Free tier (10K chars/mo) | Excellent | 8 languages | No | API key |
+| **OpenTTS** | Free | Functional | European best | Yes | Docker |
+
+For a detailed comparison and full setup walkthroughs, see the [TTS Guide](TTS-GUIDE.md).
+
+## Quick Start: KittenTTS (Local AI)
+
+KittenTTS runs a neural TTS model entirely on your machine — no cloud, no API keys, no data leaving your computer. English only, but the voice quality is genuinely good. Requires Python 3.10+ and a modern multi-core CPU.
+
+**Option A: In-app setup wizard**
+
+1. Go to **Settings > Sound** and set **TTS Provider** to **KittenTTS (English Only)**
+2. A yellow "Setup Guide" alert appears if dependencies are missing
+3. Click the alert — the wizard walks you through installation with "Fix" buttons
+
+**Option B: Terminal**
+
+```bash
+cd /path/to/en-parlant/scripts
+python3 -m venv .venv
+.venv/bin/pip install kittentts flask soundfile numpy
+```
+
+The ~25MB nano model downloads from HuggingFace automatically on first run.
+
+**Configure:**
+
+1. **Settings > Sound > TTS Provider** → KittenTTS (English Only)
+2. The server starts automatically when you select the provider
+3. Choose a voice (8 options: 4 male, 4 female)
+4. Click **Test** to preview
+
+**Thread management:** KittenTTS uses PyTorch and can consume significant CPU. If you're also running a chess engine like Stockfish, set **KittenTTS CPU Threads** in Settings to limit usage (e.g., half your core count). Set to 0 for automatic.
+
+## Quick Start: OpenTTS (Docker)
+
+OpenTTS is a self-hosted TTS server that runs locally via Docker. 75+ voices, no API keys, nothing leaves your machine.
+
+**Start the server:**
+
+```bash
+# English voices (~1.5 GB download on first run)
+docker run -d -p 5500:5500 --name opentts synesthesiam/opentts:en
+
+# All languages (larger download)
+docker run -d -p 5500:5500 --name opentts synesthesiam/opentts:all
+```
+
+**Configure:**
+
+1. **Settings > Sound > TTS Provider** → OpenTTS (Self-Hosted)
+2. Confirm **OpenTTS Server URL** is `http://localhost:5500`
+3. The voice dropdown populates from the server — try a **larynx** voice for best quality
+4. Click **Test** to preview
+
+**Manage the server:**
+
+```bash
+docker stop opentts     # stop
+docker start opentts    # restart
+docker rm -f opentts    # remove entirely
+```
+
+Note: OpenTTS works best with European languages. For Japanese, Chinese, or Korean, use Google Cloud or ElevenLabs instead.
+
+## Quick Start: Google Cloud TTS
+
+Google's WaveNet voices sound natural and support all 8 languages. The free tier (1M characters/month) covers hundreds of annotated games.
+
+1. Enable the **Cloud Text-to-Speech API** in [Google Cloud Console](https://console.cloud.google.com/)
+2. Create an API key under **APIs & Services > Credentials**
+3. In En Parlant~: **Settings > Sound > TTS Provider** → Google Cloud
+4. Paste your API key and click **Test**
+
+See the [full walkthrough](TTS-GUIDE.md#setting-up-google-cloud-tts) for step-by-step instructions with screenshots.
+
+## Quick Start: ElevenLabs
+
+Premium AI voices with the most natural intonation. Free tier is 10K characters/month (~2-5 annotated games).
+
+1. Sign up at [elevenlabs.io](https://elevenlabs.io/) and copy your API key from **Profile > API key**
+2. In En Parlant~: **Settings > Sound > TTS Provider** → ElevenLabs
+3. Paste your API key — the voice dropdown populates with your available voices
+4. Click **Test** to preview
+
+## Quick Start: System TTS
+
+Zero setup — uses your OS built-in speech synthesis.
+
+1. **Settings > Sound > TTS Provider** → System (OS Native)
+2. Pick a voice from the dropdown and click **Test**
+
+Quality varies by OS (macOS best, Linux most robotic). Good for a quick test before setting up a better provider.
+
+## Building from Source
 
 Requires Node.js 22+, pnpm, and Rust. See the [Tauri v2 prerequisites](https://v2.tauri.app/start/prerequisites/).
 
@@ -56,9 +157,13 @@ To install system-wide (Linux):
 sudo ./install.sh
 ```
 
+This installs the binary to `/usr/bin/en-parlant`, resources to `/usr/lib/en-parlant/`, and creates a desktop entry.
+
 ## Credits
 
 En Parlant~ is built on [En Croissant](https://github.com/franciscoBSalgueiro/en-croissant) by [Francisco Salgueiro](https://github.com/franciscoBSalgueiro). The original project and community can be found at [encroissant.org](https://www.encroissant.org).
+
+TTS narration developed by Darrell at [Red Shed](mailto:darrell@redshed.ai) with [Claude Code](https://claude.ai/claude-code).
 
 ## Contributing
 
