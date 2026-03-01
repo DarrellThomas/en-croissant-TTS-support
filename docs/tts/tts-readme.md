@@ -10,11 +10,13 @@ En Parlant~ supports five TTS providers:
 
 | Provider | Type | Quality | Setup | Languages |
 |----------|------|---------|-------|-----------|
-| **System (OS Native)** | OS built-in | Basic | None | OS-dependent |
-| **KittenTTS** | Local neural AI | Very good | Python + venv | English only |
+| **ElevenLabs** | Cloud API | Exceptional | API key | 8 languages |
 | **Google Cloud** | Cloud API | Very good (WaveNet) | API key | 8 languages |
-| **ElevenLabs** | Cloud API | Excellent | API key | 8 languages |
-| **OpenTTS** | Local Docker | Functional | Docker | European best |
+| **KittenTTS** | Local neural AI | Good | Python + venv | English only |
+| **System (OS Native)** | OS built-in | Passable | None | OS-dependent |
+| **OpenTTS** | Local Docker | Poor | Docker | European best |
+
+> **Hardware note:** The local providers (KittenTTS and OpenTTS) run neural inference on your CPU. They need a modern multi-core processor (8+ cores recommended) to generate speech without noticeable lag. If your machine is older or low-power, use one of the cloud providers instead.
 
 See the [TTS Guide](tts-guide.md) for detailed setup instructions for each provider.
 
