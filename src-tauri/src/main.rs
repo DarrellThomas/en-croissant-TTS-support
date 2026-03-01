@@ -65,7 +65,10 @@ use crate::system_tts::{
     SystemTtsState,
 };
 use crate::tts_servers::{
-    fetch_tts_audio, kittentts_start, kittentts_stop, opentts_start, opentts_stop, TtsServerState,
+    check_docker_installed, check_docker_running, check_kittentts_packages, check_kittentts_script,
+    check_kittentts_venv, check_opentts_image, check_python_installed, fetch_tts_audio,
+    kittentts_start, kittentts_stop, opentts_start, opentts_stop, setup_kittentts_venv,
+    setup_opentts_pull, TtsServerState,
 };
 use crate::{
     chess::get_best_moves,
@@ -183,7 +186,16 @@ fn main() {
             opentts_stop,
             kittentts_start,
             kittentts_stop,
-            fetch_tts_audio
+            fetch_tts_audio,
+            check_docker_installed,
+            check_docker_running,
+            check_opentts_image,
+            check_python_installed,
+            check_kittentts_venv,
+            check_kittentts_packages,
+            check_kittentts_script,
+            setup_kittentts_venv,
+            setup_opentts_pull
         ))
         .events(tauri_specta::collect_events!(
             BestMovesPayload,

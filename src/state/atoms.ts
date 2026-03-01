@@ -356,6 +356,18 @@ export const ttsKittenTTSVoiceAtom = atomWithStorage<string>(
   { getOnInit: true },
 );
 
+// Non-persisted: tracks whether a local TTS server is running this session
+export const ttsLocalServerStatusAtom = atom<"idle" | "starting" | "running">(
+  "idle",
+);
+
+export const ttsKittenTTSThreadsAtom = atomWithStorage<number>(
+  "tts-kittentts-threads",
+  0, // 0 = auto (PyTorch default)
+  undefined,
+  { getOnInit: true },
+);
+
 export const pieceSetAtom = atomWithStorage<string>("piece-set", "staunty");
 export const boardImageAtom = atomWithStorage<string>(
   "board-image",

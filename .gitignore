@@ -34,3 +34,6 @@ scripts/.venv/
 
 # Local issue tracking
 UPSTREAM-ISSUES.md
+
+# Draft notes (not ready for release)
+AI-NOTE.md

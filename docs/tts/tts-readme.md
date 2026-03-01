@@ -1,8 +1,22 @@
 # Text-to-Speech Narration for Chess Annotations
 
-This fork adds **ElevenLabs TTS narration** to En Croissant-TTS, turning annotated PGN files into spoken chess lessons. Step through any game and hear every comment read aloud with correct chess pronunciation.
+This fork adds **TTS narration** to En Croissant-TTS, turning annotated PGN files into spoken chess lessons. Step through any game and hear every comment read aloud with correct chess pronunciation.
 
 Built for studying annotated master games and reviewing your own game debriefs without staring at the screen.
+
+## Providers
+
+En Croissant-TTS supports five TTS providers:
+
+| Provider | Type | Quality | Setup | Languages |
+|----------|------|---------|-------|-----------|
+| **System (OS Native)** | OS built-in | Basic | None | OS-dependent |
+| **KittenTTS** | Local neural AI | Very good | Python + venv | English only |
+| **Google Cloud** | Cloud API | Very good (WaveNet) | API key | 8 languages |
+| **ElevenLabs** | Cloud API | Excellent | API key | 8 languages |
+| **OpenTTS** | Local Docker | Functional | Docker | European best |
+
+See the [TTS Guide](tts-guide.md) for detailed setup instructions for each provider.
 
 ## What It Does
 
@@ -35,78 +49,123 @@ Comments are cleaned before speaking: `[%eval]`, `[%cal]`, `[%csl]` tags are str
 
 Every narration is cached in memory after the first generation. Stepping backward and forward through a game replays instantly from cache -- no API calls. You can also precache an entire game tree in the background so there are zero pauses during playback.
 
-The cache is keyed by voice + text, so changing the voice clears the relevant entries. Changing playback speed does **not** invalidate the cache (speed is applied client-side).
+The cache is keyed by `provider:voiceId:lang:text`, so changing the voice or provider creates separate cache entries. Changing playback speed does **not** invalidate the cache (speed is applied client-side).
 
 A **Clear Audio Cache** button in Settings lets you force re-generation after editing annotations.
 
-## Setup
+## KittenTTS Hardware Requirements
 
-### 1. Get an ElevenLabs API Key
+KittenTTS runs a PyTorch neural network on your CPU. This is real ML inference, and it uses real computing power.
 
-Sign up at [elevenlabs.io](https://elevenlabs.io). The free tier gives you ~10,000 characters/month -- enough for several annotated games.
+### CPU Usage
 
-### 2. Configure in Settings
+During speech generation (typically 1-2 seconds per utterance), KittenTTS will use multiple CPU cores at high utilization. Between utterances, CPU usage drops to near zero. This is normal behavior for neural TTS inference.
 
-Open En Croissant-TTS and go to **Settings > Sound**:
+| Hardware | Experience |
+|----------|-----------|
+| **8+ cores** (Ryzen 7/9, i7/i9, Xeon, Apple M-series) | Excellent. Fast generation, minimal impact on other tasks |
+| **4-6 cores** (Ryzen 5, i5) | Good. Noticeable CPU spike during generation but usable |
+| **2 cores / older CPU** | Slow. Several seconds per utterance. Consider Google Cloud instead |
 
-| Setting | Description |
-|---------|-------------|
-| **Text-to-Speech** | Master toggle. Enable to activate all TTS features. |
-| **Auto-Narrate on Move** | When enabled, annotations are read aloud automatically as you step through moves with the arrow keys. |
-| **ElevenLabs API Key** | Paste your `sk_...` API key here. Stored locally. |
-| **TTS Voice** | Pick from your available ElevenLabs voices. A "Test" button lets you preview. |
-| **TTS Volume** | 0-100%. Independent of the board sound effects volume. |
-| **TTS Speed** | 0.5x to 2.0x playback speed. Applied client-side, so changing speed never invalidates the audio cache. |
-| **TTS Audio Cache** | "Clear Audio Cache" button. Use after editing PGN annotations to force fresh audio generation. |
+### Thread Management
 
-### 3. Load an Annotated PGN
+By default, KittenTTS uses all available CPU cores (via PyTorch's default thread count). If you're running a chess engine like Stockfish simultaneously, both will compete for CPU time.
 
-Import or open any PGN file with comments. Step through with arrow keys -- you'll hear every annotation narrated.
+**Settings > Sound > KittenTTS CPU Threads** lets you cap the number of threads KittenTTS uses:
+- **0 (default):** Automatic — PyTorch uses all available cores
+- **1-4:** Conservative — good for machines also running a chess engine
+- **Half your core count:** A reasonable balance for shared use
 
-For best results, annotations should follow standard PGN comment format:
+The thread setting is passed to PyTorch's `torch.set_num_threads()` at server startup. Changing it requires restarting the KittenTTS server (stop and start again in settings).
+
+### Memory
+
+The KittenTTS nano model uses approximately 100-200MB of RAM when loaded. The Python server process itself adds another ~50MB. Total memory footprint is modest.
+
+### First Run
+
+On first launch, KittenTTS downloads the nano model (~25MB) from HuggingFace. This is a one-time download. Subsequent starts load the model from disk in 2-5 seconds.
+
+## Dependency Management
+
+KittenTTS and OpenTTS require external dependencies (Python packages and Docker, respectively). En Croissant-TTS includes three layers of dependency management:
+
+### In-App Setup Wizard
+
+When you select KittenTTS or OpenTTS as your provider, the app automatically checks for required dependencies. If anything is missing, a yellow alert appears with a "Setup Guide" button that opens a step-by-step wizard.
+
+The wizard shows each dependency as a step:
+- Green checkmark = installed
+- Red X = missing, with a "Fix" button or terminal command to install
+- "Re-check All" button after fixing things externally
+
+**KittenTTS wizard steps:**
+1. Python 3.10+ installed
+2. Virtual environment created
+3. Python packages installed (kittentts, flask, soundfile, numpy)
+4. Server script present
+
+**OpenTTS wizard steps:**
+1. Docker installed
+2. Docker daemon running
+3. OpenTTS Docker image pulled
+
+### Setup Script
+
+A standalone bash script is available for terminal users:
+
+```bash
+./scripts/setup-tts.sh --check       # Show status of all dependencies
+./scripts/setup-tts.sh --kittentts   # Set up KittenTTS (venv + packages)
+./scripts/setup-tts.sh --opentts     # Pull OpenTTS Docker image
+./scripts/setup-tts.sh --all         # Set up everything
 ```
-14. Re3! {Blocks the e-file and attacks the queen.} Be6 {But now the knight is undefended.}
-```
 
-## How It Works
+The script is idempotent (safe to run multiple times) and does not use sudo.
 
-### Architecture
+### Auto-Start
 
-The TTS system is implemented as two self-contained files plus small integration hooks:
+When you select KittenTTS or OpenTTS as your provider and all dependencies are satisfied, the server starts automatically. A status indicator in settings shows whether the server is running. The server stops when you switch to a different provider or close the app.
+
+## Architecture
+
+The TTS system is implemented as self-contained modules plus small integration hooks:
 
 ```
 src/
   utils/
-    tts.ts                          # Core engine (465 lines)
-      - sanToSpoken()               # SAN -> spoken English
+    tts.ts                          # Core engine
+      - sanToSpoken()               # SAN -> spoken text (multi-language)
       - cleanCommentForTTS()        # Strip PGN tags, expand inline SAN, apply chess vocab
       - buildNarration()            # Assemble move + annotation + comment into one utterance
-      - speakText()                 # ElevenLabs API call with caching
+      - speakText()                 # TTS API call with caching + retry for local servers
       - precacheGame()              # Background precache entire game tree
       - clearAudioCache()           # Revoke blob URLs and reset cache
   components/
     settings/
-      TTSSettings.tsx               # UI components (202 lines)
-        - TTSEnabledSwitch
-        - TTSAutoNarrateSwitch
-        - TTSApiKeyInput
-        - TTSVoiceSelect
-        - TTSVolumeSlider
-        - TTSSpeedSlider
-        - TTSClearCacheButton
+      TTSSettings.tsx               # UI components for all providers
+      TTSSetupWizard.tsx            # Dependency check wizard (KittenTTS + OpenTTS)
+
+src-tauri/src/
+  tts_servers.rs                    # Rust backend for local server management
+    - fetch_tts_audio()             # Proxy localhost requests (bypasses browser CORS)
+    - kittentts_start/stop()        # Python server lifecycle
+    - opentts_start/stop()          # Docker container lifecycle
+    - check_*/setup_*()             # Dependency detection and installation
+
+scripts/
+  kittentts-server.py              # Flask HTTP wrapper around KittenTTS library
+  setup-tts.sh                     # Standalone dependency setup script
 ```
 
 ### Integration Points (minimal changes to existing code)
 
-| File | Change | Lines |
-|------|--------|-------|
-| `src/state/atoms.ts` | 6 persistent atoms for TTS settings | +24 |
-| `src/components/settings/SettingsPage.tsx` | 7 settings entries in Sound tab | +62 |
-| `src/state/store/tree.ts` | Auto-narrate on move navigation, stop on go-back | +24 |
-| `src/components/common/Comment.tsx` | Speaker icon button when TTS enabled | +33 |
-| `src/components/tabs/ImportModal.tsx` | `defaultPath` for file dialog | +1 |
-
-Total: **828 lines added**, 25 lines modified. The 2 new files account for 667 of those lines. The feature is almost entirely additive -- it doesn't change existing behavior when TTS is disabled.
+| File | Change |
+|------|--------|
+| `src/state/atoms.ts` | TTS setting atoms (provider, API keys, voice, volume, speed, language, threads, server status) |
+| `src/components/settings/SettingsPage.tsx` | Settings entries in Sound tab |
+| `src/state/store/tree.ts` | Auto-narrate on move navigation, stop on go-back |
+| `src/components/common/Comment.tsx` | Speaker icon button when TTS enabled |
 
 ### Audio Pipeline
 
@@ -132,10 +191,12 @@ buildNarration(san, comment, annotations, halfMoves)
     v
 speakText(narration)
     |
-    +-- check audioCache (voiceId:text -> blob URL)
+    +-- check audioCache (provider:voiceId:lang:text -> blob URL)
     |       |
     |       +-- [HIT]  -> play from cache instantly
-    |       +-- [MISS] -> call ElevenLabs API -> cache blob URL -> play
+    |       +-- [MISS] -> call provider API -> cache blob URL -> play
+    |
+    +-- [local server retry] -> if kittentts/opentts, retry once after 2s on failure
     |
     v
 HTMLAudioElement.play()
@@ -153,6 +214,38 @@ Rapid navigation (holding the arrow key) generates many requests. A generation c
 4. Any currently playing audio is stopped before the new one starts
 
 This means you can scrub through a game quickly without audio piling up or playing out of order.
+
+## Provider API Details
+
+### ElevenLabs
+- **Model**: `eleven_turbo_v2_5` (fast, good quality)
+- **Default voice**: Adam (`pNInz6obpgDQGcFmaJgB`)
+- **Voice settings**: stability 0.5, similarity_boost 0.75, style 0.0, speaker_boost on
+- **Audio format**: MP3 (audio/mpeg)
+
+### Google Cloud
+- **API**: Cloud Text-to-Speech v1
+- **Voice type**: WaveNet (neural)
+- **Audio format**: MP3 (audio/mpeg)
+- **Voice selection**: Automatic per language + gender (male/female setting)
+
+### KittenTTS
+- **Model**: nano (~25MB, downloads from HuggingFace on first run)
+- **Server**: Flask HTTP on localhost:8192
+- **Audio format**: WAV (audio/wav)
+- **Voices**: 8 expressive voices (expr-voice-2 through expr-voice-5, male and female)
+- **Inference**: PyTorch CPU, configurable thread count
+
+### OpenTTS
+- **Server**: Docker container on localhost:5500
+- **Image**: `synesthesiam/opentts:en` (~1.5GB)
+- **Engines**: Larynx, Coqui-TTS, MaryTTS, Festival, eSpeak
+- **Audio format**: WAV (audio/wav)
+
+### System TTS
+- **API**: Web Speech API (`speechSynthesis`)
+- **Voices**: OS-dependent
+- **Audio format**: Direct playback (no file)
 
 ## Writing TTS-Friendly Annotations
 
@@ -180,14 +273,6 @@ Periods create natural TTS pauses. Use them between distinct ideas:
 ### Arrows and circles
 `[%cal ...]` and `[%csl ...]` tags are stripped from audio automatically. Use them freely for visual annotations without affecting narration.
 
-## ElevenLabs API Details
-
-- **Model**: `eleven_turbo_v2_5` (fast, good quality)
-- **Default voice**: Adam (`pNInz6obpgDQGcFmaJgB`)
-- **Voice settings**: stability 0.5, similarity_boost 0.75, style 0.0, speaker_boost on
-- **Audio format**: MP3 (audio/mpeg)
-- **Rate limits**: The precacher runs sequentially to avoid hitting ElevenLabs rate limits. If an error occurs during precaching, it stops gracefully.
-
 ## Compatibility
 
 This feature is purely additive. When TTS is disabled (the default), the app behaves identically to upstream En Croissant. No existing functionality is modified.
@@ -197,3 +282,5 @@ The TTS atoms persist to localStorage, so settings survive app restarts. The aud
 ## License
 
 Same as En Croissant: GPL-3.0.
+
+Note on audio licensing: ElevenLabs audio cannot be bundled with redistributed builds (TOS non-sublicensable vs GPL-3.0). Google Cloud audio CAN be bundled (customer retains all IP rights on output). KittenTTS, OpenTTS, and System TTS audio have no redistribution restrictions.

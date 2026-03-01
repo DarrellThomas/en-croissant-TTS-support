@@ -1,6 +1,8 @@
 import {
+  Alert,
   Button,
   Group,
+  NumberInput,
   PasswordInput,
   Select,
   Slider,
@@ -8,6 +10,7 @@ import {
   Switch,
   Text,
 } from "@mantine/core";
+import { IconAlertTriangle } from "@tabler/icons-react";
 import { invoke } from "@tauri-apps/api/core";
 import { useAtom } from "jotai";
 import { useCallback, useEffect, useState } from "react";
@@ -17,9 +20,11 @@ import {
   ttsEnabledAtom,
   ttsGoogleApiKeyAtom,
   ttsGoogleGenderAtom,
+  ttsKittenTTSThreadsAtom,
   ttsKittenTTSUrlAtom,
   ttsKittenTTSVoiceAtom,
   ttsLanguageAtom,
+  ttsLocalServerStatusAtom,
   ttsOpenTTSUrlAtom,
   ttsOpenTTSVoiceAtom,
   ttsProviderAtom,
@@ -40,6 +45,14 @@ import {
   speakText,
   stopSpeaking,
 } from "@/utils/tts";
+import TTSSetupWizard from "./TTSSetupWizard";
+
+interface DepCheck {
+  ok: boolean;
+  label: string;
+  detail: string;
+  fix_hint: string;
+}
 
 export function TTSEnabledSwitch() {
   const [enabled, setEnabled] = useAtom(ttsEnabledAtom);
@@ -77,6 +90,128 @@ export function TTSProviderSelect() {
       onChange={(v) => v && setProvider(v)}
       allowDeselect={false}
     />
+  );
+}
+
+export function TTSSetupButton() {
+  const [provider] = useAtom(ttsProviderAtom);
+  const [wizardOpen, setWizardOpen] = useState(false);
+  const [depsMissing, setDepsMissing] = useState<boolean | null>(null);
+  const [serverStatus, setServerStatus] = useAtom(ttsLocalServerStatusAtom);
+  const [threads] = useAtom(ttsKittenTTSThreadsAtom);
+
+  useEffect(() => {
+    if (provider !== "kittentts" && provider !== "opentts") {
+      setDepsMissing(null);
+      setServerStatus("idle");
+      return;
+    }
+
+    let cancelled = false;
+    const checkAndStart = async () => {
+      try {
+        let depsOk = false;
+        if (provider === "kittentts") {
+          const [venv, packages] = await Promise.all([
+            invoke<DepCheck>("check_kittentts_venv"),
+            invoke<DepCheck>("check_kittentts_packages"),
+          ]);
+          depsOk = venv.ok && packages.ok;
+          if (!cancelled) setDepsMissing(!depsOk);
+        } else {
+          const [docker, running, image] = await Promise.all([
+            invoke<DepCheck>("check_docker_installed"),
+            invoke<DepCheck>("check_docker_running"),
+            invoke<DepCheck>("check_opentts_image"),
+          ]);
+          depsOk = docker.ok && running.ok && image.ok;
+          if (!cancelled) setDepsMissing(!depsOk);
+        }
+
+        // Auto-start server if deps are ready
+        if (depsOk && !cancelled) {
+          setServerStatus("starting");
+          try {
+            if (provider === "kittentts") {
+              await invoke("kittentts_start", { threads: threads || null });
+            } else {
+              await invoke("opentts_start");
+            }
+            if (!cancelled) setServerStatus("running");
+          } catch (e) {
+            console.error(`Auto-start ${provider} failed:`, e);
+            if (!cancelled) setServerStatus("idle");
+          }
+        }
+      } catch {
+        if (!cancelled) setDepsMissing(true);
+      }
+    };
+
+    checkAndStart();
+    return () => {
+      cancelled = true;
+    };
+  }, [provider, setServerStatus]);
+
+  if (provider !== "kittentts" && provider !== "opentts") {
+    return null;
+  }
+
+  return (
+    <>
+      {depsMissing && (
+        <Alert
+          color="yellow"
+          icon={<IconAlertTriangle size={16} />}
+          title="Dependencies missing"
+        >
+          <Group gap="xs" align="center">
+            <Text size="sm">
+              {provider === "kittentts"
+                ? "KittenTTS requires a Python virtual environment with packages installed."
+                : "OpenTTS requires Docker with the OpenTTS image pulled."}
+            </Text>
+            <Button
+              size="xs"
+              variant="light"
+              onClick={() => setWizardOpen(true)}
+            >
+              Setup Guide
+            </Button>
+          </Group>
+        </Alert>
+      )}
+      {depsMissing === false && (
+        <Alert
+          color={serverStatus === "running" ? "green" : "blue"}
+          title={
+            serverStatus === "starting"
+              ? "Starting server..."
+              : serverStatus === "running"
+                ? "Server running"
+                : "Dependencies ready. Server stopped."
+          }
+        >
+          <Text size="sm">
+            {serverStatus === "starting"
+              ? "Server is starting up. First launch may take a few seconds to load the model."
+              : serverStatus === "running"
+                ? "Server is running. You can test it with the voice selector below."
+                : "All required dependencies are installed. Use the Start button to launch the server."}
+          </Text>
+        </Alert>
+      )}
+      {depsMissing === null &&
+      provider !== "kittentts" &&
+      provider !== "opentts" ? null : (
+        <TTSSetupWizard
+          opened={wizardOpen}
+          onClose={() => setWizardOpen(false)}
+          provider={provider as "kittentts" | "opentts"}
+        />
+      )}
+    </>
   );
 }
 
@@ -129,6 +264,9 @@ export function TTSKittenTTSUrlInput() {
     "idle",
   );
   const [result, setResult] = useState<string | null>(null);
+  const [wizardOpen, setWizardOpen] = useState(false);
+  const [, setServerStatus] = useAtom(ttsLocalServerStatusAtom);
+  const [threads] = useAtom(ttsKittenTTSThreadsAtom);
 
   useEffect(() => {
     setTempUrl(url);
@@ -139,57 +277,85 @@ export function TTSKittenTTSUrlInput() {
     setTimeout(() => setResult(null), 2000);
   };
 
+  const handleStart = async () => {
+    // Check deps first — open wizard if missing
+    try {
+      const [venv, packages] = await Promise.all([
+        invoke<DepCheck>("check_kittentts_venv"),
+        invoke<DepCheck>("check_kittentts_packages"),
+      ]);
+      if (!venv.ok || !packages.ok) {
+        setWizardOpen(true);
+        return;
+      }
+    } catch {
+      // If check fails, try starting anyway
+    }
+
+    setStatus("starting");
+    setServerStatus("starting");
+    try {
+      await invoke("kittentts_start", { threads: threads || null });
+      showResult("Started");
+      setServerStatus("running");
+    } catch (e) {
+      showResult("Error");
+      setServerStatus("idle");
+      console.error("KittenTTS start error:", e);
+    } finally {
+      setStatus("idle");
+    }
+  };
+
   return (
-    <Group gap="xs">
-      <PasswordInput
-        w="14rem"
-        placeholder="http://localhost:8192"
-        value={tempUrl}
-        onChange={(e) => setTempUrl(e.currentTarget.value)}
-        onBlur={() => setUrl(tempUrl)}
-        visible
+    <>
+      <Group gap="xs">
+        <PasswordInput
+          w="14rem"
+          placeholder="http://localhost:8192"
+          value={tempUrl}
+          onChange={(e) => setTempUrl(e.currentTarget.value)}
+          onBlur={() => setUrl(tempUrl)}
+          visible
+        />
+        <Button
+          size="xs"
+          variant="light"
+          color={result === "Started" ? "green" : undefined}
+          loading={status === "starting"}
+          onClick={handleStart}
+        >
+          {result === "Started" ? "Started" : "Start"}
+        </Button>
+        <Button
+          size="xs"
+          variant="light"
+          color={result === "Stopped" ? "orange" : undefined}
+          loading={status === "stopping"}
+          onClick={async () => {
+            setStatus("stopping");
+            setServerStatus("idle");
+            try {
+              await invoke("kittentts_stop");
+              showResult("Stopped");
+            } catch (e) {
+              showResult("Error");
+              console.error("KittenTTS stop error:", e);
+            } finally {
+              setStatus("idle");
+            }
+          }}
+        >
+          {result === "Stopped" ? "Stopped" : "Stop"}
+        </Button>
+      </Group>
+      <TTSSetupWizard
+        opened={wizardOpen}
+        onClose={() => setWizardOpen(false)}
+        provider="kittentts"
+        onReady={handleStart}
       />
-      <Button
-        size="xs"
-        variant="light"
-        color={result === "Started" ? "green" : undefined}
-        loading={status === "starting"}
-        onClick={async () => {
-          setStatus("starting");
-          try {
-            await invoke("kittentts_start");
-            showResult("Started");
-          } catch (e) {
-            showResult("Error");
-            console.error("KittenTTS start error:", e);
-          } finally {
-            setStatus("idle");
-          }
-        }}
-      >
-        {result === "Started" ? "Started" : "Start"}
-      </Button>
-      <Button
-        size="xs"
-        variant="light"
-        color={result === "Stopped" ? "orange" : undefined}
-        loading={status === "stopping"}
-        onClick={async () => {
-          setStatus("stopping");
-          try {
-            await invoke("kittentts_stop");
-            showResult("Stopped");
-          } catch (e) {
-            showResult("Error");
-            console.error("KittenTTS stop error:", e);
-          } finally {
-            setStatus("idle");
-          }
-        }}
-      >
-        {result === "Stopped" ? "Stopped" : "Stop"}
-      </Button>
-    </Group>
+    </>
   );
 }
 
@@ -200,6 +366,8 @@ export function TTSOpenTTSUrlInput() {
     "idle",
   );
   const [result, setResult] = useState<string | null>(null);
+  const [wizardOpen, setWizardOpen] = useState(false);
+  const [, setServerStatus] = useAtom(ttsLocalServerStatusAtom);
 
   useEffect(() => {
     setTempUrl(url);
@@ -210,57 +378,86 @@ export function TTSOpenTTSUrlInput() {
     setTimeout(() => setResult(null), 2000);
   };
 
+  const handleStart = async () => {
+    // Check deps first — open wizard if missing
+    try {
+      const [docker, running, image] = await Promise.all([
+        invoke<DepCheck>("check_docker_installed"),
+        invoke<DepCheck>("check_docker_running"),
+        invoke<DepCheck>("check_opentts_image"),
+      ]);
+      if (!docker.ok || !running.ok || !image.ok) {
+        setWizardOpen(true);
+        return;
+      }
+    } catch {
+      // If check fails, try starting anyway
+    }
+
+    setStatus("starting");
+    setServerStatus("starting");
+    try {
+      await invoke("opentts_start");
+      showResult("Started");
+      setServerStatus("running");
+    } catch (e) {
+      showResult("Error");
+      setServerStatus("idle");
+      console.error("OpenTTS start error:", e);
+    } finally {
+      setStatus("idle");
+    }
+  };
+
   return (
-    <Group gap="xs">
-      <PasswordInput
-        w="14rem"
-        placeholder="http://localhost:5500"
-        value={tempUrl}
-        onChange={(e) => setTempUrl(e.currentTarget.value)}
-        onBlur={() => setUrl(tempUrl)}
-        visible
+    <>
+      <Group gap="xs">
+        <PasswordInput
+          w="14rem"
+          placeholder="http://localhost:5500"
+          value={tempUrl}
+          onChange={(e) => setTempUrl(e.currentTarget.value)}
+          onBlur={() => setUrl(tempUrl)}
+          visible
+        />
+        <Button
+          size="xs"
+          variant="light"
+          color={result === "Started" ? "green" : undefined}
+          loading={status === "starting"}
+          onClick={handleStart}
+        >
+          {result === "Started" ? "Started" : "Start"}
+        </Button>
+        <Button
+          size="xs"
+          variant="light"
+          color={result === "Stopped" ? "orange" : undefined}
+          loading={status === "stopping"}
+          onClick={async () => {
+            setStatus("stopping");
+            setServerStatus("idle");
+            try {
+              await invoke("opentts_stop");
+              showResult("Stopped");
+            } catch (e) {
+              showResult("Error");
+              console.error("OpenTTS stop error:", e);
+            } finally {
+              setStatus("idle");
+            }
+          }}
+        >
+          {result === "Stopped" ? "Stopped" : "Stop"}
+        </Button>
+      </Group>
+      <TTSSetupWizard
+        opened={wizardOpen}
+        onClose={() => setWizardOpen(false)}
+        provider="opentts"
+        onReady={handleStart}
       />
-      <Button
-        size="xs"
-        variant="light"
-        color={result === "Started" ? "green" : undefined}
-        loading={status === "starting"}
-        onClick={async () => {
-          setStatus("starting");
-          try {
-            await invoke("opentts_start");
-            showResult("Started");
-          } catch (e) {
-            showResult("Error");
-            console.error("OpenTTS start error:", e);
-          } finally {
-            setStatus("idle");
-          }
-        }}
-      >
-        {result === "Started" ? "Started" : "Start"}
-      </Button>
-      <Button
-        size="xs"
-        variant="light"
-        color={result === "Stopped" ? "orange" : undefined}
-        loading={status === "stopping"}
-        onClick={async () => {
-          setStatus("stopping");
-          try {
-            await invoke("opentts_stop");
-            showResult("Stopped");
-          } catch (e) {
-            showResult("Error");
-            console.error("OpenTTS stop error:", e);
-          } finally {
-            setStatus("idle");
-          }
-        }}
-      >
-        {result === "Stopped" ? "Stopped" : "Stop"}
-      </Button>
-    </Group>
+    </>
   );
 }
 
@@ -593,5 +790,24 @@ export function TTSSpeedSlider() {
         speakText("Speed set.").catch(() => {});
       }}
     />
+  );
+}
+
+export function TTSKittenTTSThreadsInput() {
+  const [threads, setThreads] = useAtom(ttsKittenTTSThreadsAtom);
+
+  return (
+    <Group gap="xs" align="center">
+      <NumberInput
+        w="6rem"
+        min={0}
+        max={256}
+        value={threads}
+        onChange={(v) => setThreads(typeof v === "number" ? v : 0)}
+      />
+      <Text size="xs" c="dimmed">
+        0 = auto (PyTorch default, ~4 threads). Restart server to apply.
+      </Text>
+    </Group>
   );
 }

@@ -79,6 +79,8 @@ import {
   TTSLanguageSelect,
   TTSOpenTTSUrlInput,
   TTSProviderSelect,
+  TTSKittenTTSThreadsInput,
+  TTSSetupButton,
   TTSSpeedSlider,
   TTSVoiceSelect,
   TTSVolumeSlider,
@@ -556,6 +558,23 @@ export default function Page() {
         render: () => <TTSProviderSelect />,
       },
       {
+        id: "tts-setup",
+        category: "sound",
+        title: "TTS Setup",
+        description:
+          "Check and install dependencies for local TTS providers (KittenTTS, OpenTTS)",
+        keywords: [
+          "tts",
+          "setup",
+          "install",
+          "docker",
+          "python",
+          "dependencies",
+          "venv",
+        ],
+        render: () => <TTSSetupButton />,
+      },
+      {
         id: "tts-voice",
         category: "sound",
         title: "TTS Voice",
@@ -632,7 +651,16 @@ export default function Page() {
         title: "OpenTTS Server URL",
         description:
           "URL of your OpenTTS server (e.g. http://localhost:5500). Run with: docker run -it -p 5500:5500 synesthesiam/opentts:en",
-        keywords: ["tts", "opentts", "server", "url", "self-hosted", "docker", "start", "stop"],
+        keywords: [
+          "tts",
+          "opentts",
+          "server",
+          "url",
+          "self-hosted",
+          "docker",
+          "start",
+          "stop",
+        ],
         render: () => <TTSOpenTTSUrlInput />,
       },
       {
@@ -641,8 +669,33 @@ export default function Page() {
         title: "KittenTTS Server URL",
         description:
           "URL of your KittenTTS server (English only). High-quality StyleTTS 2 voices. See TTS > Getting Started for setup.",
-        keywords: ["tts", "kittentts", "server", "url", "kitten", "styletts", "start", "stop"],
+        keywords: [
+          "tts",
+          "kittentts",
+          "server",
+          "url",
+          "kitten",
+          "styletts",
+          "start",
+          "stop",
+        ],
         render: () => <TTSKittenTTSUrlInput />,
+      },
+      {
+        id: "tts-kittentts-threads",
+        category: "sound",
+        title: "KittenTTS CPU Threads",
+        description:
+          "Number of CPU threads for KittenTTS inference. 0 = auto (~4 threads). Increase for faster generation on machines with many cores. Restart server to apply.",
+        keywords: [
+          "tts",
+          "kittentts",
+          "threads",
+          "cpu",
+          "cores",
+          "performance",
+        ],
+        render: () => <TTSKittenTTSThreadsInput />,
       },
       // Directories settings
       {

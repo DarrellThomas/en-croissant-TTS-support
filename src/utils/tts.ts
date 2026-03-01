@@ -751,53 +751,75 @@ export async function speakText(text: string): Promise<void> {
   const abort = new AbortController();
   currentAbort = abort;
 
-  try {
-    // Include provider + voice + language in cache key
-    const cacheKey = `${provider}:${voiceId}:${lang}:${text}`;
-    let blobUrl = audioCache.get(cacheKey);
+  const isLocalServer = provider === "kittentts" || provider === "opentts";
+  const maxAttempts = isLocalServer ? 2 : 1;
 
-    if (!blobUrl) {
-      let audioData: ArrayBuffer;
-      let mimeType = "audio/mpeg";
-      if (provider === "kittentts") {
-        audioData = await generateSpeechKittenTTS(text, kittenTTSUrl, voiceId);
-        mimeType = "audio/wav";
-      } else if (provider === "opentts") {
-        audioData = await generateSpeechOpenTTS(text, openTTSUrl, voiceId, lang);
-        mimeType = "audio/wav";
-      } else if (provider === "google") {
-        audioData = await generateSpeechGoogle(
-          text,
-          apiKey,
-          lang,
-          gender,
-          abort.signal,
-        );
-      } else {
-        audioData = await generateSpeech(
-          text,
-          apiKey,
-          voiceId,
-          lang,
-          abort.signal,
-        );
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      // Include provider + voice + language in cache key
+      const cacheKey = `${provider}:${voiceId}:${lang}:${text}`;
+      let blobUrl = audioCache.get(cacheKey);
+
+      if (!blobUrl) {
+        let audioData: ArrayBuffer;
+        let mimeType = "audio/mpeg";
+        if (provider === "kittentts") {
+          audioData = await generateSpeechKittenTTS(
+            text,
+            kittenTTSUrl,
+            voiceId,
+          );
+          mimeType = "audio/wav";
+        } else if (provider === "opentts") {
+          audioData = await generateSpeechOpenTTS(
+            text,
+            openTTSUrl,
+            voiceId,
+            lang,
+          );
+          mimeType = "audio/wav";
+        } else if (provider === "google") {
+          audioData = await generateSpeechGoogle(
+            text,
+            apiKey,
+            lang,
+            gender,
+            abort.signal,
+          );
+        } else {
+          audioData = await generateSpeech(
+            text,
+            apiKey,
+            voiceId,
+            lang,
+            abort.signal,
+          );
+        }
+        if (thisGeneration !== requestGeneration) return;
+
+        const blob = new Blob([audioData], { type: mimeType });
+        blobUrl = URL.createObjectURL(blob);
+        audioCache.set(cacheKey, blobUrl);
       }
+
       if (thisGeneration !== requestGeneration) return;
 
-      const blob = new Blob([audioData], { type: mimeType });
-      blobUrl = URL.createObjectURL(blob);
-      audioCache.set(cacheKey, blobUrl);
+      currentAudio = new Audio(blobUrl);
+      currentAudio.volume = volume;
+      currentAudio.playbackRate = speed;
+      await currentAudio.play();
+      return; // success — exit retry loop
+    } catch (e) {
+      if (e instanceof DOMException && e.name === "AbortError") return;
+      if (attempt < maxAttempts) {
+        // Server may still be starting — wait and retry
+        console.log(`TTS attempt ${attempt} failed, retrying in 2s...`);
+        await new Promise((r) => setTimeout(r, 2000));
+        if (thisGeneration !== requestGeneration) return;
+        continue;
+      }
+      console.error("TTS error:", e);
     }
-
-    if (thisGeneration !== requestGeneration) return;
-
-    currentAudio = new Audio(blobUrl);
-    currentAudio.volume = volume;
-    currentAudio.playbackRate = speed;
-    await currentAudio.play();
-  } catch (e) {
-    if (e instanceof DOMException && e.name === "AbortError") return;
-    console.error("TTS error:", e);
   }
 }
 

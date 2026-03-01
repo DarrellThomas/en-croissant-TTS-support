@@ -95,7 +95,16 @@ def main():
     parser = argparse.ArgumentParser(description="KittenTTS HTTP Server")
     parser.add_argument("--port", type=int, default=8192, help="Port (default: 8192)")
     parser.add_argument("--host", default="127.0.0.1", help="Host (default: 127.0.0.1)")
+    parser.add_argument("--threads", type=int, default=0, help="CPU threads for PyTorch (0 = auto)")
     args = parser.parse_args()
+
+    if args.threads > 0:
+        try:
+            import torch
+            torch.set_num_threads(args.threads)
+            print(f"PyTorch threads set to {args.threads}")
+        except ImportError:
+            pass  # torch is a transitive dep of kittentts, but guard anyway
 
     print("Loading KittenTTS nano model...")
     print("(First run downloads from HuggingFace — this may take a moment)")
