@@ -1,5 +1,5 @@
 use dashmap::DashMap;
-use diesel::prelude::*;
+use diesel::{dsl::sql, prelude::*, sql_types::Integer};
 use log::info;
 use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
@@ -417,6 +417,7 @@ pub async fn search_position(
         .inner_join(events::table.on(games::event_id.eq(events::id)))
         .inner_join(sites::table.on(games::site_id.eq(sites::id)))
         .filter(games::id.eq_any(ids))
+        .order(sql::<Integer>("COALESCE(white_elo, 0) + COALESCE(black_elo, 0)").desc())
         .load(db)?;
     let normalized_games = normalize_games(games);
     let file_path = file.clone();
