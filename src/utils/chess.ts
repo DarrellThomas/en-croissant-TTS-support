@@ -430,7 +430,11 @@ function innerParsePGN(
         root.clock = comment.clock;
       }
 
-      root.comment = comment.text;
+      if (comment.text) {
+        root.comment = root.comment
+          ? `${root.comment}\n\n${comment.text}`
+          : comment.text;
+      }
     } else if (token.type === "ParenOpen") {
       const variation = [];
       let subvariations = 0;
