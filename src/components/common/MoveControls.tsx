@@ -42,7 +42,10 @@ function MoveControls({ readOnly }: { readOnly?: boolean }) {
   useHotkeys(keyMap.NEXT_MOVE.keys, guard(next));
   useHotkeys(keyMap.GO_TO_START.keys, guard(start));
   useHotkeys(keyMap.GO_TO_END.keys, guard(end));
-  useHotkeys(keyMap.DELETE_MOVE.keys, readOnly ? () => {} : guard(() => deleteMove()));
+  useHotkeys(
+    keyMap.DELETE_MOVE.keys,
+    readOnly ? () => {} : guard(() => deleteMove()),
+  );
   useHotkeys(keyMap.GO_TO_BRANCH_START.keys, guard(startBranch));
   useHotkeys(keyMap.GO_TO_BRANCH_END.keys, guard(endBranch));
   useHotkeys(keyMap.NEXT_BRANCH.keys, guard(nextBranch));
@@ -52,16 +55,36 @@ function MoveControls({ readOnly }: { readOnly?: boolean }) {
 
   return (
     <Group grow gap="xs">
-      <ActionIcon variant="default" size="lg" onClick={guard(start)} disabled={blocked}>
+      <ActionIcon
+        variant="default"
+        size="lg"
+        onClick={guard(start)}
+        disabled={blocked}
+      >
         <IconChevronsLeft />
       </ActionIcon>
-      <ActionIcon variant="default" size="lg" onClick={guard(previous)} disabled={blocked}>
+      <ActionIcon
+        variant="default"
+        size="lg"
+        onClick={guard(previous)}
+        disabled={blocked}
+      >
         <IconChevronLeft />
       </ActionIcon>
-      <ActionIcon variant="default" size="lg" onClick={guard(next)} disabled={blocked}>
+      <ActionIcon
+        variant="default"
+        size="lg"
+        onClick={guard(next)}
+        disabled={blocked}
+      >
         <IconChevronRight />
       </ActionIcon>
-      <ActionIcon variant="default" size="lg" onClick={guard(end)} disabled={blocked}>
+      <ActionIcon
+        variant="default"
+        size="lg"
+        onClick={guard(end)}
+        disabled={blocked}
+      >
         <IconChevronsRight />
       </ActionIcon>
     </Group>
