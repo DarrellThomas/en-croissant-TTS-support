@@ -34,6 +34,12 @@ chmod 755 /usr/bin/en-croissant-TTS
 mkdir -p "$RES_DIR"
 cp -r docs/  "$RES_DIR/docs"
 cp -r sound/ "$RES_DIR/sound"
+cp -r scripts/ "$RES_DIR/scripts"
+
+# Set up KittenTTS venv if it exists in source
+if [ -d "scripts/.venv" ]; then
+  cp -r scripts/.venv "$RES_DIR/scripts/.venv"
+fi
 
 # Desktop entry
 cat > /usr/share/applications/en-croissant-TTS.desktop <<'EOF'

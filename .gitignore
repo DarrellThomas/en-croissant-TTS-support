@@ -28,5 +28,9 @@ tsconfig.tsbuildinfo
 
 src-tauri/gen/
 
+# Python virtual environments
+.venv/
+scripts/.venv/
+
 # Local issue tracking
 UPSTREAM-ISSUES.md

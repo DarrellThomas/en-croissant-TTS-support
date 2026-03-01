@@ -438,6 +438,13 @@ function RootLayout() {
               },
             ],
           },
+          {
+            label: "TTS Settings",
+            id: "tts_settings",
+            action: () => {
+              navigate({ to: "/settings", search: { tab: "sound" } });
+            },
+          },
         ],
       },
       {

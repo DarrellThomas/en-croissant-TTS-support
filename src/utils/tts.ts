@@ -1,3 +1,5 @@
+import { invoke } from "@tauri-apps/api/core";
+import { fetch } from "@tauri-apps/plugin-http";
 import { getDefaultStore } from "jotai";
 import {
   ttsApiKeyAtom,
@@ -5,9 +7,14 @@ import {
   ttsEnabledAtom,
   ttsGoogleApiKeyAtom,
   ttsGoogleGenderAtom,
+  ttsKittenTTSUrlAtom,
+  ttsKittenTTSVoiceAtom,
   ttsLanguageAtom,
+  ttsOpenTTSUrlAtom,
+  ttsOpenTTSVoiceAtom,
   ttsProviderAtom,
   ttsSpeedAtom,
+  ttsSystemVoiceAtom,
   ttsVoiceIdAtom,
   ttsVolumeAtom,
 } from "@/state/atoms";
@@ -569,6 +576,107 @@ async function generateSpeechGoogle(
   return bytes.buffer;
 }
 
+// --- OpenTTS API ---
+
+async function generateSpeechOpenTTS(
+  text: string,
+  serverUrl: string,
+  voice: string,
+  _lang = "en",
+): Promise<ArrayBuffer> {
+  const params = new URLSearchParams({ voice, text });
+  const url = `${serverUrl}/api/tts?${params}`;
+
+  const bytes: number[] = await invoke("fetch_tts_audio", { url });
+  return new Uint8Array(bytes).buffer;
+}
+
+export interface OpenTTSVoice {
+  id: string;
+  name: string;
+  gender: string;
+  language: string;
+  tts_name: string;
+}
+
+export async function listOpenTTSVoices(
+  serverUrl: string,
+  language?: string,
+): Promise<OpenTTSVoice[]> {
+  const params = new URLSearchParams();
+  if (language) params.set("language", language);
+
+  const url = `${serverUrl}/api/voices?${params}`;
+  const bytes: number[] = await invoke("fetch_tts_audio", { url });
+  const text = new TextDecoder().decode(new Uint8Array(bytes));
+  const data = JSON.parse(text);
+  return Object.entries(data).map(([key, val]: [string, any]) => ({
+    id: key,
+    name: val.name || key,
+    gender: val.gender || "",
+    language: val.language || "",
+    tts_name: val.tts_name || "",
+  }));
+}
+
+// --- KittenTTS API ---
+
+async function generateSpeechKittenTTS(
+  text: string,
+  serverUrl: string,
+  voice: string,
+): Promise<ArrayBuffer> {
+  const params = new URLSearchParams({ text, voice });
+  const url = `${serverUrl}/api/tts?${params}`;
+
+  const bytes: number[] = await invoke("fetch_tts_audio", { url });
+  return new Uint8Array(bytes).buffer;
+}
+
+export const KITTENTTS_VOICES = [
+  { id: "expr-voice-2-m", label: "Voice 2 (Male)" },
+  { id: "expr-voice-2-f", label: "Voice 2 (Female)" },
+  { id: "expr-voice-3-m", label: "Voice 3 (Male)" },
+  { id: "expr-voice-3-f", label: "Voice 3 (Female)" },
+  { id: "expr-voice-4-m", label: "Voice 4 (Male)" },
+  { id: "expr-voice-4-f", label: "Voice 4 (Female)" },
+  { id: "expr-voice-5-m", label: "Voice 5 (Male)" },
+  { id: "expr-voice-5-f", label: "Voice 5 (Female)" },
+];
+
+// --- System TTS (native OS) ---
+
+export interface SystemVoice {
+  id: string;
+  name: string;
+  language: string;
+}
+
+export async function listSystemVoices(): Promise<SystemVoice[]> {
+  return invoke<SystemVoice[]>("system_tts_list_voices");
+}
+
+async function speakSystemTTS(
+  text: string,
+  voiceId: string,
+  rate: number,
+  volume: number,
+): Promise<void> {
+  if (voiceId) {
+    await invoke("system_tts_set_voice", { voiceId });
+  }
+  await invoke("system_tts_speak", {
+    text,
+    rate: rate * 200, // speech-dispatcher rate: ~200 = normal
+    volume: volume * 100, // speech-dispatcher volume: 0-100
+    pitch: null,
+  });
+}
+
+export async function stopSystemTTS(): Promise<void> {
+  await invoke("system_tts_stop");
+}
+
 // --- Public API ---
 
 export function stopSpeaking() {
@@ -585,6 +693,8 @@ export function stopSpeaking() {
     currentAudio.currentTime = 0;
     currentAudio = null;
   }
+  // Stop system TTS if active
+  stopSystemTTS().catch(() => {});
   // Note: we do NOT revoke blob URLs here — they stay in audioCache for replay
 }
 
@@ -595,20 +705,43 @@ export async function speakText(text: string): Promise<void> {
   const speed = store.get(ttsSpeedAtom);
   const lang = store.get(ttsLanguageAtom) || "en";
 
-  let apiKey: string;
+  if (!text.trim()) return;
+
+  // System TTS uses native OS engine via Tauri commands — separate path
+  if (provider === "system") {
+    stopSpeaking();
+    const systemVoice = store.get(ttsSystemVoiceAtom) || "";
+    try {
+      await speakSystemTTS(text, systemVoice, speed, volume);
+    } catch (e) {
+      console.error("System TTS error:", e);
+    }
+    return;
+  }
+
+  let apiKey = "";
   let voiceId: string;
+  let openTTSUrl = "";
+  let kittenTTSUrl = "";
 
   let gender = "MALE";
-  if (provider === "google") {
+  if (provider === "kittentts") {
+    kittenTTSUrl = store.get(ttsKittenTTSUrlAtom) || "http://localhost:8192";
+    voiceId = store.get(ttsKittenTTSVoiceAtom) || "expr-voice-2-m";
+  } else if (provider === "opentts") {
+    openTTSUrl = store.get(ttsOpenTTSUrlAtom) || "http://localhost:5500";
+    voiceId = store.get(ttsOpenTTSVoiceAtom) || "";
+    if (!voiceId) return;
+  } else if (provider === "google") {
     apiKey = store.get(ttsGoogleApiKeyAtom);
     gender = store.get(ttsGoogleGenderAtom) || "MALE";
     voiceId = getGoogleVoice(lang, gender).name;
+    if (!apiKey) return;
   } else {
     apiKey = store.get(ttsApiKeyAtom);
     voiceId = store.get(ttsVoiceIdAtom) || DEFAULT_VOICE_ID;
+    if (!apiKey) return;
   }
-
-  if (!apiKey || !text.trim()) return;
 
   // Stop any currently playing audio and cancel in-flight requests
   stopSpeaking();
@@ -625,7 +758,14 @@ export async function speakText(text: string): Promise<void> {
 
     if (!blobUrl) {
       let audioData: ArrayBuffer;
-      if (provider === "google") {
+      let mimeType = "audio/mpeg";
+      if (provider === "kittentts") {
+        audioData = await generateSpeechKittenTTS(text, kittenTTSUrl, voiceId);
+        mimeType = "audio/wav";
+      } else if (provider === "opentts") {
+        audioData = await generateSpeechOpenTTS(text, openTTSUrl, voiceId, lang);
+        mimeType = "audio/wav";
+      } else if (provider === "google") {
         audioData = await generateSpeechGoogle(
           text,
           apiKey,
@@ -644,7 +784,7 @@ export async function speakText(text: string): Promise<void> {
       }
       if (thisGeneration !== requestGeneration) return;
 
-      const blob = new Blob([audioData], { type: "audio/mpeg" });
+      const blob = new Blob([audioData], { type: mimeType });
       blobUrl = URL.createObjectURL(blob);
       audioCache.set(cacheKey, blobUrl);
     }
@@ -715,20 +855,32 @@ export async function precacheGame(root: TreeNode): Promise<number> {
   const provider = store.get(ttsProviderAtom) || "elevenlabs";
   const lang = store.get(ttsLanguageAtom) || "en";
 
-  let apiKey: string;
+  // System TTS doesn't support precaching (speaks directly via OS)
+  if (provider === "system") return 0;
+
+  let apiKey = "";
   let voiceId: string;
   let gender = "MALE";
+  let openTTSUrl = "";
+  let kittenTTSUrl = "";
 
-  if (provider === "google") {
+  if (provider === "kittentts") {
+    kittenTTSUrl = store.get(ttsKittenTTSUrlAtom) || "http://localhost:8192";
+    voiceId = store.get(ttsKittenTTSVoiceAtom) || "expr-voice-2-m";
+  } else if (provider === "opentts") {
+    openTTSUrl = store.get(ttsOpenTTSUrlAtom) || "http://localhost:5500";
+    voiceId = store.get(ttsOpenTTSVoiceAtom) || "";
+    if (!voiceId) return 0;
+  } else if (provider === "google") {
     apiKey = store.get(ttsGoogleApiKeyAtom);
     gender = store.get(ttsGoogleGenderAtom) || "MALE";
     voiceId = getGoogleVoice(lang, gender).name;
+    if (!apiKey) return 0;
   } else {
     apiKey = store.get(ttsApiKeyAtom);
     voiceId = store.get(ttsVoiceIdAtom) || DEFAULT_VOICE_ID;
+    if (!apiKey) return 0;
   }
-
-  if (!apiKey) return 0;
 
   // Collect all narration texts
   const texts: string[] = [];
@@ -758,12 +910,24 @@ export async function precacheGame(root: TreeNode): Promise<number> {
 
     try {
       let audioData: ArrayBuffer;
-      if (provider === "google") {
+      let mimeType = "audio/mpeg";
+      if (provider === "kittentts") {
+        audioData = await generateSpeechKittenTTS(text, kittenTTSUrl, voiceId);
+        mimeType = "audio/wav";
+      } else if (provider === "opentts") {
+        audioData = await generateSpeechOpenTTS(
+          text,
+          openTTSUrl,
+          voiceId,
+          lang,
+        );
+        mimeType = "audio/wav";
+      } else if (provider === "google") {
         audioData = await generateSpeechGoogle(text, apiKey, lang, gender);
       } else {
         audioData = await generateSpeech(text, apiKey, voiceId, lang);
       }
-      const blob = new Blob([audioData], { type: "audio/mpeg" });
+      const blob = new Blob([audioData], { type: mimeType });
       const blobUrl = URL.createObjectURL(blob);
       audioCache.set(cacheKey, blobUrl);
       cached++;

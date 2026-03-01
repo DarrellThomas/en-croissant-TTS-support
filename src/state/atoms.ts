@@ -325,6 +325,36 @@ export const ttsGoogleGenderAtom = atomWithStorage<string>(
   undefined,
   { getOnInit: true },
 );
+export const ttsOpenTTSUrlAtom = atomWithStorage<string>(
+  "tts-opentts-url",
+  "http://localhost:5500",
+  undefined,
+  { getOnInit: true },
+);
+export const ttsOpenTTSVoiceAtom = atomWithStorage<string>(
+  "tts-opentts-voice",
+  "",
+  undefined,
+  { getOnInit: true },
+);
+export const ttsSystemVoiceAtom = atomWithStorage<string>(
+  "tts-system-voice",
+  "",
+  undefined,
+  { getOnInit: true },
+);
+export const ttsKittenTTSUrlAtom = atomWithStorage<string>(
+  "tts-kittentts-url",
+  "http://localhost:8192",
+  undefined,
+  { getOnInit: true },
+);
+export const ttsKittenTTSVoiceAtom = atomWithStorage<string>(
+  "tts-kittentts-voice",
+  "expr-voice-2-m",
+  undefined,
+  { getOnInit: true },
+);
 
 export const pieceSetAtom = atomWithStorage<string>("piece-set", "staunty");
 export const boardImageAtom = atomWithStorage<string>(

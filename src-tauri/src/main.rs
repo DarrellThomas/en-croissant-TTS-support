@@ -17,6 +17,8 @@ mod pgn;
 mod progress;
 mod puzzle;
 mod sound;
+mod system_tts;
+mod tts_servers;
 
 use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
@@ -58,6 +60,13 @@ use crate::puzzle::{
     get_themes_for_puzzle,
 };
 use crate::sound::get_sound_server_port;
+use crate::system_tts::{
+    system_tts_list_voices, system_tts_set_voice, system_tts_speak, system_tts_stop,
+    SystemTtsState,
+};
+use crate::tts_servers::{
+    fetch_tts_audio, kittentts_start, kittentts_stop, opentts_start, opentts_stop, TtsServerState,
+};
 use crate::{
     chess::get_best_moves,
     db::{
@@ -165,7 +174,16 @@ fn main() {
             preload_reference_db,
             get_progress,
             clear_progress,
-            get_sound_server_port
+            get_sound_server_port,
+            system_tts_speak,
+            system_tts_stop,
+            system_tts_list_voices,
+            system_tts_set_voice,
+            opentts_start,
+            opentts_stop,
+            kittentts_start,
+            kittentts_stop,
+            fetch_tts_audio
         ))
         .events(tauri_specta::collect_events!(
             BestMovesPayload,
@@ -240,6 +258,10 @@ fn main() {
             log::info!("Finished rust initialization");
 
             Ok(())
+        })
+        .manage(SystemTtsState(std::sync::Mutex::new(None)))
+        .manage(TtsServerState {
+            kittentts_pid: std::sync::Mutex::new(None),
         })
         .manage(AppState::default())
         .run(tauri::generate_context!())

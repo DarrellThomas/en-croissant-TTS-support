@@ -8,6 +8,7 @@ import {
   Switch,
   Text,
 } from "@mantine/core";
+import { invoke } from "@tauri-apps/api/core";
 import { useAtom } from "jotai";
 import { useCallback, useEffect, useState } from "react";
 import {
@@ -16,16 +17,26 @@ import {
   ttsEnabledAtom,
   ttsGoogleApiKeyAtom,
   ttsGoogleGenderAtom,
+  ttsKittenTTSUrlAtom,
+  ttsKittenTTSVoiceAtom,
   ttsLanguageAtom,
+  ttsOpenTTSUrlAtom,
+  ttsOpenTTSVoiceAtom,
   ttsProviderAtom,
   ttsSpeedAtom,
+  ttsSystemVoiceAtom,
   ttsVoiceIdAtom,
   ttsVolumeAtom,
 } from "@/state/atoms";
 import {
   clearAudioCache,
   type ElevenLabsVoice,
+  KITTENTTS_VOICES,
+  listOpenTTSVoices,
+  listSystemVoices,
   listVoices,
+  type OpenTTSVoice,
+  type SystemVoice,
   speakText,
   stopSpeaking,
 } from "@/utils/tts";
@@ -58,6 +69,9 @@ export function TTSProviderSelect() {
       data={[
         { value: "elevenlabs", label: "ElevenLabs" },
         { value: "google", label: "Google Cloud" },
+        { value: "kittentts", label: "KittenTTS (English Only)" },
+        { value: "opentts", label: "OpenTTS (Self-Hosted)" },
+        { value: "system", label: "System (OS Native)" },
       ]}
       value={provider}
       onChange={(v) => v && setProvider(v)}
@@ -108,6 +122,148 @@ export function TTSApiKeyInput() {
   );
 }
 
+export function TTSKittenTTSUrlInput() {
+  const [url, setUrl] = useAtom(ttsKittenTTSUrlAtom);
+  const [tempUrl, setTempUrl] = useState(url);
+  const [status, setStatus] = useState<"idle" | "starting" | "stopping">(
+    "idle",
+  );
+  const [result, setResult] = useState<string | null>(null);
+
+  useEffect(() => {
+    setTempUrl(url);
+  }, [url]);
+
+  const showResult = (msg: string) => {
+    setResult(msg);
+    setTimeout(() => setResult(null), 2000);
+  };
+
+  return (
+    <Group gap="xs">
+      <PasswordInput
+        w="14rem"
+        placeholder="http://localhost:8192"
+        value={tempUrl}
+        onChange={(e) => setTempUrl(e.currentTarget.value)}
+        onBlur={() => setUrl(tempUrl)}
+        visible
+      />
+      <Button
+        size="xs"
+        variant="light"
+        color={result === "Started" ? "green" : undefined}
+        loading={status === "starting"}
+        onClick={async () => {
+          setStatus("starting");
+          try {
+            await invoke("kittentts_start");
+            showResult("Started");
+          } catch (e) {
+            showResult("Error");
+            console.error("KittenTTS start error:", e);
+          } finally {
+            setStatus("idle");
+          }
+        }}
+      >
+        {result === "Started" ? "Started" : "Start"}
+      </Button>
+      <Button
+        size="xs"
+        variant="light"
+        color={result === "Stopped" ? "orange" : undefined}
+        loading={status === "stopping"}
+        onClick={async () => {
+          setStatus("stopping");
+          try {
+            await invoke("kittentts_stop");
+            showResult("Stopped");
+          } catch (e) {
+            showResult("Error");
+            console.error("KittenTTS stop error:", e);
+          } finally {
+            setStatus("idle");
+          }
+        }}
+      >
+        {result === "Stopped" ? "Stopped" : "Stop"}
+      </Button>
+    </Group>
+  );
+}
+
+export function TTSOpenTTSUrlInput() {
+  const [url, setUrl] = useAtom(ttsOpenTTSUrlAtom);
+  const [tempUrl, setTempUrl] = useState(url);
+  const [status, setStatus] = useState<"idle" | "starting" | "stopping">(
+    "idle",
+  );
+  const [result, setResult] = useState<string | null>(null);
+
+  useEffect(() => {
+    setTempUrl(url);
+  }, [url]);
+
+  const showResult = (msg: string) => {
+    setResult(msg);
+    setTimeout(() => setResult(null), 2000);
+  };
+
+  return (
+    <Group gap="xs">
+      <PasswordInput
+        w="14rem"
+        placeholder="http://localhost:5500"
+        value={tempUrl}
+        onChange={(e) => setTempUrl(e.currentTarget.value)}
+        onBlur={() => setUrl(tempUrl)}
+        visible
+      />
+      <Button
+        size="xs"
+        variant="light"
+        color={result === "Started" ? "green" : undefined}
+        loading={status === "starting"}
+        onClick={async () => {
+          setStatus("starting");
+          try {
+            await invoke("opentts_start");
+            showResult("Started");
+          } catch (e) {
+            showResult("Error");
+            console.error("OpenTTS start error:", e);
+          } finally {
+            setStatus("idle");
+          }
+        }}
+      >
+        {result === "Started" ? "Started" : "Start"}
+      </Button>
+      <Button
+        size="xs"
+        variant="light"
+        color={result === "Stopped" ? "orange" : undefined}
+        loading={status === "stopping"}
+        onClick={async () => {
+          setStatus("stopping");
+          try {
+            await invoke("opentts_stop");
+            showResult("Stopped");
+          } catch (e) {
+            showResult("Error");
+            console.error("OpenTTS stop error:", e);
+          } finally {
+            setStatus("idle");
+          }
+        }}
+      >
+        {result === "Stopped" ? "Stopped" : "Stop"}
+      </Button>
+    </Group>
+  );
+}
+
 export function TTSVoiceSelect() {
   const [voiceId, setVoiceId] = useAtom(ttsVoiceIdAtom);
   const [apiKey] = useAtom(ttsApiKeyAtom);
@@ -116,7 +272,46 @@ export function TTSVoiceSelect() {
   const [voices, setVoices] = useState<ElevenLabsVoice[]>([]);
   const [loading, setLoading] = useState(false);
 
+  // OpenTTS state
+  const [openTTSUrl] = useAtom(ttsOpenTTSUrlAtom);
+  const [openTTSVoice, setOpenTTSVoice] = useAtom(ttsOpenTTSVoiceAtom);
+  const [openTTSVoices, setOpenTTSVoices] = useState<OpenTTSVoice[]>([]);
+
+  // System TTS state
+  const [systemVoice, setSystemVoice] = useAtom(ttsSystemVoiceAtom);
+  const [systemVoices, setSystemVoices] = useState<SystemVoice[]>([]);
+
+  // KittenTTS state
+  const [kittenVoice, setKittenVoice] = useAtom(ttsKittenTTSVoiceAtom);
+
   const fetchVoices = useCallback(async () => {
+    if (provider === "system") {
+      setLoading(true);
+      try {
+        const v = await listSystemVoices();
+        setSystemVoices(v);
+      } catch (e) {
+        console.error("Failed to fetch system voices:", e);
+        setSystemVoices([]);
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+    if (provider === "opentts") {
+      if (!openTTSUrl) return;
+      setLoading(true);
+      try {
+        const v = await listOpenTTSVoices(openTTSUrl, language);
+        setOpenTTSVoices(v);
+      } catch (e) {
+        console.error("Failed to fetch OpenTTS voices:", e);
+        setOpenTTSVoices([]);
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
     if (!apiKey || provider !== "elevenlabs") return;
     setLoading(true);
     try {
@@ -127,7 +322,7 @@ export function TTSVoiceSelect() {
     } finally {
       setLoading(false);
     }
-  }, [apiKey, provider]);
+  }, [apiKey, provider, openTTSUrl, language]);
 
   useEffect(() => {
     fetchVoices();
@@ -135,6 +330,94 @@ export function TTSVoiceSelect() {
 
   const [gender, setGender] = useAtom(ttsGoogleGenderAtom);
   const testPhrase = getTestPhrase(language);
+
+  if (provider === "system") {
+    const sysVoiceOptions = systemVoices.map((v) => ({
+      value: v.id,
+      label: `${v.name} (${v.language})`,
+    }));
+
+    return (
+      <Group gap="xs">
+        <Select
+          w="20rem"
+          data={sysVoiceOptions}
+          value={systemVoice}
+          onChange={(v) => v && setSystemVoice(v)}
+          placeholder={loading ? "Loading voices..." : "Select voice"}
+          searchable
+        />
+        <Button
+          size="xs"
+          variant="light"
+          onClick={() => {
+            speakText(testPhrase);
+          }}
+        >
+          Test
+        </Button>
+      </Group>
+    );
+  }
+
+  if (provider === "kittentts") {
+    const kittenVoiceOptions = KITTENTTS_VOICES.map((v) => ({
+      value: v.id,
+      label: v.label,
+    }));
+
+    return (
+      <Group gap="xs">
+        <Select
+          w="12rem"
+          data={kittenVoiceOptions}
+          value={kittenVoice}
+          onChange={(v) => v && setKittenVoice(v)}
+          allowDeselect={false}
+        />
+        <Button
+          size="xs"
+          variant="light"
+          onClick={() => {
+            speakText(testPhrase);
+          }}
+        >
+          Test
+        </Button>
+      </Group>
+    );
+  }
+
+  if (provider === "opentts") {
+    const voiceOptions = openTTSVoices.map((v) => ({
+      value: v.id,
+      label: `${v.name} (${v.tts_name})`,
+    }));
+
+    return (
+      <Group gap="xs">
+        <Select
+          w="20rem"
+          data={voiceOptions}
+          value={openTTSVoice}
+          onChange={(v) => v && setOpenTTSVoice(v)}
+          placeholder={loading ? "Loading voices..." : "Select voice"}
+          searchable
+          disabled={!openTTSUrl}
+        />
+        <Button
+          size="xs"
+          variant="light"
+          disabled={!openTTSVoice}
+          onClick={() => {
+            speakText(testPhrase);
+          }}
+        >
+          Test
+        </Button>
+      </Group>
+    );
+  }
 
   if (provider === "google") {
     return (

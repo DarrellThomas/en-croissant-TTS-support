@@ -29,18 +29,28 @@ Once you try it, going back to silent annotations feels like watching a movie on
 
 ## Choosing a Provider
 
-This version ships with two TTS providers — Google Cloud and ElevenLabs. If there's another provider the community would like to see, let us know and we can add it. You only need one provider to get started — pick whichever suits you best.
+En Croissant-TTS ships with three TTS providers. Each takes a different approach — cloud AI services with API keys, or a self-hosted server you run on your own machine. You only need one provider to get started. Pick whichever suits you best.
 
-|                        | Google Cloud                  | ElevenLabs                    |
-|------------------------|-------------------------------|-------------------------------|
-| **Free tier**          | 1,000,000 chars/month         | 10,000 chars/month            |
-| **Voice quality**      | Very good (WaveNet)           | Excellent (premium AI voices) |
-| **Voice selection**    | Male or Female per language   | Dozens of unique characters   |
-| **Paid plans**         | Pay-as-you-go (pennies)       | $5/month and up               |
-| **Best for**           | Most users                    | Voice quality enthusiasts     |
-| **Setup difficulty**   | Moderate (Cloud Console)      | Easy (simple sign-up)         |
+|                        | Google Cloud                  | ElevenLabs                    | OpenTTS (Self-Hosted)              |
+|------------------------|-------------------------------|-------------------------------|------------------------------------|
+| **Cost**               | Free (1M chars/month)         | Free (10K chars/month)        | Completely free, unlimited         |
+| **Voice quality**      | Very good (WaveNet neural)    | Excellent (premium AI)        | Functional (older neural/rule-based) |
+| **Voice selection**    | Male or Female per language   | Dozens of unique characters   | 75+ voices across multiple engines |
+| **CJK languages**      | Excellent                     | Excellent                     | Limited (English-focused voices)   |
+| **Requires internet**  | Yes (Google servers)          | Yes (ElevenLabs servers)      | No (runs locally via Docker)       |
+| **Requires API key**   | Yes                           | Yes                           | No                                 |
+| **Setup difficulty**   | Moderate (Cloud Console)      | Easy (simple sign-up)         | Easy (one Docker command)          |
+| **Best for**           | Most users                    | Voice quality enthusiasts     | Privacy-focused / offline use      |
 
-**Our recommendation:** Start with **Google Cloud**. The free tier gives you one million characters per month — that's hundreds of fully annotated games, for free. The WaveNet voices sound great. If you later find yourself wanting richer, more expressive narration with more voice personality, ElevenLabs is there for you.
+### How they work
+
+**Google Cloud TTS** sends your text to Google's servers, which use WaveNet neural networks to generate natural-sounding speech. The audio comes back as an MP3 file. Google's free tier is generous — one million characters per month covers hundreds of annotated games. You need a Google Cloud account and an API key, but no credit card charges unless you exceed the free tier (which is very hard to do with chess annotations).
+
+**ElevenLabs** is a premium AI voice platform. Your text goes to their servers and comes back as high-quality audio with expressive, human-like intonation. The voices have real personality — some sound like audiobook narrators, others like broadcasters. The free tier is small (10,000 characters — enough for 2-5 games), but the paid plans are affordable ($5/month for 30K characters). Setup is simple: sign up, copy your API key, and go.
+
+**OpenTTS** is different from the other two. It's an open-source server that you run on your own computer using Docker. Nothing leaves your machine — all speech generation happens locally. It bundles several TTS engines (Larynx, Festival, eSpeak, Coqui-TTS, and others), giving you 75+ voices for English alone. The trade-off is voice quality: these are older neural and rule-based engines, so the output sounds more robotic than Google or ElevenLabs. OpenTTS also works best with European languages — CJK characters (Japanese, Chinese, Korean) are not well supported by its English-trained voices. But if you want free, unlimited, offline TTS with no API keys and no data leaving your machine, OpenTTS delivers.
+
+**Our recommendation:** Start with **Google Cloud**. The free tier gives you one million characters per month — that's hundreds of fully annotated games, for free. The WaveNet voices sound great across all eight supported languages. If you later want richer, more expressive narration with more voice personality, ElevenLabs is there for you. If you want complete privacy or offline use, set up OpenTTS.
 
 ## Setting Up Google Cloud TTS
 
@@ -135,6 +145,51 @@ You should hear a chess move spoken aloud.
 
 > **About the free tier:** ElevenLabs gives you 10,000 characters/month on the free plan. A typical annotated game uses 2,000-4,000 characters, so you can review 2-5 games per month for free. If you find TTS valuable, their Starter plan at $5/month (30,000 characters) is a solid upgrade. The Pro plan ($22/month, 100,000 characters) covers heavy use.
 
+## Setting Up OpenTTS (Self-Hosted)
+
+OpenTTS runs on your own machine using Docker. No account, no API key, no data leaving your computer. Setup takes about 2 minutes if you already have Docker installed.
+
+### Step 1: Install Docker
+
+If you don't have Docker yet:
+
+- **Linux:** `sudo apt install docker.io` (Ubuntu/Debian) or `sudo dnf install docker` (Fedora)
+- **macOS/Windows:** Download [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+
+### Step 2: Start the OpenTTS server
+
+Open a terminal and run:
+
+```bash
+docker run -d -p 5500:5500 --name opentts synesthesiam/opentts:en
+```
+
+This downloads the English voice pack (~1.5 GB on first run) and starts the server in the background. It will keep running until you stop it.
+
+Other language packs are available: `de`, `fr`, `es`, `ru`, `nl`, `sv`, `it`, and more. Use `synesthesiam/opentts:all` for every language (larger download). For example:
+
+```bash
+docker run -d -p 5500:5500 --name opentts synesthesiam/opentts:all
+```
+
+### Step 3: Configure En Croissant-TTS
+
+1. Open En Croissant-TTS and go to **Settings** (gear icon) > **Sound** tab
+2. Scroll down to the TTS section
+3. Set **TTS Provider** to **OpenTTS (Self-Hosted)**
+4. Confirm the **OpenTTS Server URL** is `http://localhost:5500`
+5. The **TTS Voice** dropdown will populate with available voices from your server. Try a **larynx** voice (like `harvard`) for the best quality, or browse the list — there are 75+ options
+6. Set **Text-to-Speech** to **On**
+7. Click the **Test** button next to the voice selector
+
+You should hear a chess move spoken aloud.
+
+> **Voice quality guide:** Voices are provided by several engines bundled in OpenTTS. From best to most basic: **Larynx** (neural, most natural), **Coqui-TTS** (neural, multi-speaker), **MaryTTS** (Java-based, decent), **Festival** (traditional), **eSpeak** (robotic but fast). The voice dropdown shows the engine name in parentheses so you can pick accordingly.
+
+> **Managing the server:** The OpenTTS container runs in the background. To stop it: `docker stop opentts`. To start it again: `docker start opentts`. To remove it entirely: `docker rm -f opentts`.
+
+> **Note on CJK languages:** OpenTTS works best with European languages. Japanese, Chinese, and Korean text will not be pronounced correctly by the English-trained voices. For CJK languages, use Google Cloud or ElevenLabs instead.
+
 ## Settings Reference
 
 All TTS settings are in **Settings > Sound**:
@@ -143,10 +198,11 @@ All TTS settings are in **Settings > Sound**:
 |--------------------------|-------------------------------------------------------------------------------|
 | **Text-to-Speech**       | Master on/off switch for all TTS features                                     |
 | **Auto-Narrate on Move** | Automatically speak annotations when you step through moves with arrow keys   |
-| **TTS Provider**         | Switch between ElevenLabs and Google Cloud                                    |
+| **TTS Provider**         | Switch between ElevenLabs, Google Cloud, and OpenTTS                          |
 | **ElevenLabs API Key**   | Your ElevenLabs API key (only needed if using ElevenLabs)                     |
 | **Google Cloud API Key** | Your Google Cloud API key (only needed if using Google)                        |
-| **TTS Voice**            | ElevenLabs: choose from your voices. Google: choose Male or Female            |
+| **OpenTTS Server URL**   | URL of your OpenTTS server (only needed if using OpenTTS)                     |
+| **TTS Voice**            | ElevenLabs: choose from your voices. Google: Male or Female. OpenTTS: browse available voices |
 | **TTS Language**         | Language for narration — all chess terms are translated automatically          |
 | **TTS Volume**           | How loud the narration plays                                                  |
 | **TTS Speed**            | Playback speed (0.5x to 2x) — adjusts instantly without re-generating audio   |

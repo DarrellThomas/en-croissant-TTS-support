@@ -26,11 +26,10 @@ import {
   IconShield,
   IconVolume,
 } from "@tabler/icons-react";
-import { useLoaderData } from "@tanstack/react-router";
+import { useLoaderData, useSearch } from "@tanstack/react-router";
 import { open } from "@tauri-apps/plugin-dialog";
 import { useAtom } from "jotai";
 import { RESET } from "jotai/utils";
-import posthog from "posthog-js";
 import { useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -57,7 +56,6 @@ import {
   storedDocumentDirAtom,
   storedEnginesDirAtom,
   storedPuzzlesDirAtom,
-  telemetryEnabledAtom,
 } from "@/state/atoms";
 import { keyMapAtom } from "@/state/keybinds";
 import FileInput from "../common/FileInput";
@@ -77,7 +75,9 @@ import {
   TTSClearCacheButton,
   TTSEnabledSwitch,
   TTSGoogleApiKeyInput,
+  TTSKittenTTSUrlInput,
   TTSLanguageSelect,
+  TTSOpenTTSUrlInput,
   TTSProviderSelect,
   TTSSpeedSlider,
   TTSVoiceSelect,
@@ -139,33 +139,27 @@ function SettingRow({
   );
 }
 
-function TelemetrySwitch() {
-  const { t } = useTranslation();
-  const [enabled, setEnabled] = useAtom(telemetryEnabledAtom);
+function PrivacyStatement() {
   return (
-    <Switch
-      onLabel={t("Common.On")}
-      offLabel={t("Common.Off")}
-      size="lg"
-      checked={enabled}
-      onChange={(event) => {
-        const newValue = event.currentTarget.checked;
-        setEnabled(newValue);
-        if (newValue) {
-          posthog.opt_in_capturing();
-        } else {
-          posthog.opt_out_capturing();
-        }
-      }}
-      styles={{
-        track: { cursor: "pointer" },
-      }}
-    />
+    <Stack gap="md">
+      <Text size="lg" fw={600}>
+        We respect your privacy.
+      </Text>
+      <Text size="sm">
+        We do not collect any telemetry data. Zero. Nada. Zilch. Rien. Niente.
+        Nichts. Nul. Ничего. ゼロ. 零. 제로.
+      </Text>
+      <Text size="sm" c="dimmed">
+        If you run into issues and want to share your data to help us improve,
+        you know where to find us.
+      </Text>
+    </Stack>
   );
 }
 
 export default function Page() {
   const { t, i18n } = useTranslation();
+  const { tab: initialTab } = useSearch({ from: "/settings" });
   const [searchQuery, setSearchQuery] = useState("");
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -547,34 +541,19 @@ export default function Page() {
         category: "sound",
         title: "TTS Provider",
         description:
-          "Choose between ElevenLabs (premium voices) or Google Cloud (WaveNet voices, 1M chars/mo free)",
+          "System (zero-config OS native), Google Cloud (WaveNet), ElevenLabs (premium AI), OpenTTS (self-hosted), or KittenTTS (English only, high quality)",
         keywords: [
           "tts",
           "provider",
           "elevenlabs",
           "google",
           "cloud",
+          "opentts",
+          "kittentts",
+          "system",
           "engine",
         ],
         render: () => <TTSProviderSelect />,
-      },
-      {
-        id: "tts-api-key",
-        category: "sound",
-        title: "ElevenLabs API Key",
-        description:
-          "API key for ElevenLabs provider. Get one at elevenlabs.io",
-        keywords: ["tts", "api", "key", "elevenlabs"],
-        render: () => <TTSApiKeyInput />,
-      },
-      {
-        id: "tts-google-api-key",
-        category: "sound",
-        title: "Google Cloud API Key",
-        description:
-          "API key for Google Cloud TTS provider. Enable the Text-to-Speech API in Google Cloud Console",
-        keywords: ["tts", "api", "key", "google", "cloud"],
-        render: () => <TTSGoogleApiKeyInput />,
       },
       {
         id: "tts-voice",
@@ -628,6 +607,42 @@ export default function Page() {
           "Clear cached narration audio. Use this after editing annotations to force re-generation.",
         keywords: ["tts", "cache", "clear", "reset", "audio"],
         render: () => <TTSClearCacheButton />,
+      },
+      {
+        id: "tts-api-key",
+        category: "sound",
+        title: "ElevenLabs API Key",
+        description:
+          "API key for ElevenLabs provider. Get one at elevenlabs.io",
+        keywords: ["tts", "api", "key", "elevenlabs"],
+        render: () => <TTSApiKeyInput />,
+      },
+      {
+        id: "tts-google-api-key",
+        category: "sound",
+        title: "Google Cloud API Key",
+        description:
+          "API key for Google Cloud TTS provider. Enable the Text-to-Speech API in Google Cloud Console",
+        keywords: ["tts", "api", "key", "google", "cloud"],
+        render: () => <TTSGoogleApiKeyInput />,
+      },
+      {
+        id: "tts-opentts-url",
+        category: "sound",
+        title: "OpenTTS Server URL",
+        description:
+          "URL of your OpenTTS server (e.g. http://localhost:5500). Run with: docker run -it -p 5500:5500 synesthesiam/opentts:en",
+        keywords: ["tts", "opentts", "server", "url", "self-hosted", "docker", "start", "stop"],
+        render: () => <TTSOpenTTSUrlInput />,
+      },
+      {
+        id: "tts-kittentts-url",
+        category: "sound",
+        title: "KittenTTS Server URL",
+        description:
+          "URL of your KittenTTS server (English only). High-quality StyleTTS 2 voices. See TTS > Getting Started for setup.",
+        keywords: ["tts", "kittentts", "server", "url", "kitten", "styletts", "start", "stop"],
+        render: () => <TTSKittenTTSUrlInput />,
       },
       // Directories settings
       {
@@ -712,12 +727,12 @@ export default function Page() {
       },
       // Privacy settings
       {
-        id: "telemetry",
+        id: "privacy-statement",
         category: "privacy",
-        title: t("Settings.Privacy.Telemetry"),
-        description: t("Settings.Privacy.Telemetry.Desc"),
-        keywords: ["telemetry", "privacy", "analytics", "tracking"],
-        render: () => <TelemetrySwitch />,
+        title: "",
+        description: "",
+        keywords: ["privacy", "telemetry", "data"],
+        render: () => <PrivacyStatement />,
       },
     ],
     [
@@ -906,7 +921,7 @@ export default function Page() {
         </ScrollArea>
       ) : (
         <Tabs
-          defaultValue="board"
+          defaultValue={initialTab || "board"}
           orientation="vertical"
           flex={1}
           style={{ overflow: "hidden" }}
@@ -1064,12 +1079,6 @@ export default function Page() {
                 </Tabs.Panel>
 
                 <Tabs.Panel value="privacy">
-                  <Text size="lg" fw={500} className={classes.title}>
-                    {t("Settings.Privacy")}
-                  </Text>
-                  <Text size="xs" c="dimmed" mt={3} mb="lg">
-                    {t("Settings.Privacy.Desc")}
-                  </Text>
                   {renderCategorySettings("privacy")}
                 </Tabs.Panel>
               </Card>

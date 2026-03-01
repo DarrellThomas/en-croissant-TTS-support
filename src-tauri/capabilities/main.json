@@ -39,7 +39,11 @@
                 "https://lichess.org/**",
                 "https://explorer.lichess.org/**",
                 "https://tablebase.lichess.org/**",
-                "https://www.chessdb.cn/**"
+                "https://www.chessdb.cn/**",
+                "https://api.elevenlabs.io/**",
+                "https://texttospeech.googleapis.com/**",
+                "http://localhost:**",
+                "http://127.0.0.1:**"
             ]
         }
     ]
