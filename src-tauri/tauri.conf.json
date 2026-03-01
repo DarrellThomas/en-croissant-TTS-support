@@ -67,7 +67,7 @@
     "updater": {
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IENBNDcwMUUwRTBCOUJFQTUKUldTbHZybmc0QUZIeWhscWRNOXVVWWtQUHdqZW1HMzU2eXYvZmNzN0ZTR2xaSHBTUlJMYXJieHIK",
       "endpoints": [
-        "https://github.com/DarrellThomas/en-parlant/releases/latest/download/latest.json"
+        "https://enparlant.redshed.ai/api/updates/latest.json"
       ]
     },
     "shell": {
