@@ -1,4 +1,5 @@
 import { Group, NumberInput, SegmentedControl } from "@mantine/core";
+import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { match } from "ts-pattern";
 import type { GoMode } from "@/bindings";
@@ -15,6 +16,17 @@ function GoModeInput({
 }) {
   const { t } = useTranslation();
 
+  const prevValues = useRef<Record<string, number>>({
+    Time: 8000,
+    Depth: 20,
+    Nodes: 1000000,
+  });
+
+  // Keep ref in sync with current value
+  if (goMode && "c" in goMode && typeof goMode.c === "number") {
+    prevValues.current[goMode.t] = goMode.c;
+  }
+
   const timeTypes = ["Time", "Depth", "Nodes"];
   if (!gameMode) {
     timeTypes.push("Infinite");
@@ -27,9 +39,18 @@ function GoModeInput({
         value={goMode?.t || (gameMode ? "Time" : "Infinite")}
         onChange={(v) => {
           const newGo = match<string | null, GoMode>(v)
-            .with("Depth", () => ({ t: "Depth", c: 20 }))
-            .with("Nodes", () => ({ t: "Nodes", c: 1000000 }))
-            .with("Time", () => ({ t: "Time", c: 8000 }))
+            .with("Depth", () => ({
+              t: "Depth",
+              c: prevValues.current.Depth,
+            }))
+            .with("Nodes", () => ({
+              t: "Nodes",
+              c: prevValues.current.Nodes,
+            }))
+            .with("Time", () => ({
+              t: "Time",
+              c: prevValues.current.Time,
+            }))
             .otherwise(() => ({ t: "Infinite" }));
 
           setGoMode(newGo);

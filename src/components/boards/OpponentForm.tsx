@@ -227,7 +227,13 @@ export function OpponentForm({
                     enabled: true,
                     synced: false,
                   });
-                  return { ...prev, ...newSettings };
+                  return {
+                    ...prev,
+                    go: newSettings.go,
+                    engine: prev.engine
+                      ? { ...prev.engine, settings: newSettings.settings }
+                      : null,
+                  };
                 })
               }
               minimal={true}
