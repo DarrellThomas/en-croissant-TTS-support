@@ -2,7 +2,7 @@
 
 # En Parlant~ 아키텍처 입문서
 
-**앱 버전:** v0.1.0 (포크: DarrellThomas/en-parlant)
+**앱 버전:** v0.1.1 (포크: DarrellThomas/en-parlant)
 **기술 스택:** Tauri v2 (Rust) + React 19 (TypeScript) + Vite
 
 ---

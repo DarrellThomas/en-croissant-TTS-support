@@ -2,7 +2,7 @@
 
 # En Parlant~ アーキテクチャ入門
 
-**アプリバージョン:** v0.1.0 (フォーク: DarrellThomas/en-parlant)
+**アプリバージョン:** v0.1.1 (フォーク: DarrellThomas/en-parlant)
 **技術スタック:** Tauri v2 (Rust) + React 19 (TypeScript) + Vite
 
 ---

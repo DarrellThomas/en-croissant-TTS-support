@@ -2,7 +2,7 @@
 
 # En Parlant~ Architektur-Einführung
 
-**App-Version:** v0.1.0 (Fork: DarrellThomas/en-parlant)
+**App-Version:** v0.1.1 (Fork: DarrellThomas/en-parlant)
 **Stack:** Tauri v2 (Rust) + React 19 (TypeScript) + Vite
 
 ---

@@ -2,7 +2,7 @@
 
 # En Parlant~ 架构入门
 
-**应用版本：** v0.1.0（分支：DarrellThomas/en-parlant）
+**应用版本：** v0.1.1（分支：DarrellThomas/en-parlant）
 **技术栈：** Tauri v2 (Rust) + React 19 (TypeScript) + Vite
 
 ---

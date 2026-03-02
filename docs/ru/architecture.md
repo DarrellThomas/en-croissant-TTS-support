@@ -2,7 +2,7 @@
 
 # Архитектура En Parlant~ — Вводное руководство
 
-**Версия приложения:** v0.1.0 (форк: DarrellThomas/en-parlant)
+**Версия приложения:** v0.1.1 (форк: DarrellThomas/en-parlant)
 **Стек:** Tauri v2 (Rust) + React 19 (TypeScript) + Vite
 
 ---

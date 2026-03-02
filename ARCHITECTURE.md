@@ -1,6 +1,6 @@
 # En Parlant~ Architecture Primer
 
-**App Version:** v0.1.0 (fork: DarrellThomas/en-parlant)
+**App Version:** v0.1.1 (fork: DarrellThomas/en-parlant)
 **Stack:** Tauri v2 (Rust) + React 19 (TypeScript) + Vite
 
 ---
