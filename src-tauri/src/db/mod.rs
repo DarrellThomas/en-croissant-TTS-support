@@ -535,6 +535,8 @@ pub fn generate_search_index(
         i32,
         i32,
         i32,
+        Option<i32>,
+        Option<i32>,
     );
     let games: Vec<GameRow> = games::table
         .select((
@@ -548,6 +550,8 @@ pub fn generate_search_index(
             games::pawn_home,
             games::white_material,
             games::black_material,
+            games::white_elo,
+            games::black_elo,
         ))
         .load(db)?;
 
@@ -563,6 +567,8 @@ pub fn generate_search_index(
         pawn_home,
         white_material,
         black_material,
+        white_elo,
+        black_elo,
     ) in games
     {
         let entry = SearchGameEntry::from_game_data(
@@ -576,6 +582,8 @@ pub fn generate_search_index(
             pawn_home,
             white_material,
             black_material,
+            white_elo,
+            black_elo,
         );
         writer.push(entry);
     }
