@@ -1,3 +1,4 @@
+use log::{error, info, warn};
 use serde::Serialize;
 use std::process::Command;
 use std::sync::Mutex;
@@ -553,14 +554,42 @@ pub fn kittentts_start(app_handle: tauri::AppHandle, state: State<'_, TtsServerS
         cmd.creation_flags(CREATE_NO_WINDOW);
     }
 
-    let child = cmd
+    info!("Starting KittenTTS server");
+
+    let mut child = cmd
         .stdout(std::process::Stdio::null())
-        .stderr(std::process::Stdio::null())
+        .stderr(std::process::Stdio::piped())
         .spawn()
         .map_err(|e| format!("Failed to start KittenTTS: {}", e))?;
 
     let pid = child.id();
     *pid_lock = Some(pid);
+
+    // Log stderr in a background thread so crashes are visible
+    if let Some(stderr) = child.stderr.take() {
+        std::thread::spawn(move || {
+            use std::io::BufRead;
+            let reader = std::io::BufReader::new(stderr);
+            for line in reader.lines() {
+                match line {
+                    Ok(line) if line.contains("Error") || line.contains("error") || line.contains("Traceback") => {
+                        error!("KittenTTS: {}", line);
+                    }
+                    Ok(line) if line.contains("Warning") || line.contains("warning") => {
+                        warn!("KittenTTS: {}", line);
+                    }
+                    Ok(line) if !line.trim().is_empty() => {
+                        info!("KittenTTS: {}", line);
+                    }
+                    Err(e) => {
+                        error!("KittenTTS stderr read error: {}", e);
+                        break;
+                    }
+                    _ => {}
+                }
+            }
+        });
+    }
 
     Ok("started".to_string())
 }

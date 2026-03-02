@@ -690,12 +690,40 @@ export async function stopSystemTTS(): Promise<void> {
 
 // --- KittenTTS auto-start ---
 
-let kittenTTSAutoStartAttempted = false;
+// Tracks whether the server is confirmed running (health check passed).
+// Reset to false on failure so subsequent calls can retry.
+let kittenTTSServerConfirmed = false;
+let kittenTTSStartInProgress = false;
 
 async function ensureKittenTTSRunning(): Promise<boolean> {
-  if (kittenTTSAutoStartAttempted) return true;
-  kittenTTSAutoStartAttempted = true;
+  // Already confirmed running — just verify with a quick health check
+  if (kittenTTSServerConfirmed) {
+    try {
+      const store = getDefaultStore();
+      const serverUrl =
+        store.get(ttsKittenTTSUrlAtom) || "http://localhost:8192";
+      const bytes: number[] = await invoke("fetch_tts_audio", {
+        url: `${serverUrl}/api/voices`,
+      });
+      if (bytes.length > 0) return true;
+    } catch {
+      // Server died — reset and fall through to restart
+      kittenTTSServerConfirmed = false;
+    }
+  }
 
+  // Prevent concurrent start attempts
+  if (kittenTTSStartInProgress) return false;
+  kittenTTSStartInProgress = true;
+
+  try {
+    return await startKittenTTSServer();
+  } finally {
+    kittenTTSStartInProgress = false;
+  }
+}
+
+async function startKittenTTSServer(): Promise<boolean> {
   const store = getDefaultStore();
   const serverUrl = store.get(ttsKittenTTSUrlAtom) || "http://localhost:8192";
 
@@ -704,7 +732,10 @@ async function ensureKittenTTSRunning(): Promise<boolean> {
     const bytes: number[] = await invoke("fetch_tts_audio", {
       url: `${serverUrl}/api/voices`,
     });
-    if (bytes.length > 0) return true;
+    if (bytes.length > 0) {
+      kittenTTSServerConfirmed = true;
+      return true;
+    }
   } catch {
     // Server not running — try to start it
   }
@@ -721,14 +752,17 @@ async function ensureKittenTTSRunning(): Promise<boolean> {
     return false;
   }
 
-  // Poll until server responds (up to 15s)
-  for (let i = 0; i < 15; i++) {
+  // Poll until server responds (up to 30s — model load can be slow)
+  for (let i = 0; i < 30; i++) {
     await new Promise((r) => setTimeout(r, 1000));
     try {
       const bytes: number[] = await invoke("fetch_tts_audio", {
         url: `${serverUrl}/api/voices`,
       });
-      if (bytes.length > 0) return true;
+      if (bytes.length > 0) {
+        kittenTTSServerConfirmed = true;
+        return true;
+      }
     } catch {
       // keep waiting
     }
