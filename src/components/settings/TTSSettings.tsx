@@ -2,6 +2,7 @@ import {
   Alert,
   Button,
   Group,
+  Loader,
   NumberInput,
   PasswordInput,
   Select,
@@ -33,6 +34,7 @@ import {
   ttsVoiceIdAtom,
   ttsVolumeAtom,
 } from "@/state/atoms";
+import { playCloudDemoClip } from "@/utils/cloudTts";
 import {
   clearAudioCache,
   type ElevenLabsVoice,
@@ -80,6 +82,7 @@ export function TTSProviderSelect() {
     <Select
       w="14rem"
       data={[
+        { value: "cloud", label: "Cloud (No setup required)" },
         { value: "elevenlabs", label: "ElevenLabs" },
         { value: "google", label: "Google Cloud" },
         { value: "kittentts", label: "KittenTTS (English Only)" },
@@ -97,6 +100,9 @@ export function TTSSetupButton() {
   const [provider] = useAtom(ttsProviderAtom);
   const [wizardOpen, setWizardOpen] = useState(false);
   const [depsMissing, setDepsMissing] = useState<boolean | null>(null);
+  const [installing, setInstalling] = useState(false);
+  const [installPhase, setInstallPhase] = useState("");
+  const [installError, setInstallError] = useState<string | null>(null);
   const [serverStatus, setServerStatus] = useAtom(ttsLocalServerStatusAtom);
   const [threads] = useAtom(ttsKittenTTSThreadsAtom);
 
@@ -117,7 +123,32 @@ export function TTSSetupButton() {
             invoke<DepCheck>("check_kittentts_packages"),
           ]);
           depsOk = venv.ok && packages.ok;
-          if (!cancelled) setDepsMissing(!depsOk);
+
+          // Auto-install if deps are missing
+          if (!depsOk && !cancelled) {
+            setInstalling(true);
+            setInstallError(null);
+            setInstallPhase(
+              "Creating Python environment and installing packages (1-3 minutes)...",
+            );
+            try {
+              await invoke("setup_kittentts_venv");
+              if (!cancelled) {
+                depsOk = true;
+                setDepsMissing(false);
+              }
+            } catch (e) {
+              console.error("KittenTTS auto-setup failed:", e);
+              if (!cancelled) {
+                setDepsMissing(true);
+                setInstallError(String(e));
+              }
+            } finally {
+              if (!cancelled) setInstalling(false);
+            }
+          } else {
+            if (!cancelled) setDepsMissing(!depsOk);
+          }
         } else {
           const [docker, running, image] = await Promise.all([
             invoke<DepCheck>("check_docker_installed"),
@@ -160,17 +191,27 @@ export function TTSSetupButton() {
 
   return (
     <>
-      {depsMissing && (
+      {installing && (
+        <Alert color="blue" title="Setting up KittenTTS">
+          <Group gap="xs" align="center">
+            <Loader size="xs" />
+            <Text size="sm">{installPhase}</Text>
+          </Group>
+        </Alert>
+      )}
+      {!installing && depsMissing && (
         <Alert
           color="yellow"
           icon={<IconAlertTriangle size={16} />}
-          title="Dependencies missing"
+          title={installError ? "Setup failed" : "Dependencies missing"}
         >
           <Group gap="xs" align="center">
             <Text size="sm">
-              {provider === "kittentts"
-                ? "KittenTTS requires a Python virtual environment with packages installed."
-                : "OpenTTS requires Docker with the OpenTTS image pulled."}
+              {installError
+                ? `Auto-setup failed: ${installError}`
+                : provider === "kittentts"
+                  ? "KittenTTS requires Python 3.10+. Install Python, then restart the app."
+                  : "OpenTTS requires Docker with the OpenTTS image pulled."}
             </Text>
             <Button
               size="xs"
@@ -182,7 +223,7 @@ export function TTSSetupButton() {
           </Group>
         </Alert>
       )}
-      {depsMissing === false && (
+      {!installing && depsMissing === false && (
         <Alert
           color={serverStatus === "running" ? "green" : "blue"}
           title={
@@ -527,6 +568,24 @@ export function TTSVoiceSelect() {
 
   const [gender, setGender] = useAtom(ttsGoogleGenderAtom);
   const testPhrase = getTestPhrase(language);
+
+  if (provider === "cloud") {
+    return (
+      <Group gap="xs">
+        <Text size="sm">Daniel (English)</Text>
+        <Button
+          size="xs"
+          variant="light"
+          onClick={() => {
+            stopSpeaking();
+            playCloudDemoClip();
+          }}
+        >
+          Test
+        </Button>
+      </Group>
+    );
+  }
 
   if (provider === "system") {
     const sysVoiceOptions = systemVoices.map((v) => ({

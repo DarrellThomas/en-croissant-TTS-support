@@ -20,6 +20,7 @@ import {
   ttsVoiceIdAtom,
   ttsVolumeAtom,
 } from "@/state/atoms";
+import { playCloudNarration } from "@/utils/cloudTts";
 import type { TreeNode } from "@/utils/treeReducer";
 
 // Throttle TTS notifications so rapid navigation doesn't spam the user
@@ -38,7 +39,17 @@ let currentAbort: AbortController | null = null;
 let requestGeneration = 0;
 
 // Cache: cacheKey -> blob URL (never revoked while in cache)
-const audioCache = new Map<string, string>();
+export const audioCache = new Map<string, string>();
+
+/** Setter for currentAudio — allows cloudTts.ts to set the active audio element */
+export function setCurrentAudio(audio: HTMLAudioElement | null) {
+  currentAudio = audio;
+}
+
+/** Getter for requestGeneration — allows cloudTts.ts to check for interruption */
+export function getRequestGeneration(): number {
+  return requestGeneration;
+}
 
 // --- Multi-language chess vocabulary ---
 
@@ -737,7 +748,34 @@ async function startKittenTTSServer(): Promise<boolean> {
       return true;
     }
   } catch {
-    // Server not running — try to start it
+    // Server not running — check deps and try to start it
+  }
+
+  // Check if dependencies are installed; auto-install if missing
+  try {
+    const [venv, packages] = await Promise.all([
+      invoke<{ ok: boolean }>("check_kittentts_venv"),
+      invoke<{ ok: boolean }>("check_kittentts_packages"),
+    ]);
+
+    if (!venv.ok || !packages.ok) {
+      showTtsNotification(
+        "Setting up KittenTTS",
+        "Installing dependencies for the first time. This may take a minute...",
+      );
+      try {
+        await invoke("setup_kittentts_venv");
+      } catch (e) {
+        console.error("KittenTTS auto-setup failed:", e);
+        showTtsNotification(
+          "KittenTTS setup failed",
+          "Open Settings > Sound for the setup guide, or switch to System TTS.",
+        );
+        return false;
+      }
+    }
+  } catch (e) {
+    console.error("KittenTTS dependency check failed:", e);
   }
 
   try {
@@ -798,12 +836,15 @@ export function stopSpeaking() {
 
 export async function speakText(text: string): Promise<void> {
   const store = getDefaultStore();
-  const provider = store.get(ttsProviderAtom) || "elevenlabs";
+  const provider = store.get(ttsProviderAtom) || "cloud";
   const volume = store.get(ttsVolumeAtom);
   const speed = store.get(ttsSpeedAtom);
   const lang = store.get(ttsLanguageAtom) || "en";
 
   if (!text.trim()) return;
+
+  // Cloud provider can't speak arbitrary text — silently return
+  if (provider === "cloud") return;
 
   // System TTS uses native OS engine via Tauri commands — separate path
   if (provider === "system") {
@@ -973,6 +1014,9 @@ export async function speakText(text: string): Promise<void> {
 
 export async function speakComment(comment: string): Promise<void> {
   const store = getDefaultStore();
+  const provider = store.get(ttsProviderAtom) || "cloud";
+  // Cloud provider can't speak arbitrary comment text
+  if (provider === "cloud") return;
   const lang = store.get(ttsLanguageAtom) || "en";
   const cleaned = cleanCommentForTTS(comment, lang);
   if (cleaned) {
@@ -987,6 +1031,15 @@ export async function speakMoveNarration(
   halfMoves: number,
 ): Promise<void> {
   const store = getDefaultStore();
+  const provider = store.get(ttsProviderAtom) || "cloud";
+
+  // Cloud provider works directly with SAN + annotations (no text assembly needed)
+  if (provider === "cloud") {
+    await playCloudNarration(san, comment, annotations, halfMoves);
+    return;
+  }
+
+  // All other providers: build narration text and speak it
   const lang = store.get(ttsLanguageAtom) || "en";
   const narration = buildNarration(san, comment, annotations, halfMoves, lang);
   if (narration) {
@@ -1022,9 +1075,11 @@ function narrationForNode(node: TreeNode, lang: string): string | null {
 // Fires API calls sequentially to avoid rate limiting
 export async function precacheGame(root: TreeNode): Promise<number> {
   const store = getDefaultStore();
-  const provider = store.get(ttsProviderAtom) || "elevenlabs";
+  const provider = store.get(ttsProviderAtom) || "cloud";
   const lang = store.get(ttsLanguageAtom) || "en";
 
+  // Cloud clips are cached on R2 edge + locally on first fetch — no precaching needed
+  if (provider === "cloud") return 0;
   // System TTS doesn't support precaching (speaks directly via OS)
   if (provider === "system") return 0;
 

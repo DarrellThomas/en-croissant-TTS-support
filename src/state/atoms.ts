@@ -273,13 +273,13 @@ export const soundVolumeAtom = atomWithStorage<number>(
 // via store.get() before any React component subscribes.
 export const ttsEnabledAtom = atomWithStorage<boolean>(
   "tts-enabled",
-  false,
+  true,
   undefined,
   { getOnInit: true },
 );
 export const ttsAutoNarrateAtom = atomWithStorage<boolean>(
   "tts-auto-narrate",
-  false,
+  true,
   undefined,
   { getOnInit: true },
 );
@@ -315,7 +315,7 @@ export const ttsLanguageAtom = atomWithStorage<string>(
 );
 export const ttsProviderAtom = atomWithStorage<string>(
   "tts-provider",
-  "system",
+  "cloud",
   undefined,
   { getOnInit: true },
 );

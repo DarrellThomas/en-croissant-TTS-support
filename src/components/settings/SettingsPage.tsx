@@ -30,7 +30,7 @@ import { useLoaderData, useSearch } from "@tanstack/react-router";
 import { open } from "@tauri-apps/plugin-dialog";
 import { useAtom } from "jotai";
 import { RESET } from "jotai/utils";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   autoPromoteAtom,
@@ -163,6 +163,10 @@ function PrivacyStatement() {
 export default function Page() {
   const { t, i18n } = useTranslation();
   const { tab: initialTab } = useSearch({ from: "/settings" });
+  const [activeTab, setActiveTab] = useState(initialTab || "board");
+  useEffect(() => {
+    if (initialTab) setActiveTab(initialTab);
+  }, [initialTab]);
   const [searchQuery, setSearchQuery] = useState("");
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -564,7 +568,7 @@ export default function Page() {
         category: "sound",
         title: "TTS Provider",
         description:
-          "System (zero-config OS native), Google Cloud (WaveNet), ElevenLabs (premium AI), OpenTTS (self-hosted), or KittenTTS (English only, high quality)",
+          "Cloud (instant, no setup), ElevenLabs (premium AI), Google Cloud (WaveNet), KittenTTS (English only, high quality), OpenTTS (self-hosted), or System (OS native)",
         keywords: [
           "tts",
           "provider",
@@ -997,7 +1001,8 @@ export default function Page() {
         </ScrollArea>
       ) : (
         <Tabs
-          defaultValue={initialTab || "board"}
+          value={activeTab}
+          onChange={(v) => v && setActiveTab(v)}
           orientation="vertical"
           flex={1}
           style={{ overflow: "hidden" }}
