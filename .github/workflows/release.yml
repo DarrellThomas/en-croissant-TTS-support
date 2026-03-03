@@ -138,3 +138,83 @@ jobs:
           sha256sum $(ls | grep -v 'SHA256SUMS' | grep -v 'latest.json') | sort > SHA256SUMS.txt
           cat SHA256SUMS.txt
           gh release upload ${{ github.ref_name }} SHA256SUMS.txt --repo ${{ github.repository }} --clobber
+
+  virustotal:
+    needs: checksums
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download release artifacts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release download ${{ github.ref_name }} \
+            --repo ${{ github.repository }} \
+            --pattern "*.exe" \
+            --pattern "*.dmg" \
+            --pattern "*.deb" \
+            --pattern "*.rpm" \
+            --pattern "*.AppImage" \
+            --dir /tmp/vt
+          echo "Files to scan:"
+          ls -lh /tmp/vt/
+
+      - name: Scan all artifacts with VirusTotal
+        env:
+          VT_API_KEY: ${{ secrets.VIRUSTOTAL_API_KEY }}
+        run: |
+          OVERALL_MAX=0
+
+          for FILE in /tmp/vt/*; do
+            NAME=$(basename "$FILE")
+            SHA256=$(sha256sum "$FILE" | cut -d' ' -f1)
+            echo ""
+            echo "── $NAME ──"
+            echo "  SHA256: $SHA256"
+
+            # Upload
+            RESPONSE=$(curl -s --request POST \
+              --url https://www.virustotal.com/api/v3/files \
+              --header "x-apikey: $VT_API_KEY" \
+              --form "file=@$FILE")
+            ANALYSIS_ID=$(echo "$RESPONSE" | jq -r '.data.id')
+            echo "  Analysis ID: $ANALYSIS_ID"
+
+            # Poll for completion (30s intervals, up to 10 minutes)
+            for i in $(seq 1 20); do
+              sleep 30
+              RESULT=$(curl -s --request GET \
+                --url "https://www.virustotal.com/api/v3/analyses/$ANALYSIS_ID" \
+                --header "x-apikey: $VT_API_KEY")
+              STATUS=$(echo "$RESULT" | jq -r '.data.attributes.status')
+              echo "  Attempt $i/20: $STATUS"
+
+              if [ "$STATUS" = "completed" ]; then
+                MALICIOUS=$(echo "$RESULT"  | jq -r '.data.attributes.stats.malicious')
+                SUSPICIOUS=$(echo "$RESULT" | jq -r '.data.attributes.stats.suspicious')
+                UNDETECTED=$(echo "$RESULT" | jq -r '.data.attributes.stats.undetected')
+                echo "  Malicious:  $MALICIOUS"
+                echo "  Suspicious: $SUSPICIOUS"
+                echo "  Undetected: $UNDETECTED"
+                echo "  Report:     https://www.virustotal.com/gui/file/$SHA256"
+
+                if [ "$MALICIOUS" -ge 4 ]; then
+                  echo "::error::$NAME — $MALICIOUS engines flagged this file!"
+                elif [ "$MALICIOUS" -gt 0 ]; then
+                  echo "::warning::$NAME — $MALICIOUS engine(s) flagged (likely false positive)"
+                else
+                  echo "::notice::$NAME — Clean"
+                fi
+
+                [ "$MALICIOUS" -gt "$OVERALL_MAX" ] && OVERALL_MAX="$MALICIOUS"
+                break
+              fi
+
+              if [ "$i" -eq 20 ]; then
+                echo "::warning::$NAME — VirusTotal analysis timed out"
+              fi
+            done
+          done
+
+          echo ""
+          echo "=== Summary: max malicious detections across all artifacts: $OVERALL_MAX ==="
+          [ "$OVERALL_MAX" -ge 4 ] && exit 1 || exit 0

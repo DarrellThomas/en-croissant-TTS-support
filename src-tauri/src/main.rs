@@ -199,7 +199,8 @@ fn main() {
             check_kittentts_script,
             setup_kittentts_venv,
             setup_opentts_load,
-            setup_opentts_pull
+            setup_opentts_pull,
+            install_update_linux
         ))
         .events(tauri_specta::collect_events!(
             BestMovesPayload,
@@ -292,6 +293,77 @@ fn main() {
                 }
             }
         });
+}
+
+/// Linux system-install updater: finds the extracted AppImage in /tmp and
+/// installs it to /usr/bin and /usr/lib via a single pkexec prompt.
+#[tauri::command]
+#[specta::specta]
+fn install_update_linux() -> Result<(), String> {
+    #[cfg(target_os = "linux")]
+    {
+        use std::fs;
+        use std::process::Command;
+
+        // Find the most recently modified appimage_extracted_* dir that has our binary
+        let tmp = std::path::Path::new("/tmp");
+        let extracted_dir = fs::read_dir(tmp)
+            .map_err(|e| format!("Cannot read /tmp: {}", e))?
+            .filter_map(|e| e.ok())
+            .filter(|e| {
+                e.file_name()
+                    .to_string_lossy()
+                    .starts_with("appimage_extracted_")
+            })
+            .filter(|e| e.path().join("usr/bin/en-parlant").exists())
+            .max_by_key(|e| e.metadata().and_then(|m| m.modified()).ok())
+            .ok_or_else(|| {
+                "No extracted update found in /tmp — was the download completed?".to_string()
+            })?;
+
+        let src = extracted_dir.path();
+        let new_binary = src.join("usr/bin/en-parlant");
+        let new_lib = src.join("usr/lib/en-parlant");
+
+        // Write a single helper script so pkexec only prompts once
+        let script = format!(
+            "#!/bin/sh\nset -e\ninstall -m 755 '{}' /usr/bin/en-parlant\n{}\n",
+            new_binary.display(),
+            if new_lib.exists() {
+                format!("cp -r '{}/.' /usr/lib/en-parlant/", new_lib.display())
+            } else {
+                String::new()
+            }
+        );
+        let script_path = "/tmp/en-parlant-install-update.sh";
+        fs::write(script_path, &script)
+            .map_err(|e| format!("Failed to write install script: {}", e))?;
+        Command::new("chmod")
+            .args(["+x", script_path])
+            .output()
+            .ok();
+
+        let output = Command::new("pkexec")
+            .arg(script_path)
+            .output()
+            .map_err(|e| format!("Failed to launch pkexec: {}", e))?;
+
+        // Clean up script
+        fs::remove_file(script_path).ok();
+
+        if !output.status.success() {
+            let stderr = String::from_utf8_lossy(&output.stderr);
+            return Err(format!(
+                "Install failed (password cancelled or permission denied). {}",
+                stderr.trim()
+            ));
+        }
+
+        return Ok(());
+    }
+
+    #[cfg(not(target_os = "linux"))]
+    Err("install_update_linux is only available on Linux".to_string())
 }
 
 #[tauri::command]

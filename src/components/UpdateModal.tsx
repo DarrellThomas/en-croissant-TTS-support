@@ -1,9 +1,11 @@
 import { Button, Group, Modal, Progress, Stack, Text } from "@mantine/core";
+import { invoke } from "@tauri-apps/api/core";
+import { platform } from "@tauri-apps/plugin-os";
 import { relaunch } from "@tauri-apps/plugin-process";
 import type { Update } from "@tauri-apps/plugin-updater";
 import { useCallback, useRef, useState } from "react";
 
-type UpdateState = "prompt" | "downloading" | "installing";
+type UpdateState = "prompt" | "downloading" | "installing" | "error";
 
 function formatMB(bytes: number): string {
   return (bytes / (1024 * 1024)).toFixed(1);
@@ -22,14 +24,18 @@ function UpdateModal({
   const [progress, setProgress] = useState(0);
   const [downloaded, setDownloaded] = useState(0);
   const [totalSize, setTotalSize] = useState<number | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const downloadedRef = useRef(0);
+  const totalSizeRef = useRef<number | null>(null);
 
   const reset = useCallback(() => {
     setState("prompt");
     setProgress(0);
     setDownloaded(0);
     setTotalSize(null);
+    setErrorMessage("");
     downloadedRef.current = 0;
+    totalSizeRef.current = null;
   }, []);
 
   const handleClose = useCallback(() => {
@@ -38,21 +44,16 @@ function UpdateModal({
     onClose();
   }, [state, reset, onClose]);
 
-  const totalSizeRef = useRef<number | null>(null);
-
-  const handleUpdate = useCallback(async () => {
-    if (!update) return;
-
-    setState("downloading");
-    downloadedRef.current = 0;
-    totalSizeRef.current = null;
-
-    await update.downloadAndInstall((event) => {
+  const progressCallback = useCallback(
+    (event: {
+      event: string;
+      data?: { contentLength?: number; chunkLength?: number };
+    }) => {
       if (event.event === "Started") {
-        totalSizeRef.current = event.data.contentLength ?? null;
+        totalSizeRef.current = event.data?.contentLength ?? null;
         setTotalSize(totalSizeRef.current);
       } else if (event.event === "Progress") {
-        downloadedRef.current += event.data.chunkLength;
+        downloadedRef.current += event.data?.chunkLength ?? 0;
         setDownloaded(downloadedRef.current);
         if (totalSizeRef.current) {
           setProgress((downloadedRef.current / totalSizeRef.current) * 100);
@@ -61,10 +62,34 @@ function UpdateModal({
         setProgress(100);
         setState("installing");
       }
-    });
+    },
+    [],
+  );
 
-    await relaunch();
-  }, [update]);
+  const handleUpdate = useCallback(async () => {
+    if (!update) return;
+
+    setState("downloading");
+    downloadedRef.current = 0;
+    totalSizeRef.current = null;
+
+    try {
+      const os = await platform();
+      if (os === "linux") {
+        // On Linux system installs, the Tauri updater can't write to /usr/bin without
+        // root. Download first, then install via pkexec (shows a polkit auth dialog).
+        await update.download(progressCallback);
+        // progressCallback already set state to "installing" on Finished
+        await invoke("install_update_linux");
+      } else {
+        await update.downloadAndInstall(progressCallback);
+      }
+      await relaunch();
+    } catch (e) {
+      setErrorMessage(String(e));
+      setState("error");
+    }
+  }, [update, progressCallback]);
 
   if (!update) return null;
 
@@ -74,9 +99,9 @@ function UpdateModal({
       opened={opened}
       onClose={handleClose}
       title="Update Available"
-      closeOnClickOutside={state === "prompt"}
-      closeOnEscape={state === "prompt"}
-      withCloseButton={state === "prompt"}
+      closeOnClickOutside={state === "prompt" || state === "error"}
+      closeOnEscape={state === "prompt" || state === "error"}
+      withCloseButton={state === "prompt" || state === "error"}
     >
       <Stack>
         {state === "prompt" && (
@@ -110,7 +135,25 @@ function UpdateModal({
         )}
 
         {state === "installing" && (
-          <Text ta="center">Installing update and restarting...</Text>
+          <Text ta="center">
+            Installing update... A password prompt may appear. Please approve it
+            to complete the update.
+          </Text>
+        )}
+
+        {state === "error" && (
+          <>
+            <Text c="red" fw="bold">
+              Update failed
+            </Text>
+            <Text size="sm">{errorMessage}</Text>
+            <Group justify="right">
+              <Button variant="default" onClick={handleClose}>
+                Close
+              </Button>
+              <Button onClick={reset}>Try Again</Button>
+            </Group>
+          </>
         )}
       </Stack>
     </Modal>
