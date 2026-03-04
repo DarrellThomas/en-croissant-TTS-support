@@ -28,7 +28,7 @@ import {
 } from "@tabler/icons-react";
 import { useLoaderData, useSearch } from "@tanstack/react-router";
 import { open } from "@tauri-apps/plugin-dialog";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { RESET } from "jotai/utils";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -57,6 +57,7 @@ import {
   storedDocumentDirAtom,
   storedEnginesDirAtom,
   storedPuzzlesDirAtom,
+  ttsLanguageAtom,
 } from "@/state/atoms";
 import { keyMapAtom } from "@/state/keybinds";
 import FileInput from "../common/FileInput";
@@ -197,6 +198,7 @@ export default function Page() {
   const [showCoordinates, setShowCoordinates] = useAtom(showCoordinatesAtom);
   const [ranksPosition, setRanksPosition] = useAtom(ranksPositionAtom);
   const [materialDisplay, setMaterialDisplay] = useAtom(materialDisplayAtom);
+  const setTtsLanguage = useSetAtom(ttsLanguageAtom);
 
   const settings: SettingItem[] = useMemo(
     () => [
@@ -450,6 +452,20 @@ export default function Page() {
             onChange={(val) => {
               i18n.changeLanguage(val?.replace("_", "-") || "en-US");
               localStorage.setItem("lang", val || "en_US");
+              const ttsLangs = [
+                "en",
+                "fr",
+                "es",
+                "de",
+                "ja",
+                "ru",
+                "zh",
+                "ko",
+              ];
+              const base = (val || "en_US").split("_")[0];
+              if (ttsLangs.includes(base)) {
+                setTtsLanguage(base);
+              }
             }}
           />
         ),
