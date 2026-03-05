@@ -17,6 +17,7 @@ import {
   activeTabAtom,
   addRecentFileAtom,
   deckAtomFamily,
+  isMultiplayerFamily,
   type RecentFile,
   recentFilesAtom,
   tabFamily,
@@ -39,6 +40,7 @@ import {
   IconTarget,
   IconTargetArrow,
   IconTrophy,
+  IconUsers,
 } from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-router";
 import dayjs from "dayjs";
@@ -215,6 +217,22 @@ export default function NewTabHome({ id }: { id: string }) {
           const tab = prev.find((t) => t.value === id);
           if (!tab) return prev;
           tab.name = t("Home.NewGame");
+          tab.type = "play";
+          return [...prev];
+        });
+      },
+    },
+    {
+      icon: <IconUsers size={60} />,
+      title: t("Home.Card.Multiplayer.Title"),
+      description: t("Home.Card.Multiplayer.Desc"),
+      label: t("Home.Card.Multiplayer.Button"),
+      onClick: () => {
+        store.set(isMultiplayerFamily(id), true);
+        setTabs((prev: Tab[]) => {
+          const tab = prev.find((t) => t.value === id);
+          if (!tab) return prev;
+          tab.name = t("Home.Card.Multiplayer.Title");
           tab.type = "play";
           return [...prev];
         });

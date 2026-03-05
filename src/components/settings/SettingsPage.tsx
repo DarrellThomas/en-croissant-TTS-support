@@ -5,7 +5,6 @@ import {
   ScrollArea,
   Select,
   Stack,
-  Switch,
   Table,
   Tabs,
   Text,
@@ -21,6 +20,7 @@ import {
   IconFolder,
   IconKeyboard,
   IconMouse,
+  IconNetwork,
   IconReload,
   IconSearch,
   IconShield,
@@ -44,8 +44,10 @@ import {
   moveMethodAtom,
   moveNotationTypeAtom,
   nativeBarAtom,
+  playerNameAtom,
   previewBoardOnHoverAtom,
   ranksPositionAtom,
+  relayUrlAtom,
   showArrowsAtom,
   showConsecutiveArrowsAtom,
   showCoordinatesAtom,
@@ -98,6 +100,7 @@ type SettingCategory =
   | "keybinds"
   | "directories"
   | "repertoire"
+  | "network"
   | "privacy";
 
 interface SettingItem {
@@ -192,6 +195,9 @@ export default function Page() {
   enginesDirectory = enginesDirectory || defaultEnginesDir;
   let [puzzlesDirectory, setPuzzlesDirectory] = useAtom(storedPuzzlesDirAtom);
   puzzlesDirectory = puzzlesDirectory || defaultPuzzlesDir;
+
+  const [relayUrl, setRelayUrl] = useAtom(relayUrlAtom);
+  const [mpPlayerName, setMpPlayerName] = useAtom(playerNameAtom);
 
   const [moveMethod, setMoveMethod] = useAtom(moveMethodAtom);
   const [moveNotationType, setMoveNotationType] = useAtom(moveNotationTypeAtom);
@@ -810,6 +816,37 @@ export default function Page() {
           />
         ),
       },
+      // Network settings (Multiplayer)
+      {
+        id: "relay-url",
+        category: "network",
+        title: t("Settings.Network.RelayUrl"),
+        description: t("Settings.Network.RelayUrl.Desc"),
+        keywords: ["relay", "server", "url", "multiplayer", "websocket"],
+        render: () => (
+          <TextInput
+            value={relayUrl}
+            onChange={(e) => setRelayUrl(e.currentTarget.value)}
+            placeholder="wss://relay.enparlant.org"
+            style={{ width: 250 }}
+          />
+        ),
+      },
+      {
+        id: "player-name",
+        category: "network",
+        title: t("Settings.Network.PlayerName"),
+        description: t("Settings.Network.PlayerName.Desc"),
+        keywords: ["player", "name", "multiplayer", "username"],
+        render: () => (
+          <TextInput
+            value={mpPlayerName}
+            onChange={(e) => setMpPlayerName(e.currentTarget.value)}
+            placeholder="Player"
+            style={{ width: 200 }}
+          />
+        ),
+      },
       // Privacy settings
       {
         id: "privacy-statement",
@@ -843,6 +880,11 @@ export default function Page() {
       setShowCoordinates,
       setRanksPosition,
       setMaterialDisplay,
+      relayUrl,
+      setRelayUrl,
+      mpPlayerName,
+      setMpPlayerName,
+      setTtsLanguage,
     ],
   );
 
@@ -892,6 +934,11 @@ export default function Page() {
         title: t("Settings.Repertoire"),
         description: t("Settings.Repertoire.Desc"),
         icon: <IconBook size="1rem" />,
+      },
+      network: {
+        title: t("Settings.Network"),
+        description: t("Settings.Network.Desc"),
+        icon: <IconNetwork size="1rem" />,
       },
       privacy: {
         title: t("Settings.Privacy"),
@@ -1053,6 +1100,9 @@ export default function Page() {
             <Tabs.Tab value="repertoire" leftSection={<IconBook size="1rem" />}>
               {t("Settings.Repertoire")}
             </Tabs.Tab>
+            <Tabs.Tab value="network" leftSection={<IconNetwork size="1rem" />}>
+              {t("Settings.Network")}
+            </Tabs.Tab>
             <Tabs.Tab value="privacy" leftSection={<IconShield size="1rem" />}>
               {t("Settings.Privacy")}
             </Tabs.Tab>
@@ -1164,6 +1214,16 @@ export default function Page() {
                     {t("Settings.Repertoire.Desc")}
                   </Text>
                   {renderCategorySettings("repertoire")}
+                </Tabs.Panel>
+
+                <Tabs.Panel value="network">
+                  <Text size="lg" fw={500} className={classes.title}>
+                    {t("Settings.Network")}
+                  </Text>
+                  <Text size="xs" c="dimmed" mt={3} mb="lg">
+                    {t("Settings.Network.Desc")}
+                  </Text>
+                  {renderCategorySettings("network")}
                 </Tabs.Panel>
 
                 <Tabs.Panel value="privacy">

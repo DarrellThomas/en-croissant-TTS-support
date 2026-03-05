@@ -1,5 +1,6 @@
 import { Paper, Portal, Stack, Tabs } from "@mantine/core";
 import { useHotkeys, useToggle } from "@mantine/hooks";
+import { notifications } from "@mantine/notifications";
 import {
   IconDatabase,
   IconInfoCircle,
@@ -24,7 +25,6 @@ import {
   practiceStateAtom,
 } from "@/state/atoms";
 import { keyMapAtom } from "@/state/keybinds";
-import { notifications } from "@mantine/notifications";
 import { defaultPGN } from "@/utils/chess";
 import { saveToFile } from "@/utils/tabs";
 import DetachedEval from "../common/DetachedEval";
@@ -64,7 +64,8 @@ function BoardAnalysis() {
       sessionStorage.setItem("demo-nav-hint-shown", "1");
       notifications.show({
         title: "Demo",
-        message: "Use ← → arrow keys (or the nav buttons) to step through the game",
+        message:
+          "Use ← → arrow keys (or the nav buttons) to step through the game",
         autoClose: 6000,
       });
     }
@@ -75,7 +76,7 @@ function BoardAnalysis() {
       }
     }, 800);
     return () => clearTimeout(timer);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [headers?.other?.AudioSource]);
 
   const reset = useStore(store, (s) => s.reset);

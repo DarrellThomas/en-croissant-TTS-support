@@ -5,6 +5,7 @@ import {
   Checkbox,
   Divider,
   Group,
+  Indicator,
   Paper,
   Portal,
   ScrollArea,
@@ -12,11 +13,13 @@ import {
   Stack,
   Text,
 } from "@mantine/core";
-import { notifications } from "@mantine/notifications";
 import { useToggle } from "@mantine/hooks";
+import { notifications } from "@mantine/notifications";
 import {
   IconArrowsExchange,
+  IconCheck,
   IconFileText,
+  IconHandStop,
   IconPlus,
   IconX,
   IconZoomCheck,
@@ -48,16 +51,40 @@ import {
 import type { ChessgroundRef } from "@/chessground/Chessground";
 import {
   activeTabAtom,
+  currentDrawOfferAtom,
   currentGameIdAtom,
   currentGameStateAtom,
+  currentIsMultiplayerAtom,
+  currentLocalColorAtom,
+  currentLocalReadyAtom,
+  currentMultiplayerStateAtom,
+  currentPeerNameAtom,
+  currentPeerOnlineAtom,
+  currentPeerReadyAtom,
   currentPlayersAtom,
   gameInputColorAtom,
   gamePlayer1SettingsAtom,
   gamePlayer2SettingsAtom,
   gameSameTimeControlAtom,
+  playerNameAtom,
   tabsAtom,
 } from "@/state/atoms";
 import { positionFromFen } from "@/utils/chessops";
+import {
+  disconnectFromRelay,
+  isPeerAlive,
+  onDrawAccepted,
+  onDrawOffer,
+  onPeerLeft,
+  onPeerMove,
+  onPeerReady,
+  onPeerResign,
+  sendAcceptDraw,
+  sendDrawOffer,
+  sendMove,
+  sendReady,
+  sendResign,
+} from "@/utils/relay";
 import type { GameHeaders } from "@/utils/treeReducer";
 import { unwrap } from "@/utils/unwrap";
 import EngineLogsView from "../common/EngineLogsView";
@@ -68,6 +95,7 @@ import { TreeStateContext } from "../common/TreeStateContext";
 import Board from "./Board";
 import BoardControls from "./BoardControls";
 import EditingCard from "./EditingCard";
+import MultiplayerSetup from "./MultiplayerSetup";
 import { OpponentForm, type OpponentSettings } from "./OpponentForm";
 
 function gameResultToOutcome(result: GameResult): Outcome {
@@ -125,13 +153,13 @@ function BoardGame() {
     };
   }
 
-  const store = useContext(TreeStateContext)!;
-  const root = useStore(store, (s) => s.root);
-  const headers = useStore(store, (s) => s.headers);
-  const setFen = useStore(store, (s) => s.setFen);
-  const setHeaders = useStore(store, (s) => s.setHeaders);
-  const setResult = useStore(store, (s) => s.setResult);
-  const appendMove = useStore(store, (s) => s.appendMove);
+  const treeStore = useContext(TreeStateContext)!;
+  const root = useStore(treeStore, (s) => s.root);
+  const headers = useStore(treeStore, (s) => s.headers);
+  const setFen = useStore(treeStore, (s) => s.setFen);
+  const setHeaders = useStore(treeStore, (s) => s.setHeaders);
+  const setResult = useStore(treeStore, (s) => s.setResult);
+  const appendMove = useStore(treeStore, (s) => s.appendMove);
 
   const [, setTabs] = useAtom(tabsAtom);
 
@@ -147,6 +175,29 @@ function BoardGame() {
   const [logsOpened, toggleLogsOpened] = useToggle();
   const [logsColor, setLogsColor] = useState<"white" | "black">("white");
   const [engineLogs, setEngineLogs] = useState<EngineLog[]>([]);
+
+  // Multiplayer state
+  const [isMultiplayer] = useAtom(currentIsMultiplayerAtom);
+  const [multiplayerState, setMultiplayerState] = useAtom(
+    currentMultiplayerStateAtom,
+  );
+  const [localColor] = useAtom(currentLocalColorAtom);
+  const [peerName] = useAtom(currentPeerNameAtom);
+  const [peerOnline, setPeerOnline] = useAtom(currentPeerOnlineAtom);
+  const [drawOffer, setDrawOffer] = useAtom(currentDrawOfferAtom);
+  const [localReady, setLocalReady] = useAtom(currentLocalReadyAtom);
+  const [peerReady, setPeerReady] = useAtom(currentPeerReadyAtom);
+  const [playerName] = useAtom(playerNameAtom);
+  // Snapshot name at connect time so shared localStorage doesn't overwrite it
+  const myNameRef = useRef(playerName);
+  if (
+    multiplayerState.phase === "connected" &&
+    myNameRef.current !== playerName &&
+    gameState === "settingUp"
+  ) {
+    myNameRef.current = playerName;
+  }
+  const myName = isMultiplayer ? myNameRef.current : playerName;
 
   const hasEngine =
     players.white.type === "engine" || players.black.type === "engine";
@@ -179,12 +230,14 @@ function BoardGame() {
   }, [logsOpened, fetchEngineLogs]);
 
   useEffect(() => {
-    notifications.show({
-      message: "Press Start to begin",
-      autoClose: 3000,
-      withBorder: true,
-    });
-  }, []);
+    if (!isMultiplayer) {
+      notifications.show({
+        message: "Press Start to begin",
+        autoClose: 3000,
+        withBorder: true,
+      });
+    }
+  }, [isMultiplayer]);
 
   const syncTreeWithMoves = useCallback(
     (backendMoves: BackendMove[]) => {
@@ -239,6 +292,9 @@ function BoardGame() {
   );
 
   function changeToAnalysisMode() {
+    if (isMultiplayer) {
+      disconnectFromRelay();
+    }
     setTabs((prev) =>
       prev.map((tab) =>
         tab.value === activeTab ? { ...tab, type: "analysis" } : tab,
@@ -287,14 +343,37 @@ function BoardGame() {
     return moves;
   }
 
-  async function startGame() {
-    const playerSettings = getPlayers();
+  // Start game — used for both local and multiplayer
+  async function startGame(fresh = false) {
+    let playerSettings: {
+      white: OpponentSettings;
+      black: OpponentSettings;
+    };
+
+    if (isMultiplayer && localColor) {
+      // Both players are human in multiplayer
+      const localSettings: OpponentSettings = {
+        type: "human",
+        name: myName || "Player",
+      };
+      const remoteSettings: OpponentSettings = {
+        type: "human",
+        name: peerName || "Opponent",
+      };
+      playerSettings =
+        localColor === "white"
+          ? { white: localSettings, black: remoteSettings }
+          : { white: remoteSettings, black: localSettings };
+    } else {
+      playerSettings = getPlayers();
+    }
+
     setPlayers(playerSettings);
 
     const newGameId = `${activeTab}-game`;
     setGameId(newGameId);
 
-    const initialMoves = getTreeMoves();
+    const initialMoves = fresh ? [] : getTreeMoves();
 
     const config: GameConfig = {
       white: toPlayerConfig(playerSettings.white),
@@ -311,7 +390,7 @@ function BoardGame() {
             increment: playerSettings.black.timeControl.increment ?? 0,
           }
         : null,
-      initialFen: root.fen === INITIAL_FEN ? null : root.fen,
+      initialFen: fresh ? null : root.fen === INITIAL_FEN ? null : root.fen,
       initialMoves,
     } as GameConfig;
 
@@ -328,16 +407,15 @@ function BoardGame() {
       const dateStr = now.toISOString().slice(0, 10).replace(/-/g, ".");
       const timeStr = now.toISOString().slice(11, 19);
 
-      const whiteIsEngine = playerSettings.white.type === "engine";
-      const blackIsEngine = playerSettings.black.type === "engine";
-      let eventStr = "Casual Game";
-      if (whiteIsEngine && blackIsEngine) {
-        eventStr = "Engine Match";
-      } else if (whiteIsEngine || blackIsEngine) {
-        eventStr = "Player vs Engine";
-      } else {
-        eventStr = "Player Match";
-      }
+      const eventStr = isMultiplayer
+        ? "Multiplayer Game"
+        : (() => {
+            const whiteIsEngine = playerSettings.white.type === "engine";
+            const blackIsEngine = playerSettings.black.type === "engine";
+            if (whiteIsEngine && blackIsEngine) return "Engine Match";
+            if (whiteIsEngine || blackIsEngine) return "Player vs Engine";
+            return "Player Match";
+          })();
 
       const formatTimeControl = (settings: OpponentSettings): string => {
         if (!settings.timeControl) return "-";
@@ -348,7 +426,7 @@ function BoardGame() {
 
       const whiteTimeControl = formatTimeControl(playerSettings.white);
       const blackTimeControl = formatTimeControl(playerSettings.black);
-      const sameTimeControl = whiteTimeControl === blackTimeControl;
+      const sameTC = whiteTimeControl === blackTimeControl;
 
       const newHeaders: Partial<GameHeaders> = {
         white: state.whitePlayer,
@@ -360,7 +438,7 @@ function BoardGame() {
         time_control: undefined,
       };
 
-      if (sameTimeControl) {
+      if (sameTC) {
         if (whiteTimeControl !== "-") {
           newHeaders.time_control = whiteTimeControl;
         }
@@ -391,13 +469,20 @@ function BoardGame() {
     async (uci: string) => {
       if (!gameId || gameState !== "playing") return;
 
+      // In multiplayer, only allow moves on our turn
+      if (isMultiplayer && localColor && pos) {
+        if (localColor !== pos.turn) return;
+        // Send move to relay
+        sendMove(uci, whiteTime ?? undefined, blackTime ?? undefined);
+      }
+
       try {
-        const result = await commands.makeGameMove(gameId, uci);
+        await commands.makeGameMove(gameId, uci);
       } catch (err) {
         console.error("Failed to make move:", err);
       }
     },
-    [gameId, gameState],
+    [gameId, gameState, isMultiplayer, localColor, pos, whiteTime, blackTime],
   );
 
   const pendingMovesRef = useRef<
@@ -438,7 +523,7 @@ function BoardGame() {
 
   const onTakeBack = useCallback(async () => {
     if (!gameId || gameState !== "playing") return;
-    const result = await commands.takeBackGameMove(gameId);
+    await commands.takeBackGameMove(gameId);
   }, [gameId, gameState]);
 
   useEffect(() => {
@@ -494,6 +579,107 @@ function BoardGame() {
     };
   }, [gameId, gameState, scheduleUpdate, setGameState, setResult]);
 
+  // Multiplayer: listen for ready and disconnect (no gameId needed)
+  useEffect(() => {
+    if (!isMultiplayer || multiplayerState.phase !== "connected") return;
+
+    const cleanup1 = onPeerReady(() => {
+      setPeerReady(true);
+    });
+
+    const cleanup2 = onPeerLeft(() => {
+      setPeerOnline(false);
+      if (gameStateRef.current === "gameOver") return;
+      setMultiplayerState({ ...multiplayerState, phase: "disconnected" });
+      notifications.show({
+        message: t("Multiplayer.OpponentDisconnected"),
+        autoClose: false,
+        withBorder: true,
+        color: "orange",
+      });
+    });
+
+    return () => {
+      cleanup1();
+      cleanup2();
+    };
+  }, [
+    isMultiplayer,
+    multiplayerState,
+    t,
+    setPeerReady,
+    setPeerOnline,
+    setMultiplayerState,
+  ]);
+
+  // Multiplayer: listen for remote moves, resign, draw offers (needs gameId)
+  useEffect(() => {
+    if (!isMultiplayer || multiplayerState.phase !== "connected" || !gameId)
+      return;
+
+    const currentGameId = gameId;
+
+    const cleanup1 = onPeerMove(async (uci) => {
+      try {
+        await commands.makeGameMove(currentGameId, uci);
+      } catch (err) {
+        console.error("Failed to apply remote move:", err);
+      }
+    });
+
+    const cleanup2 = onPeerResign(async (color) => {
+      await commands.resignGame(currentGameId, color);
+      setGameState("gameOver");
+      setResult(color === "white" ? "0-1" : "1-0");
+      notifications.show({
+        message: t("Multiplayer.OpponentResigned"),
+        autoClose: 5000,
+        withBorder: true,
+      });
+    });
+
+    const cleanup3 = onDrawOffer(() => {
+      setDrawOffer({ offered: false, received: true });
+      notifications.show({
+        message: t("Multiplayer.DrawOffered"),
+        autoClose: 10000,
+        withBorder: true,
+      });
+    });
+
+    const cleanup4 = onDrawAccepted(() => {
+      setDrawOffer({ offered: false, received: false });
+      setGameState("gameOver");
+      setResult("1/2-1/2");
+    });
+
+    return () => {
+      cleanup1();
+      cleanup2();
+      cleanup3();
+      cleanup4();
+    };
+  }, [
+    isMultiplayer,
+    multiplayerState,
+    gameId,
+    t,
+    setDrawOffer,
+    setGameState,
+    setResult,
+  ]);
+
+  // Multiplayer: peer online check interval
+  useEffect(() => {
+    if (!isMultiplayer || multiplayerState.phase !== "connected") return;
+
+    const interval = setInterval(() => {
+      setPeerOnline(isPeerAlive());
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [isMultiplayer, multiplayerState.phase, setPeerOnline]);
+
   useEffect(() => {
     if (gameState === "playing" && gameId) {
       commands.getGameState(gameId).then((result) => {
@@ -524,6 +710,10 @@ function BoardGame() {
   }, [gameId, gameState, setGameState, setResult]);
 
   const movable = useMemo(() => {
+    // In multiplayer, restrict to local color only
+    if (isMultiplayer && localColor) {
+      return localColor;
+    }
     if (players.white.type === "human" && players.black.type === "human") {
       return "turn";
     }
@@ -534,7 +724,7 @@ function BoardGame() {
       return "black";
     }
     return "none";
-  }, [players]);
+  }, [players, isMultiplayer, localColor]);
 
   const [sameTimeControl, setSameTimeControl] = useAtom(
     gameSameTimeControlAtom,
@@ -545,6 +735,9 @@ function BoardGame() {
     players.white.type === "engine" && players.black.type === "engine";
 
   function getResignationLosingColor(): "white" | "black" {
+    if (isMultiplayer && localColor) {
+      return localColor;
+    }
     if (isPlayerVsEngine) {
       return players.white.type === "human" ? "white" : "black";
     }
@@ -556,12 +749,69 @@ function BoardGame() {
     await commands.abortGame(gameId);
     setGameState("gameOver");
     setResult("*");
+    if (isMultiplayer) {
+      disconnectFromRelay();
+    }
   }
 
   async function handleResign() {
     if (!gameId) return;
     const losingColor = getResignationLosingColor();
+    if (isMultiplayer) {
+      sendResign(losingColor);
+      notifications.show({
+        message: t("Multiplayer.YouResigned"),
+        autoClose: 5000,
+        withBorder: true,
+        color: "red",
+      });
+    }
     await commands.resignGame(gameId, losingColor);
+  }
+
+  function handleDrawOffer() {
+    if (drawOffer.received) {
+      // Accept incoming draw
+      sendAcceptDraw();
+      setDrawOffer({ offered: false, received: false });
+      setGameState("gameOver");
+      setResult("1/2-1/2");
+    } else {
+      // Offer draw
+      sendDrawOffer();
+      setDrawOffer({ offered: true, received: false });
+      notifications.show({
+        message: t("Multiplayer.DrawOfferSent"),
+        autoClose: 3000,
+        withBorder: true,
+      });
+    }
+  }
+
+  function handlePlayAgain() {
+    // Multiplayer: stay connected, signal ready for rematch
+    setLocalReady(true);
+    sendReady();
+    if (peerReady) {
+      // Both ready — start new game
+      startRematch();
+    }
+  }
+
+  async function startRematch() {
+    setLocalReady(false);
+    setPeerReady(false);
+    setGameId(null);
+    setWhiteTime(null);
+    setBlackTime(null);
+    setFen(INITIAL_FEN);
+    setDrawOffer({ offered: false, received: false });
+    setHeaders({
+      ...headers,
+      result: "*",
+    });
+    // Go directly to game with fresh board
+    await startGame(true);
   }
 
   async function handleNewGame() {
@@ -574,17 +824,58 @@ function BoardGame() {
       ...headers,
       result: "*",
     });
+    if (isMultiplayer) {
+      disconnectFromRelay();
+      setLocalReady(false);
+      setPeerReady(false);
+      setMultiplayerState({ phase: "idle" });
+      setDrawOffer({ offered: false, received: false });
+    }
   }
+
+  // Multiplayer: refs for values needed in stable callbacks
+  const gameStateRef = useRef(gameState);
+  gameStateRef.current = gameState;
+
+  // Multiplayer: start game when both players are ready
+  const startGameRef = useRef(startGame);
+  startGameRef.current = startGame;
+  const startRematchRef = useRef(startRematch);
+  startRematchRef.current = startRematch;
+  useEffect(() => {
+    if (!isMultiplayer || !localReady || !peerReady) return;
+    if (multiplayerState.phase === "connected" && gameState === "settingUp") {
+      startGameRef.current();
+      setLocalReady(false);
+      setPeerReady(false);
+    } else if (gameState === "gameOver") {
+      startRematchRef.current();
+    }
+  }, [
+    isMultiplayer,
+    localReady,
+    peerReady,
+    multiplayerState.phase,
+    gameState,
+    setLocalReady,
+    setPeerReady,
+  ]);
 
   return (
     <>
       <Portal target="#left" style={{ height: "100%" }}>
         <Board
-          editingMode={gameState === "settingUp" && editingMode}
+          editingMode={
+            gameState === "settingUp" && editingMode && !isMultiplayer
+          }
           viewOnly={gameState !== "playing" && !editingMode}
           disableVariations
           boardRef={boardRef}
-          movable={gameState === "settingUp" && editingMode ? "none" : movable}
+          movable={
+            gameState === "settingUp" && editingMode && !isMultiplayer
+              ? "none"
+              : movable
+          }
           whiteTime={
             gameState === "playing" ? (whiteTime ?? undefined) : undefined
           }
@@ -594,7 +885,9 @@ function BoardGame() {
           onMove={handleHumanMove}
           selectedPiece={selectedPiece}
           cgRef={cgRef}
-          enablePremoves={isPlayerVsEngine && gameState === "playing"}
+          enablePremoves={
+            (isPlayerVsEngine || isMultiplayer) && gameState === "playing"
+          }
         />
       </Portal>
       <Portal target="#topRight" style={{ height: "100%", overflow: "hidden" }}>
@@ -628,11 +921,92 @@ function BoardGame() {
             />
           ) : (
             <>
-              {gameState === "settingUp" && (
+              {gameState === "settingUp" && isMultiplayer && (
+                <ScrollArea h="100%" offsetScrollbars>
+                  {multiplayerState.phase === "connected" ? (
+                    <Stack align="center" gap="md" pt="md">
+                      <Group justify="space-between" w="100%">
+                        <Stack gap={2}>
+                          <Group gap="xs">
+                            <Indicator color="green" size={8}>
+                              <Text size="sm" fw={500}>
+                                {myName || "Player"}
+                              </Text>
+                            </Indicator>
+                          </Group>
+                          <Text
+                            size="xs"
+                            c={localReady ? "green" : "dimmed"}
+                            fw={localReady ? 600 : 400}
+                          >
+                            {localReady
+                              ? t("Multiplayer.Ready")
+                              : t("Multiplayer.NotReady")}
+                          </Text>
+                        </Stack>
+                        <Text size="xs" c="dimmed">
+                          vs
+                        </Text>
+                        <Stack gap={2} align="flex-end">
+                          <Group gap="xs">
+                            <Indicator
+                              color={peerOnline ? "green" : "gray"}
+                              size={8}
+                              processing={peerOnline}
+                            >
+                              <Text size="sm" fw={500}>
+                                {peerName || t("Multiplayer.Opponent")}
+                              </Text>
+                            </Indicator>
+                          </Group>
+                          <Text
+                            size="xs"
+                            c={peerReady ? "green" : "dimmed"}
+                            fw={peerReady ? 600 : 400}
+                          >
+                            {peerReady
+                              ? t("Multiplayer.Ready")
+                              : t("Multiplayer.NotReady")}
+                          </Text>
+                        </Stack>
+                      </Group>
+                      <Group grow w="100%">
+                        <Button
+                          variant={localReady ? "filled" : "default"}
+                          color={localReady ? "green" : undefined}
+                          onClick={() => {
+                            setLocalReady(true);
+                            sendReady();
+                          }}
+                          disabled={localReady}
+                          leftSection={<IconCheck />}
+                          size="md"
+                        >
+                          {localReady
+                            ? t("Multiplayer.WaitingForOpponent")
+                            : t("Multiplayer.Ready")}
+                        </Button>
+                        <Button
+                          variant="default"
+                          color="red"
+                          onClick={handleNewGame}
+                          leftSection={<IconX />}
+                          size="md"
+                        >
+                          {t("Multiplayer.Quit")}
+                        </Button>
+                      </Group>
+                    </Stack>
+                  ) : (
+                    <MultiplayerSetup />
+                  )}
+                </ScrollArea>
+              )}
+              {gameState === "settingUp" && !isMultiplayer && (
                 <ScrollArea h="100%" offsetScrollbars>
                   <Stack>
                     <Button
-                      onClick={startGame}
+                      onClick={() => startGame()}
                       fullWidth
                       size="md"
                       variant="filled"
@@ -701,20 +1075,123 @@ function BoardGame() {
               {(gameState === "playing" || gameState === "gameOver") && (
                 <Stack h="100%">
                   <Box flex={1}>
-                    <GameInfo headers={headers} />
+                    {isMultiplayer && (
+                      <Group justify="space-between" mb="sm">
+                        <Stack gap={2}>
+                          <Group gap="xs">
+                            <Indicator color="green" size={8}>
+                              <Text size="sm" fw={500}>
+                                {myName || "Player"}
+                              </Text>
+                            </Indicator>
+                            <Text size="xs" c="dimmed">
+                              ({localColor})
+                            </Text>
+                          </Group>
+                          {gameState === "gameOver" && (
+                            <Text
+                              size="xs"
+                              c={localReady ? "green" : "dimmed"}
+                              fw={localReady ? 600 : 400}
+                            >
+                              {localReady
+                                ? t("Multiplayer.Ready")
+                                : t("Multiplayer.NotReady")}
+                            </Text>
+                          )}
+                        </Stack>
+                        <Text size="xs" c="dimmed">
+                          vs
+                        </Text>
+                        <Stack gap={2} align="flex-end">
+                          <Group gap="xs">
+                            <Indicator
+                              color={peerOnline ? "green" : "gray"}
+                              size={8}
+                              processing={peerOnline}
+                            >
+                              <Text size="sm" fw={500}>
+                                {peerName || t("Multiplayer.Opponent")}
+                              </Text>
+                            </Indicator>
+                            <Text size="xs" c={peerOnline ? "green" : "dimmed"}>
+                              ({localColor === "white" ? "black" : "white"})
+                            </Text>
+                          </Group>
+                          {gameState === "gameOver" && (
+                            <Text
+                              size="xs"
+                              c={peerReady ? "green" : "dimmed"}
+                              fw={peerReady ? 600 : 400}
+                            >
+                              {peerReady
+                                ? t("Multiplayer.Ready")
+                                : t("Multiplayer.NotReady")}
+                            </Text>
+                          )}
+                        </Stack>
+                      </Group>
+                    )}
+                    {!isMultiplayer && <GameInfo headers={headers} />}
                   </Box>
                   <Group grow>
                     {gameState === "playing" && (
                       <Button
                         variant="default"
                         color="red"
-                        onClick={isEngineVsEngine ? handleAbort : handleResign}
+                        onClick={
+                          isEngineVsEngine && !isMultiplayer
+                            ? handleAbort
+                            : handleResign
+                        }
                         leftSection={<IconX />}
                       >
-                        {isEngineVsEngine ? "Abort" : "Resign"}
+                        {isEngineVsEngine && !isMultiplayer
+                          ? "Abort"
+                          : t("Multiplayer.Resign")}
                       </Button>
                     )}
-                    {gameState === "gameOver" && (
+                    {gameState === "playing" && isMultiplayer && (
+                      <Button
+                        variant="default"
+                        onClick={handleDrawOffer}
+                        leftSection={<IconHandStop size="1rem" />}
+                        color={drawOffer.received ? "yellow" : undefined}
+                      >
+                        {drawOffer.received
+                          ? t("Multiplayer.AcceptDraw")
+                          : drawOffer.offered
+                            ? t("Multiplayer.DrawPending")
+                            : t("Multiplayer.OfferDraw")}
+                      </Button>
+                    )}
+                    {gameState === "gameOver" && isMultiplayer && (
+                      <>
+                        {peerReady && !localReady && (
+                          <Text size="xs" c="green" ta="center" fw={500}>
+                            {t("Multiplayer.OpponentReady")}
+                          </Text>
+                        )}
+                        <Button
+                          variant={localReady ? "filled" : "default"}
+                          color={localReady ? "green" : undefined}
+                          onClick={handlePlayAgain}
+                          disabled={localReady}
+                          leftSection={<IconCheck />}
+                        >
+                          {t("Multiplayer.Ready")}
+                        </Button>
+                        <Button
+                          variant="default"
+                          color="red"
+                          onClick={handleNewGame}
+                          leftSection={<IconX />}
+                        >
+                          {t("Multiplayer.Quit")}
+                        </Button>
+                      </>
+                    )}
+                    {gameState === "gameOver" && !isMultiplayer && (
                       <Button
                         variant="default"
                         onClick={handleNewGame}
@@ -723,15 +1200,17 @@ function BoardGame() {
                         New Game
                       </Button>
                     )}
-                    <Button
-                      variant="default"
-                      onClick={() => changeToAnalysisMode()}
-                      leftSection={<IconZoomCheck />}
-                    >
-                      Analyze
-                    </Button>
+                    {(!isMultiplayer || gameState === "gameOver") && (
+                      <Button
+                        variant="default"
+                        onClick={() => changeToAnalysisMode()}
+                        leftSection={<IconZoomCheck />}
+                      >
+                        Analyze
+                      </Button>
+                    )}
 
-                    {hasEngine && (
+                    {hasEngine && !isMultiplayer && (
                       <Button
                         variant="default"
                         onClick={() => toggleLogsOpened()}
@@ -748,7 +1227,7 @@ function BoardGame() {
         </Paper>
       </Portal>
       <Portal target="#bottomRight" style={{ height: "100%" }}>
-        {gameState === "settingUp" && editingMode ? (
+        {gameState === "settingUp" && editingMode && !isMultiplayer ? (
           <EditingCard
             boardRef={boardRef}
             setEditingMode={toggleEditingMode}
@@ -761,13 +1240,15 @@ function BoardGame() {
               topBar
               controls={
                 <BoardControls
-                  editingMode={gameState === "settingUp" && editingMode}
+                  editingMode={
+                    gameState === "settingUp" && editingMode && !isMultiplayer
+                  }
                   toggleEditingMode={toggleEditingMode}
                   dirty={false}
-                  canTakeBack={onePlayerIsEngine}
+                  canTakeBack={onePlayerIsEngine && !isMultiplayer}
                   onTakeBack={onTakeBack}
                   disableVariations
-                  allowEditing={gameState === "settingUp"}
+                  allowEditing={gameState === "settingUp" && !isMultiplayer}
                 />
               }
             />

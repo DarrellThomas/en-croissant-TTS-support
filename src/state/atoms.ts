@@ -635,6 +635,64 @@ export const currentPgnOptionsAtom = tabValue(pgnOptionsFamily);
 const currentPuzzleFamily = atomFamily((tab: string) => atom(0));
 export const currentPuzzleAtom = tabValue(currentPuzzleFamily);
 
+// Multiplayer — persistent settings
+export const relayUrlAtom = atomWithStorage<string>(
+  "relay-url",
+  "wss://relay.enparlant.org",
+  undefined,
+  { getOnInit: true },
+);
+export const playerNameAtom = atomWithStorage<string>(
+  "player-name",
+  "Player",
+  undefined,
+  { getOnInit: true },
+);
+
+// Multiplayer — per-tab ephemeral state
+export type MultiplayerPhase =
+  | "idle"
+  | "creating"
+  | "waiting"
+  | "joining"
+  | "connected"
+  | "disconnected";
+
+export type MultiplayerState = {
+  phase: MultiplayerPhase;
+  code?: string;
+};
+
+export const isMultiplayerFamily = atomFamily((tab: string) => atom(false));
+export const currentIsMultiplayerAtom = tabValue(isMultiplayerFamily);
+
+const multiplayerStateFamily = atomFamily((tab: string) =>
+  atom<MultiplayerState>({ phase: "idle" }),
+);
+export const currentMultiplayerStateAtom = tabValue(multiplayerStateFamily);
+
+const localColorFamily = atomFamily((tab: string) =>
+  atom<"white" | "black" | null>(null),
+);
+export const currentLocalColorAtom = tabValue(localColorFamily);
+
+const peerNameFamily = atomFamily((tab: string) => atom(""));
+export const currentPeerNameAtom = tabValue(peerNameFamily);
+
+const peerOnlineFamily = atomFamily((tab: string) => atom(true));
+export const currentPeerOnlineAtom = tabValue(peerOnlineFamily);
+
+const drawOfferFamily = atomFamily((tab: string) =>
+  atom({ offered: false, received: false }),
+);
+export const currentDrawOfferAtom = tabValue(drawOfferFamily);
+
+const localReadyFamily = atomFamily((tab: string) => atom(false));
+export const currentLocalReadyAtom = tabValue(localReadyFamily);
+
+const peerReadyFamily = atomFamily((tab: string) => atom(false));
+export const currentPeerReadyAtom = tabValue(peerReadyFamily);
+
 // Game
 
 type GameState = "settingUp" | "playing" | "gameOver";
