@@ -545,6 +545,23 @@ function RootLayout() {
           },
           { label: "divider" },
           {
+            label: t("Menu.Help.ReportIssue"),
+            id: "report_issue",
+            action: () =>
+              shellOpen(
+                "https://github.com/DarrellThomas/en-parlant/issues/new",
+              ),
+          },
+          {
+            label: t("Menu.Help.Community"),
+            id: "community",
+            action: () =>
+              shellOpen(
+                "https://github.com/DarrellThomas/en-parlant/discussions",
+              ),
+          },
+          { label: "divider" },
+          {
             label: t("Menu.Help.AboutAI"),
             id: "about_ai",
             submenu: [
