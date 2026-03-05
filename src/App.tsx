@@ -229,7 +229,7 @@ export default function App() {
         theme={theme}
       >
         <ContextMenuProvider>
-          <Notifications />
+          <Notifications position="bottom-right" />
           <RouterProvider router={router} />
         </ContextMenuProvider>
       </MantineProvider>

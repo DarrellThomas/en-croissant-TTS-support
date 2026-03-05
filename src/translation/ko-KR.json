@@ -298,7 +298,7 @@
     "Engines.Settings.SizeOfHash": "해시 크기",
     "Engines.Title": "내 엔진",
     "Error.CopyStackTrace": "스택 추적 복사",
-    "Error.ReportIssue": "이 문제를 <github>GitHub</github> 또는 <discord>Discord 서버</discord>에 보고해주세요",
+    "Error.ReportIssue": "Please report this on <github>GitHub</github>",
     "Error.Title": "오류",
     "Error.Unexpected": "예기치 않은 오류가 발생했습니다",
     "Errors.EmptyBoard": "빈 보드",
@@ -425,8 +425,6 @@
     "Menu.MarkAsStart": "시작으로 표시",
     "Menu.PromoteToMainLine": "메인 라인으로 승격",
     "Menu.PromoteVariation": "변형 수순 승격",
-    "Menu.TTS": "텍스트 음성 변환",
-    "Menu.TTS.GettingStarted": "시작하기",
     "Menu.View": "화면",
     "Menu.View.Reload": "새로고침",
     "Notation.HideComments": "주석 숨기기",
@@ -594,6 +592,7 @@
     "TimeControl.Classical": "클래식",
     "TimeControl.Correspondence": "통신",
     "TimeControl.Rapid": "래피드",
-    "TimeControl.UltraBullet": "울트라불릿"
+    "TimeControl.UltraBullet": "울트라불릿",
+    "Menu.Help.ReportIssue": ""
   }
 }

@@ -417,8 +417,6 @@
     "Menu.MarkAsStart": "",
     "Menu.PromoteToMainLine": "",
     "Menu.PromoteVariation": "",
-    "Menu.TTS": "Тэкст у маўленне",
-    "Menu.TTS.GettingStarted": "Пачатак работы",
     "Menu.View": "Выгляд",
     "Menu.View.Reload": "Перазагрузіць",
     "Notation.HideComments": "",
@@ -586,6 +584,7 @@
     "TimeControl.Classical": "Класіка",
     "TimeControl.Correspondence": "Ліставанне",
     "TimeControl.Rapid": "Рапід",
-    "TimeControl.UltraBullet": "Ультра Булет"
+    "TimeControl.UltraBullet": "Ультра Булет",
+    "Menu.Help.ReportIssue": ""
   }
 }

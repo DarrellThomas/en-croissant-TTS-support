@@ -139,7 +139,8 @@ export const createTreeStore = (id?: string, initialTree?: TreeState) => {
         playSound(san.includes("x"), san.includes("+"));
         if (node && node.children.length > 0) {
           const nextNode = node.children[0];
-          if (isAutoNarrateEnabled()) {
+          const isDemo = state.headers?.other?.AudioSource === "demo";
+          if (isAutoNarrateEnabled() || isDemo) {
             // At root position, speak the game intro comment first
             if (state.position.length === 0 && node.comment) {
               speakComment(node.comment, state.headers);

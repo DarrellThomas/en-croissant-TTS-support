@@ -431,8 +431,6 @@
     "Menu.MarkAsStart": "Отметить как начало",
     "Menu.PromoteToMainLine": "Повысить до главного варианта",
     "Menu.PromoteVariation": "Повысить вариант",
-    "Menu.TTS": "Текст в речь",
-    "Menu.TTS.GettingStarted": "Начало работы",
     "Menu.View": "Вид",
     "Menu.View.Reload": "Перезагрузить",
     "Notation.HideComments": "",
@@ -600,6 +598,7 @@
     "TimeControl.Classical": "Классика",
     "TimeControl.Correspondence": "Переписка",
     "TimeControl.Rapid": "Рапид",
-    "TimeControl.UltraBullet": "Ультра Буллет"
+    "TimeControl.UltraBullet": "Ультра Буллет",
+    "Menu.Help.ReportIssue": ""
   }
 }

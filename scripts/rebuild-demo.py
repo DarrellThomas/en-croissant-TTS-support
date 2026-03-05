@@ -393,7 +393,7 @@ def generate_narration(root_comment, moves, lang):
         move_num = (hm + 1) // 2
         spoken = san_to_spoken(mv["san"], lang)
 
-        text = f"{move_num}, {spoken}."
+        text = f"{spoken}."
         if mv["annotation_key"] and mv["annotation_key"] in v:
             text += f"  {v[mv['annotation_key']]}"
         text += f"  {clean}"

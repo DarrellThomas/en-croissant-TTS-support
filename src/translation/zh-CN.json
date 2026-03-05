@@ -300,7 +300,7 @@
     "Engines.Settings.SizeOfHash": "哈希大小",
     "Engines.Title": "引擎",
     "Error.CopyStackTrace": "复制堆栈跟踪",
-    "Error.ReportIssue": "请在 <github>GitHub</github> 或 <discord>Discord 服务器</discord> 上报告此问题！",
+    "Error.ReportIssue": "Please report this on <github>GitHub</github>",
     "Error.Title": "发生错误",
     "Error.Unexpected": "意外错误",
     "Errors.EmptyBoard": "空棋盘",
@@ -427,8 +427,6 @@
     "Menu.MarkAsStart": "标记为起始",
     "Menu.PromoteToMainLine": "升为主变",
     "Menu.PromoteVariation": "提升变着",
-    "Menu.TTS": "文字转语音",
-    "Menu.TTS.GettingStarted": "入门指南",
     "Menu.View": "视图",
     "Menu.View.Reload": "重新加载",
     "Notation.HideComments": "隐藏点评",
@@ -596,6 +594,7 @@
     "TimeControl.Classical": "慢棋",
     "TimeControl.Correspondence": "通讯棋",
     "TimeControl.Rapid": "快棋",
-    "TimeControl.UltraBullet": "超子弹棋"
+    "TimeControl.UltraBullet": "超子弹棋",
+    "Menu.Help.ReportIssue": ""
   }
 }

@@ -267,7 +267,7 @@ export async function playDemoNarration(
   const speed = store.get(ttsSpeedAtom);
   const generation = getRequestGeneration();
 
-  const url = `${CLOUD_BASE_URL}/demo/${lang}/${gender}/move-${halfMoves}.mp3`;
+  const url = `${CLOUD_BASE_URL}/demo/${lang}/${gender}/move-${halfMoves}.mp3?v=2`;
   const blobUrl = await fetchClip(url);
 
   if (generation !== getRequestGeneration()) return;
@@ -305,7 +305,7 @@ export async function prefetchDemoClips(
   if (halfMoves.length === 0) return;
 
   const urls = halfMoves.map(
-    (hm) => `${CLOUD_BASE_URL}/demo/${lang}/${gender}/move-${hm}.mp3`,
+    (hm) => `${CLOUD_BASE_URL}/demo/${lang}/${gender}/move-${hm}.mp3?v=2`,
   );
 
   // Connectivity check — try to reach the first clip URL

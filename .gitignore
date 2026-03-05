@@ -57,3 +57,6 @@ scripts/__pycache__/
 # Site and Cloudflare local state (separate repo)
 site/
 .wrangler/
+
+# Feature proposals (local planning docs, not for release)
+proposals/

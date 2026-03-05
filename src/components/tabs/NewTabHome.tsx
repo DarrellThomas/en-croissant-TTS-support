@@ -291,7 +291,16 @@ export default function NewTabHome({ id }: { id: string }) {
       <Stack gap="lg" pt="sm">
         <SimpleGrid cols={{ base: 1, sm: 2, lg: 5 }}>
           {cards.map((card) => (
-            <Card shadow="sm" p="lg" radius="md" withBorder key={card.title}>
+            <Card
+              shadow="sm"
+              p="lg"
+              radius="md"
+              withBorder
+              key={card.title}
+              onClick={card.onClick}
+              className="home-card"
+              style={{ cursor: "pointer" }}
+            >
               <Stack align="center" h="100%" justify="space-between">
                 {card.icon}
 
@@ -307,7 +316,10 @@ export default function NewTabHome({ id }: { id: string }) {
                   fullWidth
                   mt="md"
                   radius="md"
-                  onClick={card.onClick}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    card.onClick();
+                  }}
                 >
                   {card.label}
                 </Button>

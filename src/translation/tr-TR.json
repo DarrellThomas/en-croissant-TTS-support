@@ -413,8 +413,6 @@
     "Menu.MarkAsStart": "",
     "Menu.PromoteToMainLine": "",
     "Menu.PromoteVariation": "",
-    "Menu.TTS": "Metinden Konuşmaya",
-    "Menu.TTS.GettingStarted": "Başlarken",
     "Menu.View": "Görüntü",
     "Menu.View.Reload": "Yenile",
     "Notation.HideComments": "",
@@ -582,6 +580,7 @@
     "TimeControl.Classical": "Klasik",
     "TimeControl.Correspondence": "Yazışma",
     "TimeControl.Rapid": "Rapid",
-    "TimeControl.UltraBullet": "UltraBullet"
+    "TimeControl.UltraBullet": "UltraBullet",
+    "Menu.Help.ReportIssue": ""
   }
 }

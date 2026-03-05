@@ -411,8 +411,6 @@
     "Menu.MarkAsStart": "",
     "Menu.PromoteToMainLine": "",
     "Menu.PromoteVariation": "",
-    "Menu.TTS": "文字轉語音",
-    "Menu.TTS.GettingStarted": "入門指南",
     "Menu.View": "檢視",
     "Menu.View.Reload": "重新載入",
     "Notation.HideComments": "",
@@ -580,6 +578,7 @@
     "TimeControl.Classical": "慢棋",
     "TimeControl.Correspondence": "通信棋",
     "TimeControl.Rapid": "快棋",
-    "TimeControl.UltraBullet": "超快棋"
+    "TimeControl.UltraBullet": "超快棋",
+    "Menu.Help.ReportIssue": ""
   }
 }

@@ -429,8 +429,6 @@
     "Menu.MarkAsStart": "Marquer comme début",
     "Menu.PromoteToMainLine": "Variante principale",
     "Menu.PromoteVariation": "Promouvoir la variante",
-    "Menu.TTS": "Synthèse vocale",
-    "Menu.TTS.GettingStarted": "Premiers pas",
     "Menu.View": "Vue",
     "Menu.View.Reload": "Recharger",
     "Notation.HideComments": "",
@@ -598,6 +596,7 @@
     "TimeControl.Classical": "Classique",
     "TimeControl.Correspondence": "Correspondance",
     "TimeControl.Rapid": "Rapide",
-    "TimeControl.UltraBullet": "UltraBullet"
+    "TimeControl.UltraBullet": "UltraBullet",
+    "Menu.Help.ReportIssue": ""
   }
 }

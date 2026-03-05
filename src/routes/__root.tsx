@@ -35,7 +35,6 @@ import {
   docLangAtom,
   nativeBarAtom,
   tabsAtom,
-  ttsLanguageAtom,
 } from "@/state/atoms";
 import { keyMapAtom } from "@/state/keybinds";
 import { openFile } from "@/utils/files";
@@ -132,8 +131,7 @@ function RootLayout() {
 
   const [, setTabs] = useAtom(tabsAtom);
   const [, setActiveTab] = useAtom(activeTabAtom);
-  const [docLang, setDocLang] = useAtom(docLangAtom);
-  const [, setTtsLang] = useAtom(ttsLanguageAtom);
+  const docLang = useAtomValue(docLangAtom);
 
   const { t } = useTranslation();
 
@@ -156,33 +154,6 @@ function RootLayout() {
       setActiveTab,
     });
   }, [navigate, setActiveTab, setTabs, t]);
-
-  const openDemo = useCallback(
-    async (lang: string, label: string, gender: "male" | "female" = "male") => {
-      try {
-        const res = await fetch(
-          `https://enparlant.redshed.ai/pgn/demo/tts-demo-${lang}.pgn`,
-        );
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        let pgn = await res.text();
-        // Inject gender header so the TTS system knows which clips to fetch
-        pgn = pgn.replace(
-          '[AudioSource "demo"]',
-          `[AudioSource "demo"]\n[AudioGender "${gender}"]`,
-        );
-        navigate({ to: "/" });
-        createTab({
-          tab: { name: `TTS Demo (${label})`, type: "analysis" },
-          setTabs,
-          setActiveTab,
-          pgn,
-        });
-      } catch (e) {
-        console.error("Failed to open demo:", e);
-      }
-    },
-    [navigate, setTabs, setActiveTab],
-  );
 
   const [updateModalOpened, setUpdateModalOpened] = useState(false);
   const [pendingUpdate, setPendingUpdate] = useState<Update | null>(null);
@@ -351,187 +322,6 @@ function RootLayout() {
         ],
       },
       {
-        label: t("Menu.TTS"),
-        options: [
-          {
-            label: t("Menu.TTS.GettingStarted"),
-            id: "tts_getting_started",
-            action: () => shellOpen(docsUrl("tts-guide", docLang)),
-          },
-          {
-            label: "English",
-            id: "tts_demo_en",
-            submenu: [
-              {
-                label: "Male",
-                id: "tts_demo_en_male",
-                action: () => openDemo("en", "English", "male"),
-              },
-              {
-                label: "Female",
-                id: "tts_demo_en_female",
-                action: () => openDemo("en", "English", "female"),
-              },
-            ],
-          },
-          {
-            label: "Fran\u00e7ais",
-            id: "tts_demo_fr",
-            submenu: [
-              {
-                label: "Masculin",
-                id: "tts_demo_fr_male",
-                action: () => openDemo("fr", "Fran\u00e7ais", "male"),
-              },
-              {
-                label: "F\u00e9minin",
-                id: "tts_demo_fr_female",
-                action: () => openDemo("fr", "Fran\u00e7ais", "female"),
-              },
-            ],
-          },
-          {
-            label: "Espa\u00f1ol",
-            id: "tts_demo_es",
-            submenu: [
-              {
-                label: "Masculino",
-                id: "tts_demo_es_male",
-                action: () => openDemo("es", "Espa\u00f1ol", "male"),
-              },
-              {
-                label: "Femenino",
-                id: "tts_demo_es_female",
-                action: () => openDemo("es", "Espa\u00f1ol", "female"),
-              },
-            ],
-          },
-          {
-            label: "Deutsch",
-            id: "tts_demo_de",
-            submenu: [
-              {
-                label: "M\u00e4nnlich",
-                id: "tts_demo_de_male",
-                action: () => openDemo("de", "Deutsch", "male"),
-              },
-              {
-                label: "Weiblich",
-                id: "tts_demo_de_female",
-                action: () => openDemo("de", "Deutsch", "female"),
-              },
-            ],
-          },
-          {
-            label: "\u65e5\u672c\u8a9e",
-            id: "tts_demo_ja",
-            submenu: [
-              {
-                label: "\u7537\u6027",
-                id: "tts_demo_ja_male",
-                action: () => openDemo("ja", "\u65e5\u672c\u8a9e", "male"),
-              },
-              {
-                label: "\u5973\u6027",
-                id: "tts_demo_ja_female",
-                action: () => openDemo("ja", "\u65e5\u672c\u8a9e", "female"),
-              },
-            ],
-          },
-          {
-            label: "\u0420\u0443\u0441\u0441\u043a\u0438\u0439",
-            id: "tts_demo_ru",
-            submenu: [
-              {
-                label: "\u041c\u0443\u0436\u0441\u043a\u043e\u0439",
-                id: "tts_demo_ru_male",
-                action: () =>
-                  openDemo(
-                    "ru",
-                    "\u0420\u0443\u0441\u0441\u043a\u0438\u0439",
-                    "male",
-                  ),
-              },
-              {
-                label: "\u0416\u0435\u043d\u0441\u043a\u043e\u0439",
-                id: "tts_demo_ru_female",
-                action: () =>
-                  openDemo(
-                    "ru",
-                    "\u0420\u0443\u0441\u0441\u043a\u0438\u0439",
-                    "female",
-                  ),
-              },
-            ],
-          },
-          {
-            label: "\u4e2d\u6587",
-            id: "tts_demo_zh",
-            submenu: [
-              {
-                label: "\u7537\u58f0",
-                id: "tts_demo_zh_male",
-                action: () => openDemo("zh", "\u4e2d\u6587", "male"),
-              },
-              {
-                label: "\u5973\u58f0",
-                id: "tts_demo_zh_female",
-                action: () => openDemo("zh", "\u4e2d\u6587", "female"),
-              },
-            ],
-          },
-          {
-            label: "\uD55C\uAD6D\uC5B4",
-            id: "tts_demo_ko",
-            submenu: [
-              {
-                label: "\ub0a8\uc131",
-                id: "tts_demo_ko_male",
-                action: () => openDemo("ko", "\uD55C\uAD6D\uC5B4", "male"),
-              },
-              {
-                label: "\uc5ec\uc131",
-                id: "tts_demo_ko_female",
-                action: () => openDemo("ko", "\uD55C\uAD6D\uC5B4", "female"),
-              },
-            ],
-          },
-          {
-            label: "\u0939\u093F\u0928\u094D\u0926\u0940",
-            id: "tts_demo_hi",
-            submenu: [
-              {
-                label: "\u092a\u0941\u0930\u0941\u0937",
-                id: "tts_demo_hi_male",
-                action: () =>
-                  openDemo(
-                    "hi",
-                    "\u0939\u093F\u0928\u094D\u0926\u0940",
-                    "male",
-                  ),
-              },
-              {
-                label: "\u092e\u0939\u093f\u0932\u093e",
-                id: "tts_demo_hi_female",
-                action: () =>
-                  openDemo(
-                    "hi",
-                    "\u0939\u093F\u0928\u094D\u0926\u0940",
-                    "female",
-                  ),
-              },
-            ],
-          },
-          {
-            label: "Text to Speech Settings",
-            id: "tts_settings",
-            action: () => {
-              navigate({ to: "/settings", search: { tab: "sound" } });
-            },
-          },
-        ],
-      },
-      {
         label: t("Menu.Help"),
         options: [
           {
@@ -556,136 +346,6 @@ function RootLayout() {
             label: t("Menu.Help.Architecture"),
             id: "architecture",
             action: () => shellOpen(docsUrl("architecture", docLang)),
-          },
-          { label: "divider" },
-          {
-            label: "Language / Langue",
-            id: "language_selector",
-            submenu: [
-              {
-                label: `${docLang === "en" ? "\u2713 " : ""}English`,
-                id: "lang_en",
-                action: () => {
-                  if (docLang === "en") return;
-                  ask("Switch to English?", {
-                    title: "Language / Langue",
-                  }).then((yes) => {
-                    if (yes) {
-                      setDocLang("en");
-                      setTtsLang("en");
-                    }
-                  });
-                },
-              },
-              {
-                label: `${docLang === "fr" ? "\u2713 " : ""}Fran\u00e7ais`,
-                id: "lang_fr",
-                action: () => {
-                  if (docLang === "fr") return;
-                  ask("Switch to Fran\u00e7ais (French)?", {
-                    title: "Language / Langue",
-                  }).then((yes) => {
-                    if (yes) {
-                      setDocLang("fr");
-                      setTtsLang("fr");
-                    }
-                  });
-                },
-              },
-              {
-                label: `${docLang === "es" ? "\u2713 " : ""}Espa\u00f1ol`,
-                id: "lang_es",
-                action: () => {
-                  if (docLang === "es") return;
-                  ask("Switch to Espa\u00f1ol (Spanish)?", {
-                    title: "Language / Langue",
-                  }).then((yes) => {
-                    if (yes) {
-                      setDocLang("es");
-                      setTtsLang("es");
-                    }
-                  });
-                },
-              },
-              {
-                label: `${docLang === "de" ? "\u2713 " : ""}Deutsch`,
-                id: "lang_de",
-                action: () => {
-                  if (docLang === "de") return;
-                  ask("Switch to Deutsch (German)?", {
-                    title: "Language / Langue",
-                  }).then((yes) => {
-                    if (yes) {
-                      setDocLang("de");
-                      setTtsLang("de");
-                    }
-                  });
-                },
-              },
-              {
-                label: `${docLang === "ja" ? "\u2713 " : ""}\u65e5\u672c\u8a9e`,
-                id: "lang_ja",
-                action: () => {
-                  if (docLang === "ja") return;
-                  ask("Switch to \u65e5\u672c\u8a9e (Japanese)?", {
-                    title: "Language / Langue",
-                  }).then((yes) => {
-                    if (yes) {
-                      setDocLang("ja");
-                      setTtsLang("ja");
-                    }
-                  });
-                },
-              },
-              {
-                label: `${docLang === "ru" ? "\u2713 " : ""}\u0420\u0443\u0441\u0441\u043a\u0438\u0439`,
-                id: "lang_ru",
-                action: () => {
-                  if (docLang === "ru") return;
-                  ask(
-                    "Switch to \u0420\u0443\u0441\u0441\u043a\u0438\u0439 (Russian)?",
-                    {
-                      title: "Language / Langue",
-                    },
-                  ).then((yes) => {
-                    if (yes) {
-                      setDocLang("ru");
-                      setTtsLang("ru");
-                    }
-                  });
-                },
-              },
-              {
-                label: `${docLang === "zh" ? "\u2713 " : ""}\u4e2d\u6587`,
-                id: "lang_zh",
-                action: () => {
-                  if (docLang === "zh") return;
-                  ask("Switch to \u4e2d\u6587 (Chinese)?", {
-                    title: "Language / Langue",
-                  }).then((yes) => {
-                    if (yes) {
-                      setDocLang("zh");
-                      setTtsLang("zh");
-                    }
-                  });
-                },
-              },
-              {
-                label: `${docLang === "ko" ? "\u2713 " : ""}\uD55C\uAD6D\uC5B4`,
-                id: "lang_ko",
-                action: () => {
-                  if (docLang === "ko") return;
-                  ask("Switch to \uD55C\uAD6D\uC5B4 (Korean)?", {
-                    title: "Language / Langue",
-                  }).then((yes) => {
-                    if (yes) {
-                      setDocLang("ko");
-                      setTtsLang("ko");
-                    }
-                  });
-                },
-              },
-            ],
           },
           { label: "divider" },
           {
@@ -716,6 +376,15 @@ function RootLayout() {
             },
           },
           { label: "divider" },
+          {
+            label: t("Menu.Help.ReportIssue"),
+            id: "report_issue",
+            action: () =>
+              shellOpen(
+                "https://github.com/DarrellThomas/en-parlant/issues/new",
+              ),
+          },
+          { label: "divider" },
           ...(!isMacOS ? [checkForUpdatesOption, aboutOption] : []),
         ],
       },
@@ -726,10 +395,7 @@ function RootLayout() {
       createNewTab,
       keyMap,
       openNewFile,
-      openDemo,
       docLang,
-      setDocLang,
-      setTtsLang,
     ],
   );
 

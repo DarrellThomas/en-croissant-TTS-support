@@ -24,6 +24,7 @@ import {
   practiceStateAtom,
 } from "@/state/atoms";
 import { keyMapAtom } from "@/state/keybinds";
+import { notifications } from "@mantine/notifications";
 import { defaultPGN } from "@/utils/chess";
 import { saveToFile } from "@/utils/tabs";
 import DetachedEval from "../common/DetachedEval";
@@ -53,6 +54,29 @@ function BoardAnalysis() {
   const store = useContext(TreeStateContext)!;
 
   const dirty = useStore(store, (s) => s.dirty);
+  const headers = useStore(store, (s) => s.headers);
+  const goToNext = useStore(store, (s) => s.goToNext);
+
+  // Auto-advance to first move on demo games so narration plays immediately
+  useEffect(() => {
+    if (headers?.other?.AudioSource !== "demo") return;
+    if (!sessionStorage.getItem("demo-nav-hint-shown")) {
+      sessionStorage.setItem("demo-nav-hint-shown", "1");
+      notifications.show({
+        title: "Demo",
+        message: "Use ← → arrow keys (or the nav buttons) to step through the game",
+        autoClose: 6000,
+      });
+    }
+    const timer = setTimeout(() => {
+      const state = store.getState();
+      if (state.position.length === 0 && state.root.children.length > 0) {
+        goToNext(); // tree.ts always narrates in demo mode
+      }
+    }, 800);
+    return () => clearTimeout(timer);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [headers?.other?.AudioSource]);
 
   const reset = useStore(store, (s) => s.reset);
   const clearShapes = useStore(store, (s) => s.clearShapes);

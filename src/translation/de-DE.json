@@ -413,8 +413,6 @@
     "Menu.MarkAsStart": "",
     "Menu.PromoteToMainLine": "",
     "Menu.PromoteVariation": "",
-    "Menu.TTS": "Text zu Sprache",
-    "Menu.TTS.GettingStarted": "Erste Schritte",
     "Menu.View": "Ansicht",
     "Menu.View.Reload": "Neu laden",
     "Notation.HideComments": "",
@@ -582,6 +580,7 @@
     "TimeControl.Classical": "Klassisch",
     "TimeControl.Correspondence": "Fernschach",
     "TimeControl.Rapid": "Rapid",
-    "TimeControl.UltraBullet": "UltraBullet"
+    "TimeControl.UltraBullet": "UltraBullet",
+    "Menu.Help.ReportIssue": ""
   }
 }

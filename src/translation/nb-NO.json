@@ -413,8 +413,6 @@
     "Menu.MarkAsStart": "",
     "Menu.PromoteToMainLine": "",
     "Menu.PromoteVariation": "",
-    "Menu.TTS": "Tekst til tale",
-    "Menu.TTS.GettingStarted": "Kom i gang",
     "Menu.View": "Vis",
     "Menu.View.Reload": "Last inn på nytt",
     "Notation.HideComments": "",
@@ -582,6 +580,7 @@
     "TimeControl.Classical": "Klassisk",
     "TimeControl.Correspondence": "Fjernsjakk",
     "TimeControl.Rapid": "Hurtig",
-    "TimeControl.UltraBullet": "UltraBullet"
+    "TimeControl.UltraBullet": "UltraBullet",
+    "Menu.Help.ReportIssue": ""
   }
 }

@@ -370,7 +370,7 @@
     "Home.Card.ImportGame.Title": "Import Game",
     "Home.Card.NarratedDemo.Button": "",
     "Home.Card.NarratedDemo.Desc": "",
-    "Home.Card.NarratedDemo.Title": "",
+    "Home.Card.NarratedDemo.Title": "Narrated Annotation DEMO",
     "Home.Card.NewRepertoire.Button": "",
     "Home.Card.NewRepertoire.Color": "",
     "Home.Card.NewRepertoire.Desc": "",
@@ -427,8 +427,6 @@
     "Menu.MarkAsStart": "Mark as start",
     "Menu.PromoteToMainLine": "Promote to Main Line",
     "Menu.PromoteVariation": "Promote Variation",
-    "Menu.TTS": "Text to Speech",
-    "Menu.TTS.GettingStarted": "Getting Started",
     "Menu.View": "View",
     "Menu.View.Reload": "Reload",
     "Notation.HideComments": "",
@@ -596,6 +594,7 @@
     "TimeControl.Classical": "Classical",
     "TimeControl.Correspondence": "Correspondence",
     "TimeControl.Rapid": "Rapid",
-    "TimeControl.UltraBullet": "UltraBullet"
+    "TimeControl.UltraBullet": "UltraBullet",
+    "Menu.Help.ReportIssue": ""
   }
 }

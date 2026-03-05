@@ -12,6 +12,7 @@ import {
   Stack,
   Text,
 } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 import { useToggle } from "@mantine/hooks";
 import {
   IconArrowsExchange,
@@ -176,6 +177,14 @@ function BoardGame() {
       fetchEngineLogs();
     }
   }, [logsOpened, fetchEngineLogs]);
+
+  useEffect(() => {
+    notifications.show({
+      message: "Press Start to begin",
+      autoClose: 3000,
+      withBorder: true,
+    });
+  }, []);
 
   const syncTreeWithMoves = useCallback(
     (backendMoves: BackendMove[]) => {
@@ -622,6 +631,17 @@ function BoardGame() {
               {gameState === "settingUp" && (
                 <ScrollArea h="100%" offsetScrollbars>
                   <Stack>
+                    <Button
+                      onClick={startGame}
+                      fullWidth
+                      size="md"
+                      variant="filled"
+                      color="teal"
+                      disabled={error !== null}
+                    >
+                      {t("Board.Opponent.StartGame")}
+                    </Button>
+
                     <Group>
                       <Text flex={1} ta="center" fz="lg" fw="bold">
                         {match(inputColor)
@@ -675,17 +695,6 @@ function BoardGame() {
                         }
                       }}
                     />
-
-                    <Group>
-                      <Button
-                        onClick={startGame}
-                        fullWidth
-                        variant="light"
-                        disabled={error !== null}
-                      >
-                        {t("Board.Opponent.StartGame")}
-                      </Button>
-                    </Group>
                   </Stack>
                 </ScrollArea>
               )}

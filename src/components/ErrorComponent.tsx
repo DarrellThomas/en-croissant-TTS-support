@@ -56,13 +56,7 @@ export default function ErrorComponent({ error }: { error: unknown }) {
           components={{
             github: (
               <Anchor
-                href="https://github.com/DarrellThomas/en-parlant/issues"
-                target="_blank"
-              />
-            ),
-            discord: (
-              <Anchor
-                href="https://discord.com/invite/tdYzfDbSSW"
+                href="https://github.com/DarrellThomas/en-parlant/issues/new"
                 target="_blank"
               />
             ),

@@ -11,9 +11,9 @@ import {
   Text,
 } from "@mantine/core";
 import {
+  IconBrain,
   IconHeadphones,
   IconKey,
-  IconPlayerPlay,
   IconSparkles,
 } from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-router";
@@ -103,25 +103,21 @@ export default function TTSDemoModal({
       title={
         <Group gap="xs">
           <IconHeadphones size={20} />
-          <Text fw={600}>Narrated Debrief — Demo</Text>
+          <Text fw={600}>Narrated Annotation DEMO</Text>
         </Group>
       }
       size="xl"
     >
       <Stack gap="md">
-        <Text size="sm">
-          This is a short demo of <strong>En Parlant~</strong>'s narrated
-          debrief feature. Pick a language, then{" "}
+        <Text size="md">
+          What you are hearing in this demo are <strong>ElevenLabs</strong>{" "}
+          voices — 9 languages and growing. Pick one, then{" "}
           <strong>step through the moves yourself</strong> using the arrow keys
-          or the move list — each move narrates as you go. It's your pace, not
+          or navigation buttons. Each move announces as you go. Your pace, not
           auto-play.
         </Text>
-        <Text size="sm">
-          You can load <strong>any annotated PGN</strong> and have it narrated
-          in your language. Two service levels are available:
-        </Text>
 
-        <SimpleGrid cols={2} spacing="xs">
+        <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="xs">
           <Box
             p="sm"
             style={{
@@ -130,18 +126,19 @@ export default function TTSDemoModal({
             }}
           >
             <Group gap="xs" mb={4}>
-              <IconPlayerPlay size={16} />
+              <IconBrain size={16} />
               <Text size="sm" fw={600}>
-                Free
+                Free option
               </Text>
-              <Badge size="xs" color="teal" variant="light">
-                No key needed
+              <Badge size="xs" color="green" variant="light">
+                Open source
               </Badge>
             </Group>
             <Text size="xs" c="dimmed">
-              Demo audio clips hosted on our servers — English only for now.
-              KittyTTS sounds pretty good. OpenTTS and System TTS are included
-              so you can hear the contrast — they're not great.
+              <strong>KittenTTS</strong> is a free, open-source model we
+              support — and it punches well above its weight. Install it
+              locally, and you can run that server right at home. Our
+              documentation will walk you through it.
             </Text>
           </Box>
 
@@ -155,17 +152,17 @@ export default function TTSDemoModal({
             <Group gap="xs" mb={4}>
               <IconKey size={16} />
               <Text size="sm" fw={600}>
-                BYOK
+                Bring your own key
               </Text>
               <Badge size="xs" color="violet" variant="light">
-                Bring Your Own Key
+                BYOK
               </Badge>
             </Group>
             <Text size="xs" c="dimmed">
-              This is the way to go — and it's not expensive for this use case.
-              ElevenLabs is the best; Google Cloud is a close second with a more
-              generous free tier (1M characters/month). The demos you're hearing
-              right now were made with ElevenLabs.
+              This was the original idea behind TTS narration. Paste in your
+              API key, and you've got it —{" "}
+              <strong>ElevenLabs</strong> or <strong>Google Cloud</strong>.
+              Lots of options for lots of use cases.
             </Text>
           </Box>
         </SimpleGrid>
@@ -192,6 +189,7 @@ export default function TTSDemoModal({
                 <Button
                   size="xs"
                   variant="light"
+                  color="blue"
                   leftSection={<IconSparkles size={12} />}
                   onClick={() => openDemo(lang.code, lang.label, "male")}
                 >

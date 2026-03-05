@@ -415,8 +415,6 @@
     "Menu.MarkAsStart": "",
     "Menu.PromoteToMainLine": "",
     "Menu.PromoteVariation": "",
-    "Menu.TTS": "Testo in voce",
-    "Menu.TTS.GettingStarted": "Per iniziare",
     "Menu.View": "Visualizza",
     "Menu.View.Reload": "Ricarica",
     "Notation.HideComments": "",
@@ -584,6 +582,7 @@
     "TimeControl.Classical": "Classica",
     "TimeControl.Correspondence": "Corrispondenza",
     "TimeControl.Rapid": "Semi-lampo",
-    "TimeControl.UltraBullet": "UltraBullet"
+    "TimeControl.UltraBullet": "UltraBullet",
+    "Menu.Help.ReportIssue": ""
   }
 }
