@@ -619,9 +619,11 @@ function BoardGame() {
 
     const currentGameId = gameId;
 
-    const cleanup1 = onPeerMove(async (uci) => {
+    const cleanup1 = onPeerMove(async (uci, wt, bt) => {
       try {
         await commands.makeGameMove(currentGameId, uci);
+        if (wt !== undefined) setWhiteTime(wt);
+        if (bt !== undefined) setBlackTime(bt);
       } catch (err) {
         console.error("Failed to apply remote move:", err);
       }
