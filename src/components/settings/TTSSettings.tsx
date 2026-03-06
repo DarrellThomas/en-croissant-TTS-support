@@ -733,28 +733,82 @@ export function TTSVoiceSelect() {
 
 const TTS_TEST_PHRASES: Record<string, string> = {
   en: "Knight to f3, check. A strong developing move.",
-  fr: "Cavalier f3, échec. Un coup de développement fort qui contrôle le centre.",
-  es: "Caballo f3, jaque. Un fuerte movimiento de desarrollo que controla el centro.",
+  ar: "حصان f3، كش. نقلة تطوير قوية تسيطر على المركز.",
+  bg: "Кон f3, шах. Силен развиващ ход, контролиращ центъра.",
+  bn: "নাইট f3, চেক। কেন্দ্র নিয়ন্ত্রণকারী একটি শক্তিশালী উন্নয়ন চাল।",
+  cs: "Jezdec f3, šach. Silný rozvojový tah ovládající centrum.",
+  da: "Springer f3, skak. Et stærkt udviklingstræk der kontrollerer centret.",
   de: "Springer f3, Schach. Ein starker Entwicklungszug, der das Zentrum kontrolliert.",
+  el: "Ίππος f3, σαχ. Μια δυνατή αναπτυξιακή κίνηση που ελέγχει το κέντρο.",
+  es: "Caballo f3, jaque. Un fuerte movimiento de desarrollo que controla el centro.",
+  fi: "Ratsu f3, shakki. Vahva kehityssiirto joka hallitsee keskustaa.",
+  fil: "Knight f3, check. Isang malakas na developing move na kumokontrol sa center.",
+  fr: "Cavalier f3, échec. Un coup de développement fort qui contrôle le centre.",
+  hi: "घोड़ा f3, शह। केंद्र को नियंत्रित करने वाली एक मजबूत विकास चाल।",
+  hr: "Skakač f3, šah. Snažan razvojni potez koji kontrolira centar.",
+  hu: "Huszár f3, sakk. Erős fejlesztő lépés, amely a centrumot kontrollálja.",
+  id: "Kuda f3, skak. Langkah pengembangan kuat yang menguasai pusat.",
+  it: "Cavallo f3, scacco. Una forte mossa di sviluppo che controlla il centro.",
   ja: "ナイト f3、チェック。センターを支配する強い展開の手。",
-  ru: "Конь f3, шах. Сильный развивающий ход, контролирующий центр.",
-  zh: "马 f3，将军。一步控制中心的强力出子。",
   ko: "나이트 f3, 체크. 중앙을 지배하는 강력한 전개 수.",
+  ms: "Kuda f3, syah. Langkah pembangunan kuat yang mengawal pusat.",
+  nl: "Paard f3, schaak. Een sterke ontwikkelingszet die het centrum controleert.",
+  no: "Springer f3, sjakk. Et sterkt utviklingstrekk som kontrollerer sentrum.",
+  pl: "Skoczek f3, szach. Silne posunięcie rozwojowe kontrolujące centrum.",
+  pt: "Cavalo f3, xeque. Um forte lance de desenvolvimento que controla o centro.",
+  ro: "Cal f3, șah. O mutare puternică de dezvoltare care controlează centrul.",
+  ru: "Конь f3, шах. Сильный развивающий ход, контролирующий центр.",
+  sk: "Jazdec f3, šach. Silný rozvojový ťah kontrolujúci centrum.",
+  sv: "Springare f3, schack. Ett starkt utvecklingsdrag som kontrollerar centrum.",
+  ta: "நைட் f3, செக். மையத்தைக் கட்டுப்படுத்தும் வலுவான வளர்ச்சி நகர்வு.",
+  th: "อัศวิน f3 รุก การเดินพัฒนาที่แข็งแกร่งควบคุมกลางกระดาน",
+  tr: "At f3, şah. Merkezi kontrol eden güçlü bir gelişim hamlesi.",
+  uk: "Кінь f3, шах. Сильний розвиваючий хід, що контролює центр.",
+  vi: "Mã f3, chiếu. Một nước đi phát triển mạnh kiểm soát trung tâm.",
+  zh: "马 f3，将军。一步控制中心的强力出子。",
 };
 
 function getTestPhrase(lang: string): string {
   return TTS_TEST_PHRASES[lang] || TTS_TEST_PHRASES.en;
 }
 
+// Ordered by global chess-playing population (FIDE + online platforms).
+// Updated annually — last reviewed March 2026.
 const TTS_LANGUAGE_OPTIONS = [
   { value: "en", label: "English" },
-  { value: "fr", label: "Français" },
-  { value: "es", label: "Español" },
-  { value: "de", label: "Deutsch" },
-  { value: "ja", label: "日本語" },
-  { value: "ru", label: "Русский" },
-  { value: "zh", label: "中文" },
-  { value: "ko", label: "한국어" },
+  { value: "es", label: "Español (Spanish)" },
+  { value: "hi", label: "हिन्दी (Hindi)" },
+  { value: "ru", label: "Русский (Russian)" },
+  { value: "de", label: "Deutsch (German)" },
+  { value: "fr", label: "Français (French)" },
+  { value: "pt", label: "Português (Portuguese)" },
+  { value: "ar", label: "العربية (Arabic)" },
+  { value: "fil", label: "Filipino" },
+  { value: "id", label: "Indonesia (Indonesian)" },
+  { value: "pl", label: "Polski (Polish)" },
+  { value: "it", label: "Italiano (Italian)" },
+  { value: "uk", label: "Українська (Ukrainian)" },
+  { value: "tr", label: "Türkçe (Turkish)" },
+  { value: "vi", label: "Tiếng Việt (Vietnamese)" },
+  { value: "nl", label: "Nederlands (Dutch)" },
+  { value: "ko", label: "한국어 (Korean)" },
+  { value: "zh", label: "中文 (Chinese)" },
+  { value: "sv", label: "Svenska (Swedish)" },
+  { value: "ro", label: "Română (Romanian)" },
+  { value: "cs", label: "Čeština (Czech)" },
+  { value: "hu", label: "Magyar (Hungarian)" },
+  { value: "no", label: "Norsk (Norwegian)" },
+  { value: "el", label: "Ελληνικά (Greek)" },
+  { value: "da", label: "Dansk (Danish)" },
+  { value: "bg", label: "Български (Bulgarian)" },
+  { value: "fi", label: "Suomi (Finnish)" },
+  { value: "ms", label: "Melayu (Malay)" },
+  { value: "th", label: "ไทย (Thai)" },
+  { value: "hr", label: "Hrvatski (Croatian)" },
+  { value: "sk", label: "Slovenčina (Slovak)" },
+  { value: "bn", label: "বাংলা (Bengali)" },
+  { value: "ta", label: "தமிழ் (Tamil)" },
+  { value: "ja", label: "日本語 (Japanese)" },
 ];
 
 export function TTSLanguageSelect() {
@@ -762,11 +816,12 @@ export function TTSLanguageSelect() {
 
   return (
     <Select
-      w="12rem"
+      w="16rem"
       data={TTS_LANGUAGE_OPTIONS}
       value={language}
       onChange={(v) => v && setLanguage(v)}
       allowDeselect={false}
+      searchable
     />
   );
 }

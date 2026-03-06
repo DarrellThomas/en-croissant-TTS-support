@@ -14,7 +14,7 @@ import {
 } from "@tauri-apps/api/menu";
 import { appLogDir, resolve } from "@tauri-apps/api/path";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { ask, open } from "@tauri-apps/plugin-dialog";
+import { open } from "@tauri-apps/plugin-dialog";
 import { platform } from "@tauri-apps/plugin-os";
 import { exit } from "@tauri-apps/plugin-process";
 import { open as shellOpen } from "@tauri-apps/plugin-shell";
@@ -27,15 +27,11 @@ import useSWRImmutable from "swr/immutable";
 import { match } from "ts-pattern";
 import type { Dirs } from "@/App";
 import AboutModal from "@/components/About";
+import ClearDataModal from "@/components/ClearDataModal";
 import { SideBar } from "@/components/Sidebar";
 import TopBar from "@/components/TopBar";
 import UpdateModal from "@/components/UpdateModal";
-import {
-  activeTabAtom,
-  docLangAtom,
-  nativeBarAtom,
-  tabsAtom,
-} from "@/state/atoms";
+import { activeTabAtom, nativeBarAtom, tabsAtom } from "@/state/atoms";
 import { keyMapAtom } from "@/state/keybinds";
 import { openFile } from "@/utils/files";
 import { createTab } from "@/utils/tabs";
@@ -131,9 +127,25 @@ function RootLayout() {
 
   const [, setTabs] = useAtom(tabsAtom);
   const [, setActiveTab] = useAtom(activeTabAtom);
-  const docLang = useAtomValue(docLangAtom);
+  const { t, i18n } = useTranslation();
 
-  const { t } = useTranslation();
+  // Build a localized docs URL at click time (not at menu-build time)
+  // so the native Tauri menu always opens the current language.
+  const docsUrl = useCallback(
+    (path = "/docs/") => {
+      const lang = i18n.language; // e.g. "es-ES", "zh-TW"
+      let prefix = "";
+      if (lang && !lang.startsWith("en")) {
+        if (lang.startsWith("zh") && /tw/i.test(lang)) {
+          prefix = "/zh-tw";
+        } else {
+          prefix = `/${lang.slice(0, 2)}`;
+        }
+      }
+      return `${DOCS_BASE}${prefix}${path}`;
+    },
+    [i18n.language],
+  );
 
   const openNewFile = useCallback(async () => {
     const selected = await open({
@@ -194,13 +206,9 @@ function RootLayout() {
   useHotkeys(keyMap.NEW_TAB.keys, createNewTab);
   useHotkeys(keyMap.OPEN_FILE.keys, openNewFile);
   const [opened, setOpened] = useState(false);
+  const [clearDataOpened, setClearDataOpened] = useState(false);
 
   const DOCS_BASE = "https://enparlant.redshed.ai";
-  function docsUrl(path: string, lang: string): string {
-    return lang === "en"
-      ? `${DOCS_BASE}/docs/${path}/`
-      : `${DOCS_BASE}/${lang}/docs/${path}/`;
-  }
 
   const isMacOS = platform() === "macos";
 
@@ -327,41 +335,13 @@ function RootLayout() {
           {
             label: t("Menu.Help.Docs"),
             id: "documentation",
-            action: () => shellOpen(`${DOCS_BASE}/docs/`),
-          },
-          {
-            label: t("Menu.Help.License"),
-            id: "license",
-            action: () =>
-              shellOpen(
-                "https://github.com/DarrellThomas/en-parlant/blob/master/LICENSE",
-              ),
-          },
-          {
-            label: t("Menu.Help.Credits"),
-            id: "credits",
-            action: () => shellOpen(`${DOCS_BASE}/credits/`),
-          },
-          {
-            label: t("Menu.Help.Architecture"),
-            id: "architecture",
-            action: () => shellOpen(docsUrl("architecture", docLang)),
+            action: () => shellOpen(docsUrl()),
           },
           { label: "divider" },
           {
-            label: t("Menu.Help.ClearSavedData"),
-            id: "clear_saved_data",
-            action: () => {
-              ask("Are you sure you want to clear all saved data?", {
-                title: "Clear data",
-              }).then((res) => {
-                if (res) {
-                  localStorage.clear();
-                  sessionStorage.clear();
-                  location.reload();
-                }
-              });
-            },
+            label: t("Menu.Help.ClearData"),
+            id: "clear_data",
+            action: () => setClearDataOpened(true),
           },
           {
             label: t("Menu.Help.OpenLogs"),
@@ -375,7 +355,6 @@ function RootLayout() {
               await shellOpen(path);
             },
           },
-          { label: "divider" },
           {
             label: t("Menu.Help.ReportIssue"),
             id: "report_issue",
@@ -388,8 +367,18 @@ function RootLayout() {
           ...(!isMacOS ? [checkForUpdatesOption, aboutOption] : []),
         ],
       },
+      {
+        label: t("Menu.Help.Credits"),
+        options: [
+          {
+            label: t("Menu.Help.Credits"),
+            id: "credits",
+            action: () => shellOpen(docsUrl("/credits/")),
+          },
+        ],
+      },
     ],
-    [t, checkForUpdates, createNewTab, keyMap, openNewFile, docLang],
+    [t, checkForUpdates, createNewTab, keyMap, openNewFile, docsUrl],
   );
 
   const { data: menu } = useSWRImmutable(["menu", menuActions], () =>
@@ -453,6 +442,10 @@ function RootLayout() {
       }}
     >
       <AboutModal opened={opened} setOpened={setOpened} />
+      <ClearDataModal
+        opened={clearDataOpened}
+        onClose={() => setClearDataOpened(false)}
+      />
       <UpdateModal
         opened={updateModalOpened}
         onClose={() => setUpdateModalOpened(false)}

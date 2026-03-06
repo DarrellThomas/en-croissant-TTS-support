@@ -70,7 +70,17 @@ function AboutModal({
 
       <br />
 
-      <Text size="sm">License: GPL-3.0</Text>
+      <Text size="sm">
+        License:{" "}
+        <Anchor
+          href="https://github.com/DarrellThomas/en-parlant/blob/master/LICENSE"
+          target="_blank"
+          rel="noreferrer"
+          size="sm"
+        >
+          GPL-3.0
+        </Anchor>
+      </Text>
       <Text size="xs" c="dimmed">
         Based on En Croissant by Francisco Salgueiro. TTS narration by{" "}
         <Anchor

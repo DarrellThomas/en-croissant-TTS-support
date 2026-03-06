@@ -63,3 +63,6 @@ proposals/
 
 # Environment secrets (relay URL, API keys)
 .env
+
+# Pending docs (staging area, not ready for site)
+pending_docs/

@@ -1,0 +1,1 @@
+/data/src/claude-code-config/projects/en-parlant/claude/CLAUDE.md

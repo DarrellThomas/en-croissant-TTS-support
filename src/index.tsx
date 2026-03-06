@@ -11,6 +11,7 @@ import en_GB from "./translation/en-GB.json";
 import en_US from "./translation/en-US.json";
 import es_ES from "./translation/es-ES.json";
 import fr_FR from "./translation/fr-FR.json";
+import hi_IN from "./translation/hi-IN.json";
 import it_IT from "./translation/it-IT.json";
 import ko_KR from "./translation/ko-KR.json";
 import nb_NO from "./translation/nb-NO.json";
@@ -36,6 +37,7 @@ i18n.use(initReactI18next).init({
     "es-ES": es_ES,
     "it-IT": it_IT,
     "fr-FR": fr_FR,
+    "hi-IN": hi_IN,
     "tr-TR": tr_TR,
     "ko-KR": ko_KR,
     "zh-TW": zh_TW,

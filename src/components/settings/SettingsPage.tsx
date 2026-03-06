@@ -19,6 +19,7 @@ import {
   IconFlag,
   IconFolder,
   IconKeyboard,
+  IconLanguage,
   IconMouse,
   IconNetwork,
   IconReload,
@@ -96,6 +97,7 @@ type SettingCategory =
   | "inputs"
   | "anarchy"
   | "appearance"
+  | "language"
   | "sound"
   | "keybinds"
   | "directories"
@@ -427,9 +429,10 @@ export default function Page() {
         keywords: ["theme", "dark", "light", "color"],
         render: () => <ThemeButton />,
       },
+      // Language settings
       {
         id: "language",
-        category: "appearance",
+        category: "language",
         title: t("Settings.Appearance.Language"),
         description: t("Settings.Appearance.Language.Desc"),
         keywords: ["language", "locale", "translation"],
@@ -437,28 +440,39 @@ export default function Page() {
           <Select
             allowDeselect={false}
             data={[
-              { value: "be_BY", label: "Belarusian" },
-              { value: "zh_CN", label: "Chinese (Simplified)" },
-              { value: "zh_TW", label: "Chinese (Traditional)" },
-              { value: "en_GB", label: "English (UK)" },
               { value: "en_US", label: "English (US)" },
-              { value: "fr_FR", label: "Français" },
-              { value: "pl_PL", label: "Polish" },
-              { value: "nb_NO", label: "Norsk bokmål" },
-              { value: "pt_PT", label: "Portuguese" },
-              { value: "ru_RU", label: "Russian" },
+              { value: "en_GB", label: "English (UK)" },
               { value: "es_ES", label: "Spanish" },
+              { value: "hi_IN", label: "हिन्दी (Hindi)" },
+              { value: "ru_RU", label: "Russian" },
+              { value: "de_DE", label: "Deutsch" },
+              { value: "fr_FR", label: "Français" },
+              { value: "pt_PT", label: "Portuguese" },
+              { value: "pl_PL", label: "Polish" },
               { value: "it_IT", label: "Italian" },
               { value: "uk_UA", label: "Ukrainian" },
               { value: "tr_TR", label: "Türkçe" },
               { value: "ko_KR", label: "한국어" },
-              { value: "de_DE", label: "Deutsch" },
+              { value: "zh_CN", label: "Chinese (Simplified)" },
+              { value: "zh_TW", label: "Chinese (Traditional)" },
+              { value: "nb_NO", label: "Norsk bokmål" },
+              { value: "be_BY", label: "Belarusian" },
             ]}
             value={i18n.language.replace("-", "_")}
             onChange={(val) => {
               i18n.changeLanguage(val?.replace("_", "-") || "en-US");
               localStorage.setItem("lang", val || "en_US");
-              const ttsLangs = ["en", "fr", "es", "de", "ja", "ru", "zh", "ko"];
+              const ttsLangs = [
+                "en",
+                "fr",
+                "es",
+                "de",
+                "hi",
+                "ja",
+                "ru",
+                "zh",
+                "ko",
+              ];
               const base = (val || "en_US").split("_")[0];
               if (ttsLangs.includes(base)) {
                 setTtsLanguage(base);
@@ -915,6 +929,11 @@ export default function Page() {
         description: t("Settings.Appearance.Desc"),
         icon: <IconBrush size="1rem" />,
       },
+      language: {
+        title: t("Settings.Language"),
+        description: t("Settings.Language.Desc"),
+        icon: <IconLanguage size="1rem" />,
+      },
       sound: {
         title: t("Settings.Sound"),
         description: t("Settings.Sound.Desc"),
@@ -1082,6 +1101,12 @@ export default function Page() {
             >
               {t("Settings.Appearance")}
             </Tabs.Tab>
+            <Tabs.Tab
+              value="language"
+              leftSection={<IconLanguage size="1rem" />}
+            >
+              {t("Settings.Language")}
+            </Tabs.Tab>
             <Tabs.Tab value="sound" leftSection={<IconVolume size="1rem" />}>
               {t("Settings.Sound")}
             </Tabs.Tab>
@@ -1148,6 +1173,16 @@ export default function Page() {
                     {t("Settings.Appearance.Desc")}
                   </Text>
                   {renderCategorySettings("appearance")}
+                </Tabs.Panel>
+
+                <Tabs.Panel value="language">
+                  <Text size="lg" fw={500} className={classes.title}>
+                    {t("Settings.Language")}
+                  </Text>
+                  <Text size="xs" c="dimmed" mt={3} mb="lg">
+                    {t("Settings.Language.Desc")}
+                  </Text>
+                  {renderCategorySettings("language")}
                 </Tabs.Panel>
 
                 <Tabs.Panel value="sound">
