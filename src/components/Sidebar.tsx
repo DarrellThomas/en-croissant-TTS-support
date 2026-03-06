@@ -14,6 +14,24 @@ import cx from "clsx";
 import { useTranslation } from "react-i18next";
 import * as classes from "./Sidebar.css";
 
+// "Language" in every supported language — always readable
+const LANGUAGE_TOOLTIP = [
+  "Language",
+  "Idioma",
+  "भाषा",
+  "Язык",
+  "Sprache",
+  "Langue",
+  "Język",
+  "Lingua",
+  "Мова",
+  "Dil",
+  "언어",
+  "语言",
+  "語言",
+  "Språk",
+].join(" · ");
+
 interface NavbarLinkProps {
   icon: Icon;
   label: string;
@@ -32,6 +50,27 @@ function NavbarLink({ url, icon: Icon, label }: NavbarLinkProps) {
         })}
       >
         <Icon size="1.5rem" stroke={1.5} />
+      </Link>
+    </Tooltip>
+  );
+}
+
+function LanguageNavLink() {
+  const match = useMatchRoute();
+  const onSettingsRoute = match({ to: "/settings", fuzzy: true }) !== false;
+  const isActive =
+    onSettingsRoute &&
+    new URLSearchParams(window.location.search).get("tab") === "language";
+  return (
+    <Tooltip label={LANGUAGE_TOOLTIP} position="right" multiline w={280}>
+      <Link
+        to="/settings"
+        search={{ tab: "language" }}
+        className={cx(classes.link, {
+          [classes.active]: isActive,
+        })}
+      >
+        <span style={{ fontSize: "1.5rem", lineHeight: 1 }}>🌐</span>
       </Link>
     </Tooltip>
   );
@@ -65,6 +104,7 @@ export function SideBar() {
       </AppShellSection>
       <AppShellSection>
         <Stack justify="center" gap={0}>
+          <LanguageNavLink />
           <NavbarLink
             icon={IconSettings}
             label={t("SideBar.Settings")}

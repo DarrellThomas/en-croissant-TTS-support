@@ -1,9 +1,11 @@
 import {
   ActionIcon,
+  Button,
   Card,
   Group,
   ScrollArea,
   Select,
+  SimpleGrid,
   Stack,
   Table,
   Tabs,
@@ -12,6 +14,7 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
+import { notifications } from "@mantine/notifications";
 import {
   IconBook,
   IconBrush,
@@ -19,7 +22,7 @@ import {
   IconFlag,
   IconFolder,
   IconKeyboard,
-  IconLanguage,
+  IconMessageCircle,
   IconMouse,
   IconNetwork,
   IconReload,
@@ -92,6 +95,70 @@ import {
 } from "./TTSSettings";
 import VolumeSlider from "./VolumeSlider";
 
+// Hardcoded language data for the rescue banner and undo toast.
+// These are NOT translated via i18n — they must always be readable
+// regardless of the current UI language.
+const LANGUAGE_RESCUE = [
+  { value: "en_US", native: "English (US)" },
+  { value: "en_GB", native: "English (UK)" },
+  { value: "es_ES", native: "Español" },
+  { value: "hi_IN", native: "हिन्दी" },
+  { value: "ru_RU", native: "Русский" },
+  { value: "de_DE", native: "Deutsch" },
+  { value: "fr_FR", native: "Français" },
+  { value: "pt_PT", native: "Português" },
+  { value: "pl_PL", native: "Polski" },
+  { value: "it_IT", native: "Italiano" },
+  { value: "uk_UA", native: "Українська" },
+  { value: "tr_TR", native: "Türkçe" },
+  { value: "ko_KR", native: "한국어" },
+  { value: "zh_CN", native: "中文（简体）" },
+  { value: "zh_TW", native: "中文（繁體）" },
+  { value: "nb_NO", native: "Norsk bokmål" },
+  { value: "be_BY", native: "Беларуская" },
+] as const;
+
+// Undo messages in each language (shown in the PREVIOUS language after switching)
+const UNDO_MESSAGES: Record<string, { changed: string; undo: string }> = {
+  en_US: { changed: "Language changed.", undo: "Undo" },
+  en_GB: { changed: "Language changed.", undo: "Undo" },
+  es_ES: { changed: "Idioma cambiado.", undo: "Deshacer" },
+  hi_IN: { changed: "भाषा बदली गई।", undo: "पूर्ववत करें" },
+  ru_RU: { changed: "Язык изменён.", undo: "Отменить" },
+  de_DE: { changed: "Sprache geändert.", undo: "Rückgängig" },
+  fr_FR: { changed: "Langue modifiée.", undo: "Annuler" },
+  pt_PT: { changed: "Idioma alterado.", undo: "Desfazer" },
+  pl_PL: { changed: "Język zmieniony.", undo: "Cofnij" },
+  it_IT: { changed: "Lingua cambiata.", undo: "Annulla" },
+  uk_UA: { changed: "Мову змінено.", undo: "Скасувати" },
+  tr_TR: { changed: "Dil değiştirildi.", undo: "Geri al" },
+  ko_KR: { changed: "언어가 변경되었습니다.", undo: "실행 취소" },
+  zh_CN: { changed: "语言已更改。", undo: "撤消" },
+  zh_TW: { changed: "語言已更改。", undo: "復原" },
+  nb_NO: { changed: "Språk endret.", undo: "Angre" },
+  be_BY: { changed: "Мова зменена.", undo: "Адмяніць" },
+};
+
+// "Language" in every supported language — used for tooltip and sidebar
+const LANGUAGE_WORD_ALL = [
+  "Language",
+  "Idioma",
+  "भाषा",
+  "Язык",
+  "Sprache",
+  "Langue",
+  "Idioma",
+  "Język",
+  "Lingua",
+  "Мова",
+  "Dil",
+  "언어",
+  "语言",
+  "語言",
+  "Språk",
+  "Мова",
+].join(" · ");
+
 type SettingCategory =
   | "board"
   | "inputs"
@@ -102,6 +169,7 @@ type SettingCategory =
   | "keybinds"
   | "directories"
   | "repertoire"
+  | "tts"
   | "network"
   | "privacy";
 
@@ -429,58 +497,6 @@ export default function Page() {
         keywords: ["theme", "dark", "light", "color"],
         render: () => <ThemeButton />,
       },
-      // Language settings
-      {
-        id: "language",
-        category: "language",
-        title: t("Settings.Appearance.Language"),
-        description: t("Settings.Appearance.Language.Desc"),
-        keywords: ["language", "locale", "translation"],
-        render: () => (
-          <Select
-            allowDeselect={false}
-            data={[
-              { value: "en_US", label: "English (US)" },
-              { value: "en_GB", label: "English (UK)" },
-              { value: "es_ES", label: "Spanish" },
-              { value: "hi_IN", label: "हिन्दी (Hindi)" },
-              { value: "ru_RU", label: "Russian" },
-              { value: "de_DE", label: "Deutsch" },
-              { value: "fr_FR", label: "Français" },
-              { value: "pt_PT", label: "Portuguese" },
-              { value: "pl_PL", label: "Polish" },
-              { value: "it_IT", label: "Italian" },
-              { value: "uk_UA", label: "Ukrainian" },
-              { value: "tr_TR", label: "Türkçe" },
-              { value: "ko_KR", label: "한국어" },
-              { value: "zh_CN", label: "Chinese (Simplified)" },
-              { value: "zh_TW", label: "Chinese (Traditional)" },
-              { value: "nb_NO", label: "Norsk bokmål" },
-              { value: "be_BY", label: "Belarusian" },
-            ]}
-            value={i18n.language.replace("-", "_")}
-            onChange={(val) => {
-              i18n.changeLanguage(val?.replace("_", "-") || "en-US");
-              localStorage.setItem("lang", val || "en_US");
-              const ttsLangs = [
-                "en",
-                "fr",
-                "es",
-                "de",
-                "hi",
-                "ja",
-                "ru",
-                "zh",
-                "ko",
-              ];
-              const base = (val || "en_US").split("_")[0];
-              if (ttsLangs.includes(base)) {
-                setTtsLanguage(base);
-              }
-            }}
-          />
-        ),
-      },
       ...(import.meta.env.VITE_PLATFORM === "win32"
         ? [
             {
@@ -574,7 +590,7 @@ export default function Page() {
       // TTS settings
       {
         id: "tts-enabled",
-        category: "sound",
+        category: "tts",
         title: "Text-to-Speech",
         description:
           "Enable text-to-speech narration for PGN annotations and comments",
@@ -583,7 +599,7 @@ export default function Page() {
       },
       {
         id: "tts-auto-narrate",
-        category: "sound",
+        category: "tts",
         title: "Auto-Narrate on Move",
         description:
           "Automatically read annotations aloud when stepping through moves",
@@ -592,10 +608,10 @@ export default function Page() {
       },
       {
         id: "tts-provider",
-        category: "sound",
+        category: "tts",
         title: "TTS Provider",
         description:
-          "Cloud (instant, no setup), ElevenLabs (premium AI), Google Cloud (WaveNet), KittenTTS (English only, high quality), OpenTTS (self-hosted), or System (OS native)",
+          "En Parlant Cloud Clips (instant, no setup), ElevenLabs (premium AI), Google Cloud (WaveNet), KittenTTS (English only, high quality), OpenTTS (self-hosted), or System (OS native)",
         keywords: [
           "tts",
           "provider",
@@ -611,7 +627,7 @@ export default function Page() {
       },
       {
         id: "tts-setup",
-        category: "sound",
+        category: "tts",
         title: "TTS Setup",
         description:
           "Check and install dependencies for local TTS providers (KittenTTS, OpenTTS)",
@@ -628,16 +644,16 @@ export default function Page() {
       },
       {
         id: "tts-voice",
-        category: "sound",
+        category: "tts",
         title: "TTS Voice",
         description:
-          "Select the voice for narration. ElevenLabs: choose from your voices. Google: auto-selected by language.",
+          "Select the voice for narration. Options change based on the provider selected above.",
         keywords: ["tts", "voice", "select", "elevenlabs"],
         render: () => <TTSVoiceSelect />,
       },
       {
         id: "tts-language",
-        category: "sound",
+        category: "tts",
         title: "TTS Language",
         description:
           "Language for narration. Chess terms are translated; comments are spoken in this language.",
@@ -655,7 +671,7 @@ export default function Page() {
       },
       {
         id: "tts-volume",
-        category: "sound",
+        category: "tts",
         title: "TTS Volume",
         description: "Volume level for text-to-speech narration",
         keywords: ["tts", "volume", "loud"],
@@ -663,7 +679,7 @@ export default function Page() {
       },
       {
         id: "tts-speed",
-        category: "sound",
+        category: "tts",
         title: "TTS Speed",
         description:
           "Playback speed for narration. Adjusts in real-time without re-generating audio.",
@@ -672,7 +688,7 @@ export default function Page() {
       },
       {
         id: "tts-clear-cache",
-        category: "sound",
+        category: "tts",
         title: "TTS Audio Cache",
         description:
           "Clear cached narration audio. Use this after editing annotations to force re-generation.",
@@ -681,7 +697,7 @@ export default function Page() {
       },
       {
         id: "tts-api-key",
-        category: "sound",
+        category: "tts",
         title: "ElevenLabs API Key",
         description:
           "API key for ElevenLabs provider. Get one at elevenlabs.io",
@@ -690,7 +706,7 @@ export default function Page() {
       },
       {
         id: "tts-google-api-key",
-        category: "sound",
+        category: "tts",
         title: "Google Cloud API Key",
         description:
           "API key for Google Cloud TTS provider. Enable the Text-to-Speech API in Google Cloud Console",
@@ -699,7 +715,7 @@ export default function Page() {
       },
       {
         id: "tts-opentts-url",
-        category: "sound",
+        category: "tts",
         title: "OpenTTS Server URL",
         description:
           "URL of your OpenTTS server (e.g. http://localhost:5500). Run with: docker run -it -p 5500:5500 synesthesiam/opentts:en",
@@ -717,7 +733,7 @@ export default function Page() {
       },
       {
         id: "tts-kittentts-url",
-        category: "sound",
+        category: "tts",
         title: "KittenTTS Server URL",
         description:
           "URL of your KittenTTS server (English only). High-quality StyleTTS 2 voices. See TTS > Getting Started for setup.",
@@ -735,7 +751,7 @@ export default function Page() {
       },
       {
         id: "tts-kittentts-threads",
-        category: "sound",
+        category: "tts",
         title: "KittenTTS CPU Threads",
         description:
           "Number of CPU threads for KittenTTS inference. 0 = auto (~4 threads). Increase for faster generation on machines with many cores. Restart server to apply.",
@@ -873,7 +889,6 @@ export default function Page() {
     ],
     [
       t,
-      i18n,
       moveNotationType,
       moveMethod,
       isNative,
@@ -898,7 +913,6 @@ export default function Page() {
       setRelayUrl,
       mpPlayerName,
       setMpPlayerName,
-      setTtsLanguage,
     ],
   );
 
@@ -932,12 +946,17 @@ export default function Page() {
       language: {
         title: t("Settings.Language"),
         description: t("Settings.Language.Desc"),
-        icon: <IconLanguage size="1rem" />,
+        icon: <span style={{ fontSize: "1rem" }}>🌐</span>,
       },
       sound: {
         title: t("Settings.Sound"),
         description: t("Settings.Sound.Desc"),
         icon: <IconVolume size="1rem" />,
+      },
+      tts: {
+        title: t("Settings.TTS"),
+        description: t("Settings.TTS.Desc"),
+        icon: <IconMessageCircle size="1rem" />,
       },
       keybinds: {
         title: t("Settings.Keybinds"),
@@ -1101,14 +1120,14 @@ export default function Page() {
             >
               {t("Settings.Appearance")}
             </Tabs.Tab>
-            <Tabs.Tab
-              value="language"
-              leftSection={<IconLanguage size="1rem" />}
-            >
-              {t("Settings.Language")}
-            </Tabs.Tab>
             <Tabs.Tab value="sound" leftSection={<IconVolume size="1rem" />}>
               {t("Settings.Sound")}
+            </Tabs.Tab>
+            <Tabs.Tab
+              value="tts"
+              leftSection={<IconMessageCircle size="1rem" />}
+            >
+              {t("Settings.TTS")}
             </Tabs.Tab>
             <Tabs.Tab
               value="keybinds"
@@ -1128,6 +1147,19 @@ export default function Page() {
             <Tabs.Tab value="network" leftSection={<IconNetwork size="1rem" />}>
               {t("Settings.Network")}
             </Tabs.Tab>
+            <Tooltip
+              label={LANGUAGE_WORD_ALL}
+              position="right"
+              multiline
+              w={280}
+            >
+              <Tabs.Tab
+                value="language"
+                leftSection={<span style={{ fontSize: "1rem" }}>🌐</span>}
+              >
+                {t("Settings.Language")}
+              </Tabs.Tab>
+            </Tooltip>
             <Tabs.Tab value="privacy" leftSection={<IconShield size="1rem" />}>
               {t("Settings.Privacy")}
             </Tabs.Tab>
@@ -1179,10 +1211,100 @@ export default function Page() {
                   <Text size="lg" fw={500} className={classes.title}>
                     {t("Settings.Language")}
                   </Text>
-                  <Text size="xs" c="dimmed" mt={3} mb="lg">
+                  <Text size="xs" c="dimmed" mt={3} mb="md">
                     {t("Settings.Language.Desc")}
                   </Text>
-                  {renderCategorySettings("language")}
+                  {/* Multilingual rescue banner — always readable regardless of current language */}
+                  <Card
+                    withBorder
+                    p="sm"
+                    mb="lg"
+                    radius="md"
+                    style={{
+                      backgroundColor: "var(--mantine-color-default-hover)",
+                      borderColor: "var(--mantine-color-dimmed)",
+                    }}
+                  >
+                    <SimpleGrid cols={3} spacing="xs" verticalSpacing={4}>
+                      {LANGUAGE_RESCUE.map((lang) => {
+                        const isActive =
+                          i18n.language.replace("-", "_") === lang.value;
+                        return (
+                          <Button
+                            key={lang.value}
+                            variant={isActive ? "filled" : "subtle"}
+                            size="compact-sm"
+                            onClick={() => {
+                              if (isActive) return;
+                              const prevLang = i18n.language.replace("-", "_");
+                              i18n.changeLanguage(lang.value.replace("_", "-"));
+                              localStorage.setItem("lang", lang.value);
+                              const ttsLangs = [
+                                "en",
+                                "fr",
+                                "es",
+                                "de",
+                                "hi",
+                                "ja",
+                                "ru",
+                                "zh",
+                                "ko",
+                              ];
+                              const base = lang.value.split("_")[0];
+                              if (ttsLangs.includes(base)) {
+                                setTtsLanguage(base);
+                              }
+
+                              // Show undo toast in previous language
+                              const prevName =
+                                LANGUAGE_RESCUE.find(
+                                  (l) => l.value === prevLang,
+                                )?.native || prevLang;
+                              const msg =
+                                UNDO_MESSAGES[prevLang] || UNDO_MESSAGES.en_US;
+                              notifications.show({
+                                id: "language-undo",
+                                title: `${msg.changed} → ${lang.native}`,
+                                message: (
+                                  <Button
+                                    variant="subtle"
+                                    size="compact-sm"
+                                    onClick={() => {
+                                      i18n.changeLanguage(
+                                        prevLang.replace("_", "-"),
+                                      );
+                                      localStorage.setItem("lang", prevLang);
+                                      const prevBase = prevLang.split("_")[0];
+                                      if (ttsLangs.includes(prevBase)) {
+                                        setTtsLanguage(prevBase);
+                                      }
+                                      notifications.hide("language-undo");
+                                    }}
+                                  >
+                                    {msg.undo} → {prevName}
+                                  </Button>
+                                ),
+                                autoClose: 10000,
+                              });
+                            }}
+                          >
+                            {lang.native}
+                          </Button>
+                        );
+                      })}
+                    </SimpleGrid>
+                  </Card>
+                  {/* Multilingual hint: how to find this page again */}
+                  <Text size="xs" c="dimmed" mt="xs" fs="italic">
+                    {
+                      "🌐 Look for the blue globe (🌐) in the sidebar or settings tabs to find this page."
+                    }
+                  </Text>
+                  <Text size="xs" c="dimmed" mt={4} fs="italic">
+                    {
+                      "🌐 Cherchez le globe bleu (🌐) · Busca el globo azul (🌐) · Suchen Sie die blaue Weltkugel (🌐) · Ищите синий глобус (🌐) · 파란 지구본(🌐)을 찾으세요 · 找到蓝色地球图标(🌐)"
+                    }
+                  </Text>
                 </Tabs.Panel>
 
                 <Tabs.Panel value="sound">
@@ -1193,6 +1315,16 @@ export default function Page() {
                     {t("Settings.Sound.Desc")}
                   </Text>
                   {renderCategorySettings("sound")}
+                </Tabs.Panel>
+
+                <Tabs.Panel value="tts">
+                  <Text size="lg" fw={500} className={classes.title}>
+                    {t("Settings.TTS")}
+                  </Text>
+                  <Text size="xs" c="dimmed" mt={3} mb="lg">
+                    {t("Settings.TTS.Desc")}
+                  </Text>
+                  {renderCategorySettings("tts")}
                 </Tabs.Panel>
 
                 <Tabs.Panel value="keybinds">

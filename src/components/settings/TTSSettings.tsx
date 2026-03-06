@@ -82,7 +82,7 @@ export function TTSProviderSelect() {
     <Select
       w="14rem"
       data={[
-        { value: "cloud", label: "Cloud (No setup required)" },
+        { value: "cloud", label: "En Parlant Cloud Clips" },
         { value: "elevenlabs", label: "ElevenLabs" },
         { value: "google", label: "Google Cloud" },
         { value: "kittentts", label: "KittenTTS (English Only)" },
@@ -813,15 +813,18 @@ const TTS_LANGUAGE_OPTIONS = [
 
 export function TTSLanguageSelect() {
   const [language, setLanguage] = useAtom(ttsLanguageAtom);
+  const [provider] = useAtom(ttsProviderAtom);
+  const isCloud = provider === "cloud";
 
   return (
     <Select
       w="16rem"
       data={TTS_LANGUAGE_OPTIONS}
-      value={language}
+      value={isCloud ? "en" : language}
       onChange={(v) => v && setLanguage(v)}
       allowDeselect={false}
       searchable
+      disabled={isCloud}
     />
   );
 }

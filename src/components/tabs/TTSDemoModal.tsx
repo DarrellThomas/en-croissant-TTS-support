@@ -18,43 +18,74 @@ import {
 } from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-router";
 import { useAtom, useSetAtom } from "jotai";
+import { Trans, useTranslation } from "react-i18next";
 import { activeTabAtom, tabsAtom } from "@/state/atoms";
 import { createTab } from "@/utils/tabs";
 
 const DEMO_LANGUAGES = [
-  { code: "en", label: "English", flag: "🇬🇧", male: "Male", female: "Female" },
+  {
+    code: "en",
+    label: "English",
+    flag: "\u{1F1EC}\u{1F1E7}",
+    male: "Male",
+    female: "Female",
+  },
   {
     code: "fr",
-    label: "Français",
-    flag: "🇫🇷",
+    label: "Fran\u00E7ais",
+    flag: "\u{1F1EB}\u{1F1F7}",
     male: "Masculin",
-    female: "Féminin",
+    female: "F\u00E9minin",
   },
   {
     code: "es",
-    label: "Español",
-    flag: "🇪🇸",
+    label: "Espa\u00F1ol",
+    flag: "\u{1F1EA}\u{1F1F8}",
     male: "Masculino",
     female: "Femenino",
   },
   {
     code: "de",
     label: "Deutsch",
-    flag: "🇩🇪",
-    male: "Männlich",
+    flag: "\u{1F1E9}\u{1F1EA}",
+    male: "M\u00E4nnlich",
     female: "Weiblich",
   },
-  { code: "ja", label: "日本語", flag: "🇯🇵", male: "男性", female: "女性" },
+  {
+    code: "ja",
+    label: "\u65E5\u672C\u8A9E",
+    flag: "\u{1F1EF}\u{1F1F5}",
+    male: "\u7537\u6027",
+    female: "\u5973\u6027",
+  },
   {
     code: "ru",
-    label: "Русский",
-    flag: "🇷🇺",
-    male: "Мужской",
-    female: "Женский",
+    label: "\u0420\u0443\u0441\u0441\u043A\u0438\u0439",
+    flag: "\u{1F1F7}\u{1F1FA}",
+    male: "\u041C\u0443\u0436\u0441\u043A\u043E\u0439",
+    female: "\u0416\u0435\u043D\u0441\u043A\u0438\u0439",
   },
-  { code: "zh", label: "中文", flag: "🇨🇳", male: "男声", female: "女声" },
-  { code: "ko", label: "한국어", flag: "🇰🇷", male: "남성", female: "여성" },
-  { code: "hi", label: "हिन्दी", flag: "🇮🇳", male: "पुरुष", female: "महिला" },
+  {
+    code: "zh",
+    label: "\u4E2D\u6587",
+    flag: "\u{1F1E8}\u{1F1F3}",
+    male: "\u7537\u58F0",
+    female: "\u5973\u58F0",
+  },
+  {
+    code: "ko",
+    label: "\uD55C\uAD6D\uC5B4",
+    flag: "\u{1F1F0}\u{1F1F7}",
+    male: "\uB0A8\uC131",
+    female: "\uC5EC\uC131",
+  },
+  {
+    code: "hi",
+    label: "\u0939\u093F\u0928\u094D\u0926\u0940",
+    flag: "\u{1F1EE}\u{1F1F3}",
+    male: "\u092A\u0941\u0930\u0941\u0937",
+    female: "\u092E\u0939\u093F\u0932\u093E",
+  },
 ];
 
 export default function TTSDemoModal({
@@ -64,6 +95,7 @@ export default function TTSDemoModal({
   opened: boolean;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const [, setTabs] = useAtom(tabsAtom);
   const setActiveTab = useSetAtom(activeTabAtom);
   const navigate = useNavigate();
@@ -85,7 +117,7 @@ export default function TTSDemoModal({
       );
       navigate({ to: "/" });
       createTab({
-        tab: { name: `Demo — ${label}`, type: "analysis" },
+        tab: { name: `Demo \u2014 ${label}`, type: "analysis" },
         setTabs,
         setActiveTab,
         pgn,
@@ -96,6 +128,11 @@ export default function TTSDemoModal({
     }
   }
 
+  const settingsClick = () => {
+    navigate({ to: "/settings", search: { tab: "tts" } });
+    onClose();
+  };
+
   return (
     <Modal
       opened={opened}
@@ -103,18 +140,14 @@ export default function TTSDemoModal({
       title={
         <Group gap="xs">
           <IconHeadphones size={20} />
-          <Text fw={600}>Narrated Annotation DEMO</Text>
+          <Text fw={600}>{t("TTSDemo.ModalTitle")}</Text>
         </Group>
       }
       size="xl"
     >
       <Stack gap="md">
         <Text size="md">
-          What you are hearing in this demo are <strong>ElevenLabs</strong>{" "}
-          voices — 9 languages and growing. Pick one, then{" "}
-          <strong>step through the moves yourself</strong> using the arrow keys
-          or navigation buttons. Each move announces as you go. Your pace, not
-          auto-play.
+          <Trans i18nKey="TTSDemo.Intro" components={{ bold: <strong /> }} />
         </Text>
 
         <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="xs">
@@ -128,17 +161,17 @@ export default function TTSDemoModal({
             <Group gap="xs" mb={4}>
               <IconBrain size={16} />
               <Text size="sm" fw={600}>
-                Free option
+                {t("TTSDemo.FreeOption.Title")}
               </Text>
               <Badge size="xs" color="green" variant="light">
-                Open source
+                {t("TTSDemo.FreeOption.Badge")}
               </Badge>
             </Group>
             <Text size="xs" c="dimmed">
-              <strong>KittenTTS</strong> is a free, open-source model we support
-              — and it punches well above its weight. Install it locally, and
-              you can run that server right at home. Our documentation will walk
-              you through it.
+              <Trans
+                i18nKey="TTSDemo.FreeOption.Desc"
+                components={{ bold: <strong /> }}
+              />
             </Text>
           </Box>
 
@@ -152,22 +185,22 @@ export default function TTSDemoModal({
             <Group gap="xs" mb={4}>
               <IconKey size={16} />
               <Text size="sm" fw={600}>
-                Bring your own key
+                {t("TTSDemo.BYOK.Title")}
               </Text>
               <Badge size="xs" color="violet" variant="light">
-                BYOK
+                {t("TTSDemo.BYOK.Badge")}
               </Badge>
             </Group>
             <Text size="xs" c="dimmed">
-              This was the original idea behind TTS narration. Paste in your API
-              key, and you've got it — <strong>ElevenLabs</strong> or{" "}
-              <strong>Google Cloud</strong>. Lots of options for lots of use
-              cases.
+              <Trans
+                i18nKey="TTSDemo.BYOK.Desc"
+                components={{ bold: <strong /> }}
+              />
             </Text>
           </Box>
         </SimpleGrid>
 
-        <Divider label="Pick a language and voice" labelPosition="center" />
+        <Divider label={t("TTSDemo.PickLanguage")} labelPosition="center" />
 
         <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="xs">
           {DEMO_LANGUAGES.map((lang) => (
@@ -210,37 +243,12 @@ export default function TTSDemoModal({
         </SimpleGrid>
 
         <Text size="xs" c="dimmed" ta="center">
-          To set up your own API key, go to{" "}
-          <Anchor
-            size="xs"
-            onClick={() => {
-              navigate({ to: "/settings", search: { tab: "sound" } });
-              onClose();
+          <Trans
+            i18nKey="TTSDemo.SetupHint"
+            components={{
+              link: <Anchor size="xs" onClick={settingsClick} />,
             }}
-          >
-            Settings
-          </Anchor>
-          {" → "}
-          <Anchor
-            size="xs"
-            onClick={() => {
-              navigate({ to: "/settings", search: { tab: "sound" } });
-              onClose();
-            }}
-          >
-            Sound
-          </Anchor>
-          {" → "}
-          <Anchor
-            size="xs"
-            onClick={() => {
-              navigate({ to: "/settings", search: { tab: "sound" } });
-              onClose();
-            }}
-          >
-            Text to Speech
-          </Anchor>
-          .
+          />
         </Text>
       </Stack>
     </Modal>

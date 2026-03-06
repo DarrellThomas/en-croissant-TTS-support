@@ -179,6 +179,7 @@ function RootLayout() {
       notifications.show({
         title: "Updates",
         message: "No updates available.",
+        position: "top-left",
       });
     }
   }, []);
@@ -330,6 +331,16 @@ function RootLayout() {
         ],
       },
       {
+        label: t("Menu.Help.Credits"),
+        options: [
+          {
+            label: t("Menu.Help.Credits"),
+            id: "credits",
+            action: () => shellOpen(docsUrl("/docs/credits/")),
+          },
+        ],
+      },
+      {
         label: t("Menu.Help"),
         options: [
           {
@@ -365,16 +376,6 @@ function RootLayout() {
           },
           { label: "divider" },
           ...(!isMacOS ? [checkForUpdatesOption, aboutOption] : []),
-        ],
-      },
-      {
-        label: t("Menu.Help.Credits"),
-        options: [
-          {
-            label: t("Menu.Help.Credits"),
-            id: "credits",
-            action: () => shellOpen(docsUrl("/credits/")),
-          },
         ],
       },
     ],
