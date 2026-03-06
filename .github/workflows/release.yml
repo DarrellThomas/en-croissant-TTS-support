@@ -5,6 +5,9 @@ on:
       - "v*"
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   release:
     permissions:
@@ -143,6 +146,8 @@ jobs:
   publish-updater:
     needs: checksums
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Install rclone
         run: curl https://rclone.org/install.sh | sudo bash
