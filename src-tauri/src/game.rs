@@ -865,6 +865,11 @@ async fn game_loop(
                         error!("Engine move error: {:?}", e);
                         let mut ctrl = controller.write().await;
                         ctrl.engine_thinking = false;
+                        // If the game already ended (e.g. timeout fired while the engine
+                        // was thinking), don't overwrite the result or emit a second event.
+                        if ctrl.status != GameStatus::Playing {
+                            break;
+                        }
                         let result = if ctrl.position.turn() == Color::White {
                             GameResult::BlackWins { reason: GameEndReason::Abandonment }
                         } else {
@@ -877,6 +882,10 @@ async fn game_loop(
                     Some(Err(_join_error)) => {
                         let mut ctrl = controller.write().await;
                         ctrl.engine_thinking = false;
+                        // Same guard: game may have already ended by timeout.
+                        if ctrl.status != GameStatus::Playing {
+                            break;
+                        }
                         let result = if ctrl.position.turn() == Color::White {
                             GameResult::BlackWins { reason: GameEndReason::Abandonment }
                         } else {
@@ -986,6 +995,26 @@ async fn request_engine_move(
         } else {
             black_time
         };
+
+        // If the active player's clock has hit zero, don't ask the engine to
+        // move — flag immediately so the error handler sees a finished game.
+        if current_time == Some(0) {
+            let result = if turn == Color::White {
+                GameResult::BlackWins { reason: GameEndReason::Timeout }
+            } else {
+                GameResult::WhiteWins { reason: GameEndReason::Timeout }
+            };
+            drop(ctrl);
+            let mut ctrl = controller.write().await;
+            ctrl.end_game(result.clone());
+            let _ = GameOverEvent {
+                game_id: game_id.to_string(),
+                result,
+                moves: ctrl.moves.clone(),
+            }
+            .emit(app);
+            return Ok(());
+        }
 
         let go_mode = if current_time.is_some() {
             let (winc, binc) = ctrl
