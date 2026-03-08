@@ -51,9 +51,9 @@ Last updated: 2026-03-07
 
 | # | Title | Relevance | Status |
 |---|---|---|---|
-| #254 | Arrow keys navigate tabs instead of moves | High | ⬜ Open |
+| #254 | Arrow keys navigate tabs instead of moves | High | ✅ Fixed |
 | #301 | Allow up to 8 analysis lines (not just 5) | High | ✅ Fixed |
-| #495 | Auto-start engine on new analysis board | High | ⬜ Open |
+| #495 | Auto-start engine on new analysis board | High | ✅ Fixed |
 | #510 | Copy engine output to clipboard | High | ⬜ Open |
 | #534 | Save engine line without jumping to position | High | ⬜ Open |
 | #708 | Support PGN `[%timestamp]` syntax | High | ✅ Fixed |

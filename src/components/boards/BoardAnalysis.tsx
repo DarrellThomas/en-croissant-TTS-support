@@ -11,18 +11,21 @@ import {
 import { useLoaderData } from "@tanstack/react-router";
 import { writeTextFile } from "@tauri-apps/plugin-fs";
 import type { Piece } from "chessops";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtom, useAtomValue, useStore as useJotaiStore } from "jotai";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useStore } from "zustand";
 import {
+  activeTabAtom,
   allEnabledAtom,
   autoSaveAtom,
   currentPracticeTabAtom,
   currentTabAtom,
   currentTabSelectedAtom,
   enableAllAtom,
+  enginesAtom,
   practiceStateAtom,
+  tabEngineSettingsFamily,
 } from "@/state/atoms";
 import { keyMapAtom } from "@/state/keybinds";
 import { defaultPGN } from "@/utils/chess";
@@ -117,6 +120,43 @@ function BoardAnalysis() {
 
   const [, enable] = useAtom(enableAllAtom);
   const allEnabled = useAtomValue(allEnabledAtom);
+  const [engines, setEngines] = useAtom(enginesAtom);
+  const jotaiStore = useJotaiStore();
+
+  // Auto-start first engine when analysis board mounts
+  const autoStartedRef = useRef(false);
+  useEffect(() => {
+    if (autoStartedRef.current) return;
+    if (!engines || engines.length === 0) return;
+
+    const firstEngine = engines[0];
+    const enableFirst = () => {
+      const tab = jotaiStore.get(activeTabAtom)!;
+      const settingsAtom = tabEngineSettingsFamily({
+        tab,
+        engineId: firstEngine.id,
+        defaultSettings:
+          firstEngine.type === "local"
+            ? firstEngine.settings || []
+            : undefined,
+        defaultGo: firstEngine.go ?? undefined,
+      });
+      jotaiStore.set(settingsAtom, {
+        ...jotaiStore.get(settingsAtom),
+        enabled: true,
+      });
+    };
+
+    if (firstEngine.loaded) {
+      autoStartedRef.current = true;
+      enableFirst();
+    } else {
+      // Load the first engine, then enable on next render
+      setEngines(async (prev) =>
+        (await prev).map((e, i) => (i === 0 ? { ...e, loaded: true } : e)),
+      );
+    }
+  }, [engines]);
 
   const keyMap = useAtomValue(keyMapAtom);
 
