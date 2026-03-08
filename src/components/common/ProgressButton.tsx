@@ -20,6 +20,7 @@ type Props = {
   redoable?: boolean;
   inProgress: boolean;
   setInProgress: (inProgress: boolean) => void;
+  error?: string | null;
 };
 
 function ProgressButton({
@@ -33,6 +34,7 @@ function ProgressButton({
   redoable,
   inProgress,
   setInProgress,
+  error,
 }: Props) {
   const { progress, finished, isActive, clear } = useProgress(id);
   const completed = initInstalled || finished;
@@ -72,6 +74,7 @@ function ProgressButton({
         disabled={showProgress || (completed && !redoable) || disabled}
         leftSection={<Box className={classes.label}>{leftIcon}</Box>}
         autoContrast
+        color={error && !showProgress ? "red" : undefined}
       >
         <span className={classes.label}>{label}</span>
         {!completed && progress !== 0 && (

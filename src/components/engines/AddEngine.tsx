@@ -13,6 +13,7 @@ import {
   Tabs,
   Text,
 } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 import { useForm } from "@mantine/form";
 import { IconAlertCircle, IconDatabase, IconTrophy } from "@tabler/icons-react";
 import { join, resolve } from "@tauri-apps/api/path";
@@ -208,45 +209,72 @@ function EngineCard({
   const { t } = useTranslation();
 
   const [inProgress, setInProgress] = useState<boolean>(false);
+  const [downloadError, setDownloadError] = useState<string | null>(null);
   const [, setEngines] = useAtom(enginesAtom);
   const downloadEngine = useCallback(
     async (id: number, url: string) => {
       setInProgress(true);
-      const enginesDir = await getEnginesDir();
-      let path = await resolve(
-        enginesDir,
-        `${url.slice(url.lastIndexOf("/") + 1)}`,
-      );
-      if (url.endsWith(".zip") || url.endsWith(".tar")) {
-        path = enginesDir;
+      setDownloadError(null);
+      try {
+        const enginesDir = await getEnginesDir();
+        let path = await resolve(
+          enginesDir,
+          `${url.slice(url.lastIndexOf("/") + 1)}`,
+        );
+        if (url.endsWith(".zip") || url.endsWith(".tar")) {
+          path = enginesDir;
+        }
+        await commands.downloadFile(
+          `engine_${id}`,
+          url,
+          path,
+          null,
+          null,
+          null,
+        );
+        let enginesDirPath = enginesDir;
+        if (enginesDirPath.endsWith("/") || enginesDirPath.endsWith("\\")) {
+          enginesDirPath = enginesDirPath.slice(0, -1);
+        }
+        const enginePath = await join(
+          enginesDirPath,
+          ...engine.path.split("/"),
+        );
+        await commands.setFileAsExecutable(enginePath);
+        const config = unwrap(await commands.getEngineConfig(enginePath));
+        setEngines(async (prev) => [
+          ...(await prev),
+          {
+            ...engine,
+            id: crypto.randomUUID(),
+            type: "local",
+            path: enginePath,
+            loaded: true,
+            settings: config.options
+              .filter((o) => requiredEngineSettings.includes(o.value.name))
+              .map((o) => ({
+                name: o.value.name,
+                // @ts-expect-error
+                value: o.value.default,
+              })),
+          },
+        ]);
+      } catch (e) {
+        const errorMessage =
+          e instanceof Error ? e.message : t("Engines.Add.DownloadFailed");
+        setDownloadError(errorMessage);
+        notifications.show({
+          title: t("Common.Error"),
+          message: errorMessage,
+          color: "red",
+        });
+        // Clear the progress state so button resets
+        commands.clearProgress(`engine_${id}`);
+      } finally {
+        setInProgress(false);
       }
-      await commands.downloadFile(`engine_${id}`, url, path, null, null, null);
-      let enginesDirPath = enginesDir;
-      if (enginesDirPath.endsWith("/") || enginesDirPath.endsWith("\\")) {
-        enginesDirPath = enginesDirPath.slice(0, -1);
-      }
-      const enginePath = await join(enginesDirPath, ...engine.path.split("/"));
-      await commands.setFileAsExecutable(enginePath);
-      const config = unwrap(await commands.getEngineConfig(enginePath));
-      setEngines(async (prev) => [
-        ...(await prev),
-        {
-          ...engine,
-          id: crypto.randomUUID(),
-          type: "local",
-          path: enginePath,
-          loaded: true,
-          settings: config.options
-            .filter((o) => requiredEngineSettings.includes(o.value.name))
-            .map((o) => ({
-              name: o.value.name,
-              // @ts-expect-error
-              value: o.value.default,
-            })),
-        },
-      ]);
     },
-    [engine, setEngines],
+    [engine, setEngines, t],
   );
 
   return (
@@ -277,7 +305,7 @@ function EngineCard({
             initInstalled={initInstalled}
             labels={{
               completed: t("Common.Installed"),
-              action: t("Common.Install"),
+              action: downloadError ? t("Common.Retry") : t("Common.Install"),
               inProgress: t("Common.Downloading"),
               finalizing: t("Common.Extracting"),
             }}
@@ -287,6 +315,7 @@ function EngineCard({
             }}
             inProgress={inProgress}
             setInProgress={setInProgress}
+            error={downloadError}
           />
         </Box>
       </Group>
