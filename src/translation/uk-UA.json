@@ -532,6 +532,8 @@
     "Settings.Directories.Files.Desc": "Тут зберігаються ігрові файли на сторінці файлів",
     "Settings.Directories.Puzzles": "",
     "Settings.Directories.Puzzles.Desc": "",
+    "Settings.Directories.SidecarFiles": "",
+    "Settings.Directories.SidecarFiles.Desc": "",
     "Settings.EraseDrawablesOnClick": "Стерти позначки при кліку",
     "Settings.EraseDrawablesOnClick.Desc": "Очистити дошку від намальованих стрілок і кіл при натисканні лівої кнопки миші",
     "Settings.Inputs": "Вводи",

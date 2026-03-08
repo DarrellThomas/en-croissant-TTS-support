@@ -528,6 +528,8 @@
     "Settings.Directories.Files.Desc": "Hier werden deine Spiele auf der Dateien-Seite gespeichert",
     "Settings.Directories.Puzzles": "",
     "Settings.Directories.Puzzles.Desc": "",
+    "Settings.Directories.SidecarFiles": "",
+    "Settings.Directories.SidecarFiles.Desc": "",
     "Settings.EraseDrawablesOnClick": "Zeichnungen mit Klick löschen",
     "Settings.EraseDrawablesOnClick.Desc": "Lösche Pfeile und Kreise auf dem Brett durch Linksklick",
     "Settings.Inputs": "Eingaben",

@@ -532,6 +532,8 @@
     "Settings.Directories.Files.Desc": "To miejsce, gdzie są przechowywane twoje gry na stronie Pliki",
     "Settings.Directories.Puzzles": "",
     "Settings.Directories.Puzzles.Desc": "",
+    "Settings.Directories.SidecarFiles": "",
+    "Settings.Directories.SidecarFiles.Desc": "",
     "Settings.EraseDrawablesOnClick": "Usuń rysunki po kliknięciu",
     "Settings.EraseDrawablesOnClick.Desc": "Wyczyść szachownicę z narysowanych strzałek i okręgów, klikając lewym przyciskiem myszy",
     "Settings.Inputs": "Wejścia",

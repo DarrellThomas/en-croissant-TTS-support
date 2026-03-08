@@ -542,6 +542,8 @@
     "Settings.Directories.Files.Desc": "这是“文件”页面中对局所存储的位置",
     "Settings.Directories.Puzzles": "",
     "Settings.Directories.Puzzles.Desc": "",
+    "Settings.Directories.SidecarFiles": "",
+    "Settings.Directories.SidecarFiles.Desc": "",
     "Settings.EraseDrawablesOnClick": "点击时清除绘制",
     "Settings.EraseDrawablesOnClick.Desc": "通过鼠标左键点击清除棋盘上绘制的箭头和圆圈",
     "Settings.Inputs": "输入",

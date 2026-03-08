@@ -39,6 +39,7 @@ import { useTranslation } from "react-i18next";
 import {
   autoPromoteAtom,
   autoSaveAtom,
+  createSidecarFilesAtom,
   enableBoardScrollAtom,
   eraseDrawablesOnClickAtom,
   forcedEnPassantAtom,
@@ -846,6 +847,14 @@ export default function Page() {
             filename={puzzlesDirectory || null}
           />
         ),
+      },
+      {
+        id: "create-sidecar-files",
+        category: "directories",
+        title: t("Settings.Directories.SidecarFiles"),
+        description: t("Settings.Directories.SidecarFiles.Desc"),
+        keywords: ["sidecar", "info", "metadata", "files"],
+        render: () => <SettingsSwitch atom={createSidecarFilesAtom} />,
       },
       // Network settings (Multiplayer)
       {

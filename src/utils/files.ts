@@ -7,7 +7,7 @@ import { getDefaultStore } from "jotai";
 import useSWR from "swr";
 import { commands } from "@/bindings";
 import type { FileMetadata } from "@/components/files/file";
-import { addRecentFileAtom, tabFamily } from "@/state/atoms";
+import { addRecentFileAtom, createSidecarFilesAtom, tabFamily } from "@/state/atoms";
 import { unwrap } from "@/utils/unwrap";
 import { parsePGN } from "./chess";
 import { createTab, type Tab } from "./tabs";
@@ -118,7 +118,10 @@ export async function createFile({
     tags: [],
   };
   await writeTextFile(file, pgn || makePgn(defaultGame()));
-  await writeTextFile(file.replace(".pgn", ".info"), JSON.stringify(metadata));
+  const store = getDefaultStore();
+  if (store.get(createSidecarFilesAtom)) {
+    await writeTextFile(file.replace(".pgn", ".info"), JSON.stringify(metadata));
+  }
   const numGames = unwrap(await commands.countPgnGames(file));
   return Result.ok({
     type: "file",

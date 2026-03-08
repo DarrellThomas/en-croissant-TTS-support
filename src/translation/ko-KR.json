@@ -540,6 +540,8 @@
     "Settings.Directories.Files.Desc": "파일 페이지에서 게임이 저장되는 곳입니다",
     "Settings.Directories.Puzzles": "",
     "Settings.Directories.Puzzles.Desc": "",
+    "Settings.Directories.SidecarFiles": "",
+    "Settings.Directories.SidecarFiles.Desc": "",
     "Settings.EraseDrawablesOnClick": "클릭으로 그림 지우기",
     "Settings.EraseDrawablesOnClick.Desc": "마우스 왼쪽 클릭으로 보드의 그려진 화살표와 원을 지웁니다",
     "Settings.Inputs": "입력",

@@ -544,6 +544,8 @@
     "Settings.Directories.Files.Desc": "C'est ici que vos fichiers de parties seront sauvegardés",
     "Settings.Directories.Puzzles": "",
     "Settings.Directories.Puzzles.Desc": "",
+    "Settings.Directories.SidecarFiles": "",
+    "Settings.Directories.SidecarFiles.Desc": "",
     "Settings.EraseDrawablesOnClick": "Effacer les indications au clic",
     "Settings.EraseDrawablesOnClick.Desc": "Efface toutes les indications de l'échiquier en cliquant avec la souris",
     "Settings.Inputs": "Entrées",

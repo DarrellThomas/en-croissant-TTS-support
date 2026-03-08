@@ -528,6 +528,8 @@
     "Settings.Directories.Files.Desc": "Dette er hvor partiene fra Fil-siden blir lagret",
     "Settings.Directories.Puzzles": "",
     "Settings.Directories.Puzzles.Desc": "",
+    "Settings.Directories.SidecarFiles": "",
+    "Settings.Directories.SidecarFiles.Desc": "",
     "Settings.EraseDrawablesOnClick": "Slett tegninger ved klikk",
     "Settings.EraseDrawablesOnClick.Desc": "Fjern piler og sirkler fra brette med venstre museklikk",
     "Settings.Inputs": "Inputs",

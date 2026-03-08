@@ -8,9 +8,11 @@ import {
   TextInput,
 } from "@mantine/core";
 import { useLoaderData } from "@tanstack/react-router";
-import { rename, writeTextFile } from "@tauri-apps/plugin-fs";
+import { exists, rename, writeTextFile } from "@tauri-apps/plugin-fs";
+import { useAtomValue } from "jotai";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { createSidecarFilesAtom } from "@/state/atoms";
 import { createFile } from "@/utils/files";
 import GenericCard from "../common/GenericCard";
 import type { Directory, FileMetadata, FileType } from "./file";
@@ -142,6 +144,7 @@ export function EditModal({
   metadata: FileMetadata;
 }) {
   const { t } = useTranslation();
+  const createSidecarFiles = useAtomValue(createSidecarFilesAtom);
 
   const [filename, setFilename] = useState(metadata.name);
   const [filetype, setFiletype] = useState<FileType>(metadata.metadata.type);
@@ -153,7 +156,6 @@ export function EditModal({
       type: filetype,
       tags: [],
     };
-    await writeTextFile(metadataPath, JSON.stringify(newMetadata));
 
     const newPGNPath = metadata.path.replace(
       `${metadata.name}.pgn`,
@@ -161,10 +163,19 @@ export function EditModal({
     );
 
     await rename(metadata.path, newPGNPath);
-    await rename(
-      metadataPath.replace(".pgn", ".info"),
-      newPGNPath.replace(".pgn", ".info"),
-    );
+
+    if (await exists(metadataPath)) {
+      // Update metadata and rename to match the new PGN filename
+      if (createSidecarFiles) {
+        await writeTextFile(metadataPath, JSON.stringify(newMetadata));
+      }
+      await rename(metadataPath, newPGNPath.replace(".pgn", ".info"));
+    } else if (createSidecarFiles) {
+      await writeTextFile(
+        newPGNPath.replace(".pgn", ".info"),
+        JSON.stringify(newMetadata),
+      );
+    }
 
     mutate();
     setSelected((selected) =>

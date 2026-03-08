@@ -542,6 +542,8 @@
     "Settings.Directories.Files.Desc": "यहाँ फ़ाइल पृष्ठ में आपके खेल संग्रहीत हैं",
     "Settings.Directories.Puzzles": "पहेली निर्देशिका",
     "Settings.Directories.Puzzles.Desc": "यहाँ आपके पहेली डेटाबेस संग्रहीत हैं",
+    "Settings.Directories.SidecarFiles": "",
+    "Settings.Directories.SidecarFiles.Desc": "",
     "Settings.EraseDrawablesOnClick": "क्लिक पर रेखाचित्र मिटाएँ",
     "Settings.EraseDrawablesOnClick.Desc": "माउस के बाएँ क्लिक से बोर्ड पर बनाए गए तीर और वृत्त मिटाएँ",
     "Settings.Inputs": "इनपुट",

@@ -225,6 +225,10 @@ export const eraseDrawablesOnClickAtom = atomWithStorage<boolean>(
 );
 export const autoPromoteAtom = atomWithStorage<boolean>("auto-promote", true);
 export const autoSaveAtom = atomWithStorage<boolean>("auto-save", true);
+export const createSidecarFilesAtom = atomWithStorage<boolean>(
+  "create-sidecar-files",
+  true,
+);
 export const previewBoardOnHoverAtom = atomWithStorage<boolean>(
   "preview-board-on-hover",
   true,

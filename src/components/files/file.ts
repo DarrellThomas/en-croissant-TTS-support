@@ -6,8 +6,10 @@ import {
   readTextFile,
   writeTextFile,
 } from "@tauri-apps/plugin-fs";
+import { getDefaultStore } from "jotai";
 import { z } from "zod";
 import { commands } from "@/bindings";
+import { createSidecarFilesAtom } from "@/state/atoms";
 import { unwrap } from "@/utils/unwrap";
 
 const fileTypeSchema = z.enum([
@@ -56,7 +58,10 @@ async function readFileMetadata(path: string): Promise<FileMetadata | null> {
       type: "other",
       tags: [],
     };
-    await writeTextFile(metadataPath, JSON.stringify(metadata));
+    const store = getDefaultStore();
+    if (store.get(createSidecarFilesAtom)) {
+      await writeTextFile(metadataPath, JSON.stringify(metadata));
+    }
   }
   const fileMetadata = unwrap(await commands.getFileMetadata(path));
   const numGames = unwrap(await commands.countPgnGames(path));

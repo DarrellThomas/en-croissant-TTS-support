@@ -58,8 +58,8 @@ Last updated: 2026-03-07
 | #534 | Save engine line without jumping to position | High | ✅ Fixed |
 | #708 | Support PGN `[%timestamp]` syntax | High | ✅ Fixed |
 | #393 | Option to download unrated Lichess games | Medium | ✅ Fixed |
-| #266 | Open analysis in new tab from Play Chess | Medium | ⬜ Open |
-| #516 | Option to suppress `.info` sidecar files | Medium | ⬜ Open |
+| #266 | Open analysis in new tab from Play Chess | Medium | ✅ Fixed |
+| #516 | Option to suppress `.info` sidecar files | Medium | ✅ Fixed |
 | #682 | Arrows for variation moves on board | Medium | ⬜ Open |
 | #672 | Credit authors in database download list | Medium | ⬜ Open |
 | #565 | Time editor in PGN editor | Low | ⬜ Open |
@@ -135,12 +135,12 @@ Last updated: 2026-03-07
 | BATCH 1: Easy Bug Fixes | 9 | **9** ✅ | 0 |
 | BATCH 2: Moderate Bug Fixes | 9 | **9** ✅ | 0 |
 | BATCH 3: Hard Bug Fixes | 3 | **2** ✅ | 1 |
-| BATCH 4: Easy Enhancements | 14 | **8** ✅ | 6 |
+| BATCH 4: Easy Enhancements | 14 | **9** ✅ | 5 |
 | BATCH 5: Moderate Enhancements | 23 | 0 | **23** |
 | BATCH 6: Large Enhancements | 23 | 0 | **23** |
-| **TOTAL** | **81** | **28** | **53** |
+| **TOTAL** | **81** | **29** | **52** |
 
-**28 issues resolved. 53 remaining.**
+**29 issues resolved. 52 remaining.**
 
 Next highest-impact targets (quick wins from Batch 4):
 1. **#516** — Option to suppress `.info` sidecar files
@@ -157,3 +157,4 @@ Next highest-impact targets (quick wins from Batch 4):
 |---|---|---|
 | W-001 | Multiplayer: mutual engine approval | Both players must toggle "Enable Engines?" before either can use engine analysis. Opponent's engine status should be visible (i.e. if your opponent has an engine running, you see it). Prevents unfair advantage in multiplayer. |
 | W-002 | Analysis tab visual distinction | When opening "Analyze in New Tab" from a game, the analysis board looks identical to the game board. Consider adding a colored board border, tab badge, or subtle board tint to make it visually distinct. Currently uses tab name prefix ("Analysis: ...") only. |
+| W-003 | Verify relay URL in release builds | Confirm that `VITE_RELAY_URL` GitHub secret is set and the relay server is running. Dev builds have no `.env` so relay is empty locally — verify the installed/release build has it baked in and working. |

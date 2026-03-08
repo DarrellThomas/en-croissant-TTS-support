@@ -542,6 +542,8 @@
     "Settings.Directories.Files.Desc": "This is where your games in the Files page are stored",
     "Settings.Directories.Puzzles": "",
     "Settings.Directories.Puzzles.Desc": "",
+    "Settings.Directories.SidecarFiles": "",
+    "Settings.Directories.SidecarFiles.Desc": "",
     "Settings.EraseDrawablesOnClick": "Erase Drawables On Click",
     "Settings.EraseDrawablesOnClick.Desc": "Clear the board of drawn arrows & circles by left-clicking the mouse",
     "Settings.Inputs": "Inputs",

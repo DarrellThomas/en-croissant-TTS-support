@@ -17,7 +17,7 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import { useLoaderData } from "@tanstack/react-router";
-import { readDir, remove } from "@tauri-apps/plugin-fs";
+import { exists, readDir, remove } from "@tauri-apps/plugin-fs";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import useSWR from "swr";
@@ -185,7 +185,10 @@ function FilesPage() {
               onClose={toggleDeleteModal}
               onConfirm={async () => {
                 await remove(selected.path);
-                await remove(selected.path.replace(".pgn", ".info"));
+                const infoPath = selected.path.replace(".pgn", ".info");
+                if (await exists(infoPath)) {
+                  await remove(infoPath);
+                }
                 mutate(files?.filter((file) => file.name !== selected.name));
                 toggleDeleteModal();
                 setSelected(null);
