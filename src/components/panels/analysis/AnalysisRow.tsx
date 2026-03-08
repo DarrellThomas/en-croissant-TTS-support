@@ -1,7 +1,11 @@
 import type { Key } from "@lichess-org/chessground/types";
-import { ActionIcon, Box, Flex, Portal, Table } from "@mantine/core";
+import { ActionIcon, Box, Flex, Portal, Table, Tooltip } from "@mantine/core";
 import { useForceUpdate } from "@mantine/hooks";
-import { IconChevronDown } from "@tabler/icons-react";
+import {
+  IconCheck,
+  IconChevronDown,
+  IconListTree,
+} from "@tabler/icons-react";
 import { chessgroundMove } from "chessops/compat";
 import { makeFen } from "chessops/fen";
 import { parseSan } from "chessops/san";
@@ -44,7 +48,11 @@ function AnalysisRow({
   orientation: "white" | "black";
 }) {
   const [open, setOpen] = useState<boolean>(false);
+  const [saved, setSaved] = useState(false);
+  const store = useContext(TreeStateContext)!;
+  const saveVariation = useStore(store, (s) => s.saveVariation);
 
+  const allMoves = moves;
   if (!open) {
     moves = moves.slice(0, 12);
   }
@@ -117,15 +125,35 @@ function AnalysisRow({
           </Flex>
         </Table.Td>
         <Table.Th w={10}>
-          <ActionIcon
-            style={{
-              transition: "transform 200ms ease",
-              transform: open ? "rotate(180deg)" : "none",
-            }}
-            onClick={() => setOpen(!open)}
-          >
-            <IconChevronDown size={16} />
-          </ActionIcon>
+          <Flex direction="column" align="center" gap={2}>
+            <Tooltip label="Save line as variation">
+              <ActionIcon
+                size="sm"
+                variant="transparent"
+                onClick={() => {
+                  saveVariation({ payload: allMoves });
+                  setSaved(true);
+                  setTimeout(() => setSaved(false), 5000);
+                }}
+              >
+                {saved ? (
+                  <IconCheck size={14} style={{ color: "#00FF00" }} />
+                ) : (
+                  <IconListTree size={14} />
+                )}
+              </ActionIcon>
+            </Tooltip>
+            <ActionIcon
+              size="sm"
+              style={{
+                transition: "transform 200ms ease",
+                transform: open ? "rotate(180deg)" : "none",
+              }}
+              onClick={() => setOpen(!open)}
+            >
+              <IconChevronDown size={16} />
+            </ActionIcon>
+          </Flex>
         </Table.Th>
       </Table.Tr>
       <Table.Tr ref={ref} />

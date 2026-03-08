@@ -61,6 +61,7 @@ export interface TreeStoreState extends TreeState {
     mainline?: boolean;
     changeHeaders?: boolean;
   }) => void;
+  saveVariation: (args: { payload: string[] }) => void;
   deleteMove: (path?: number[]) => void;
   promoteVariation: (path: number[]) => void;
   promoteToMainline: (path: number[]) => void;
@@ -255,6 +256,64 @@ export const createTreeStore = (id?: string, initialTree?: TreeState) => {
               sound: i === payload.length - 1,
               changeHeaders,
             });
+          }
+        }),
+      ),
+    saveVariation: ({ payload }) =>
+      set(
+        produce((state) => {
+          const node = getNodeAtPath(state.root, state.position);
+          if (!node) return;
+          const [pos] = positionFromFen(node.fen);
+          if (!pos || payload.length === 0) return;
+
+          // Parse the first move and check if it already exists
+          const firstMove = parseSanOrUci(pos, payload[0]);
+          if (!firstMove) return;
+          const firstSan = makeSan(pos, firstMove);
+          const existing = node.children.findIndex((n) => n.san === firstSan);
+          if (existing !== -1 && payload.length === 1) return;
+
+          pos.play(firstMove);
+          let currentNode: TreeNode;
+
+          if (existing !== -1) {
+            // First move exists — continue from that child
+            currentNode = node.children[existing];
+          } else {
+            // Create new variation branch
+            state.dirty = true;
+            currentNode = createNode({
+              fen: makeFen(pos.toSetup()),
+              move: firstMove,
+              san: firstSan,
+              halfMoves: node.halfMoves + 1,
+            });
+            node.children.push(currentNode);
+          }
+
+          // Chain remaining moves
+          for (let i = 1; i < payload.length; i++) {
+            const m = parseSanOrUci(pos, payload[i]);
+            if (!m) break;
+            const san = makeSan(pos, m);
+            pos.play(m);
+            const childIdx = currentNode.children.findIndex(
+              (n) => n.san === san,
+            );
+            if (childIdx !== -1) {
+              currentNode = currentNode.children[childIdx];
+            } else {
+              state.dirty = true;
+              const newNode = createNode({
+                fen: makeFen(pos.toSetup()),
+                move: m,
+                san,
+                halfMoves: currentNode.halfMoves + 1,
+              });
+              currentNode.children.push(newNode);
+              currentNode = newNode;
+            }
           }
         }),
       ),
