@@ -19,7 +19,9 @@ import {
   activeTabAtom,
   allEnabledAtom,
   autoSaveAtom,
+  currentAnalysisTabAtom,
   currentPracticeTabAtom,
+  currentReportModalOpenAtom,
   currentTabAtom,
   currentTabSelectedAtom,
   enableAllAtom,
@@ -156,7 +158,9 @@ function BoardAnalysis() {
 
   const keyMap = useAtomValue(keyMapAtom);
 
+  const [, setAnalysisTab] = useAtom(currentAnalysisTabAtom);
   const [currentTabSelected, setCurrentTabSelected] = useAtom(currentTabSelectedAtom);
+  const [, setReportModalOpen] = useAtom(currentReportModalOpenAtom);
   const practiceTabSelected = useAtomValue(currentPracticeTabAtom);
   const isRepertoire = currentTab?.file?.metadata.type === "repertoire";
   const practicing = currentTabSelected === "practice" && practiceTabSelected === "train";
@@ -181,6 +185,15 @@ function BoardAnalysis() {
       },
     ],
     [keyMap.ANALYSIS_TAB.keys, () => setCurrentTabSelected("analysis")],
+    [
+      keyMap.GENERATE_REPORT.keys,
+      (e) => {
+        setCurrentTabSelected("analysis");
+        setAnalysisTab("report");
+        setReportModalOpen(true);
+        e.preventDefault();
+      },
+    ],
     [keyMap.DATABASE_TAB.keys, () => setCurrentTabSelected("database")],
     [keyMap.ANNOTATE_TAB.keys, () => setCurrentTabSelected("annotate")],
     [keyMap.INFO_TAB.keys, () => setCurrentTabSelected("info")],
