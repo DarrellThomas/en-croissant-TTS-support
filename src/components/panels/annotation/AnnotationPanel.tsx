@@ -6,12 +6,13 @@ import {
   ScrollArea,
   Stack,
   Text,
+  TextInput,
   Tooltip,
   useMantineTheme,
 } from "@mantine/core";
-import { IconChevronDown } from "@tabler/icons-react";
+import { IconChevronDown, IconClock } from "@tabler/icons-react";
 import { atom, useAtom } from "jotai";
-import { memo, useContext } from "react";
+import { memo, useCallback, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useStore } from "zustand";
 import { TreeStateContext } from "@/components/common/TreeStateContext";
@@ -45,6 +46,69 @@ const SymbolButton = memo(function SymbolButton({
     </Tooltip>
   );
 });
+
+function formatClockValue(seconds: number | undefined): string {
+  if (seconds === undefined) return "";
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = Math.floor(seconds % 60);
+  return `${h}:${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+}
+
+function parseClockValue(value: string): number | undefined {
+  if (!value.trim()) return undefined;
+  const parts = value.split(":").map(Number);
+  if (parts.some(Number.isNaN)) return undefined;
+  if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+  if (parts.length === 2) return parts[0] * 60 + parts[1];
+  if (parts.length === 1) return parts[0];
+  return undefined;
+}
+
+function ClockEditor() {
+  const { t } = useTranslation();
+  const store = useContext(TreeStateContext)!;
+  const root = useStore(store, (s) => s.root);
+  const position = useStore(store, (s) => s.position);
+  const setClock = useStore(store, (s) => s.setClock);
+  const currentNode = getNodeAtPath(root, position);
+  const isRoot = position.length === 0;
+
+  const [inputValue, setInputValue] = useState(() => formatClockValue(currentNode.clock));
+
+  useEffect(() => {
+    setInputValue(formatClockValue(currentNode.clock));
+  }, [currentNode.clock, position]);
+
+  const handleBlur = useCallback(() => {
+    const parsed = parseClockValue(inputValue);
+    setClock(parsed);
+    setInputValue(formatClockValue(parsed));
+  }, [inputValue, setClock]);
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Enter") {
+        handleBlur();
+      }
+    },
+    [handleBlur],
+  );
+
+  if (isRoot) return null;
+
+  return (
+    <TextInput
+      size="xs"
+      leftSection={<IconClock size={14} />}
+      placeholder={t("Annotate.ClockPlaceholder", { defaultValue: "h:mm:ss" })}
+      value={inputValue}
+      onChange={(e) => setInputValue(e.currentTarget.value)}
+      onBlur={handleBlur}
+      onKeyDown={handleKeyDown}
+    />
+  );
+}
 
 const showMoreSymbolsAtom = atom(false);
 
@@ -112,6 +176,10 @@ function AnnotationPanel() {
           </Group>
         </Stack>
       </Collapse>
+
+      <Group px="sm" mb="xs">
+        <ClockEditor />
+      </Group>
 
       <ScrollArea offsetScrollbars pl="sm">
         <AnnotationEditor />
