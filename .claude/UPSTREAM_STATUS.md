@@ -1,7 +1,7 @@
 # Upstream Issues Status
 
-Quick-reference tracking for the 80 actionable issues from `UPSTREAM_ISSUES.md`.
-Last updated: 2026-03-07
+Quick-reference tracking for upstream en-croissant issues and cherry-picks.
+Last updated: 2026-03-21
 
 ---
 
@@ -47,7 +47,7 @@ Last updated: 2026-03-07
 
 ---
 
-## BATCH 4: Easy Enhancements — 11 DONE (11/14)
+## BATCH 4: Easy Enhancements — ✅ ALL DONE (14/14)
 
 | # | Title | Relevance | Status |
 |---|---|---|---|
@@ -61,14 +61,14 @@ Last updated: 2026-03-07
 | #266 | Open analysis in new tab from Play Chess | Medium | ✅ Fixed |
 | #516 | Option to suppress `.info` sidecar files | Medium | ✅ Fixed |
 | #682 | Arrows for variation moves on board | Medium | ✅ Fixed |
-| #672 | Credit authors in database download list | Medium | ⬜ Open |
-| #565 | Time editor in PGN editor | Low | ⬜ Open |
-| #566 | Invert/swap sides in board editor | Low | ⬜ Open |
+| #672 | Credit authors in database download list | Medium | ✅ Addressed | Website credits page covers this |
+| #565 | Time editor in PGN editor | Low | ✅ Fixed | e6b3aaf5 |
+| #566 | Invert/swap sides in board editor | Low | ✅ Fixed | 19145149 |
 | #413 | Spanish translation | Low | ✅ Fixed |
 
 ---
 
-## BATCH 5: Moderate Enhancements — ⬜ ALL OPEN (0/24)
+## BATCH 5: Moderate Enhancements — ⬜ ALL OPEN (0/23)
 
 | # | Title | Relevance | Status |
 |---|---|---|---|
@@ -128,6 +128,47 @@ Last updated: 2026-03-07
 
 ---
 
+## BATCH 7: Upstream Cherry-Picks (v0.15.0+) — NEW
+
+Recently merged upstream features/fixes not yet in our fork.
+
+### Bug Fixes
+
+| Upstream | Title | Priority | Status |
+|---|---|---|---|
+| `b8612591` | Fix React Compiler for Vite 8 | High | ⬜ Open |
+| `262fa5a6` | Fix puzzle bug | Medium | ⬜ Open |
+
+### Features
+
+| Upstream | Title | Priority | Status |
+|---|---|---|---|
+| PR #710 | Variation/comment/NAG encoding in database | High | ⬜ Open |
+| `cbdf2a09` / #535 | Convert multiple PGNs to database | High | ⬜ Open |
+| PR #733 | Puzzle hints | Medium | ⬜ Open |
+| PR #701 | Settings for all directories (puzzles, docs, engines) | Medium | ⬜ Open |
+| PR #722 | Types for local ONNX engine | Low | ⬜ Open |
+
+### UI/UX Improvements
+
+| Upstream | Title | Priority | Status |
+|---|---|---|---|
+| `afbe3172` | Tab icons | Medium | ⬜ Open |
+| `b2fcf250` | Database info in info panel | Medium | ⬜ Open |
+| `99206828` | Smaller engine/database cards | Low | ⬜ Open |
+| `ed64726d` | Game selector UI adjustments | Low | ⬜ Open |
+| `32942d97` | Render performance improvements | Medium | ⬜ Open |
+
+### Infrastructure
+
+| Upstream | Title | Priority | Status |
+|---|---|---|---|
+| `f100027b` | Typed CSS modules TS plugin | Low | ⬜ Open |
+| i18n pluralisation (`4e221670`) | i18n plural support | Low | ⬜ Open |
+| Italian translation (multiple PRs) | New language: Italian | Low | ⬜ Open |
+
+---
+
 ## Summary
 
 | Batch | Total | Done | Open |
@@ -135,17 +176,19 @@ Last updated: 2026-03-07
 | BATCH 1: Easy Bug Fixes | 9 | **9** ✅ | 0 |
 | BATCH 2: Moderate Bug Fixes | 9 | **9** ✅ | 0 |
 | BATCH 3: Hard Bug Fixes | 3 | **2** ✅ | 1 |
-| BATCH 4: Easy Enhancements | 14 | **11** ✅ | 3 |
+| BATCH 4: Easy Enhancements | 14 | **14** ✅ | 0 |
 | BATCH 5: Moderate Enhancements | 23 | 0 | **23** |
-| BATCH 6: Large Enhancements | 23 | 0 | **23** |
-| **TOTAL** | **81** | **31** | **50** |
+| BATCH 6: Large Enhancements | 22 | 0 | **22** |
+| BATCH 7: Upstream Cherry-Picks | 15 | 0 | **15** |
+| **TOTAL** | **95** | **34** | **61** |
 
-**31 issues resolved. 50 remaining.**
+**34 issues resolved. 61 remaining.**
 
-Next highest-impact targets (quick wins from Batch 4):
-1. **#672** — Credit authors in database download list
-2. **#565** — Time editor in PGN editor
-3. **#566** — Invert/swap sides in board editor
+Next highest-impact targets:
+1. **PR #710** — Variation/comment/NAG encoding in DB (data fidelity)
+2. **#535** — Convert multiple PGNs to database (highly requested)
+3. **PR #733** — Puzzle hints (clean standalone feature)
+4. **`b8612591`** — React Compiler fix for Vite 8
 
 ---
 
