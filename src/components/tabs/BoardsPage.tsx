@@ -72,13 +72,7 @@ export default function BoardsPage() {
         await commands.abortGame(`${value}-game`);
       }
     },
-    [
-	tabs,
-	activeTab,
-	setTabs,
-	toggleSaveModal,
-	setActiveTab
-],
+    [tabs, activeTab, setTabs, toggleSaveModal, setActiveTab],
   );
 
   function selectTab(index: number) {
@@ -136,11 +130,7 @@ export default function BoardsPage() {
         startTransition(() => setActiveTab(id));
       }
     },
-    [
-	tabs,
-	setTabs,
-	setActiveTab
-],
+    [tabs, setTabs, setActiveTab],
   );
 
   useEffect(() => {
