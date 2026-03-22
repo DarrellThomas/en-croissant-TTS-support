@@ -353,6 +353,11 @@ function BoardGame() {
 
     setPlayers(playerSettings);
 
+    const boardOrientation =
+      playerSettings.black.type === "human" && playerSettings.white.type === "engine"
+        ? "black"
+        : "white";
+
     const newGameId = `${activeTab}-game`;
     setGameId(newGameId);
 
@@ -419,6 +424,7 @@ function BoardGame() {
         date: dateStr,
         time: timeStr,
         time_control: undefined,
+        orientation: boardOrientation,
       };
 
       if (sameTC) {
