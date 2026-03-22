@@ -167,6 +167,12 @@ function RootLayout() {
     }
   }, []);
 
+  const toggleFullscreen = useCallback(async () => {
+    const currentWindow = getCurrentWindow();
+    const isFullscreen = await currentWindow.isFullscreen();
+    await currentWindow.setFullscreen(!isFullscreen);
+  }, []);
+
   // Auto-check for updates on startup (silently — no toast if already up to date)
   useEffect(() => {
     check()
@@ -311,6 +317,14 @@ function RootLayout() {
             shortcut: "Ctrl+R",
             action: () => location.reload(),
           },
+          {
+            label: t("Menu.View.Fullscreen", {
+              defaultValue: "Toggle Fullscreen",
+            }),
+            id: "toggle_fullscreen",
+            shortcut: isMacOS ? "Ctrl+Cmd+F" : "F11",
+            action: toggleFullscreen,
+          },
         ],
       },
       {
@@ -359,7 +373,7 @@ function RootLayout() {
         ],
       },
     ],
-    [t, checkForUpdates, createNewTab, keyMap, openNewFile, docsUrl],
+    [t, checkForUpdates, createNewTab, keyMap, openNewFile, docsUrl, toggleFullscreen],
   );
 
   const { data: menu } = useSWRImmutable(["menu", menuActions], () => createMenu(menuActions));
