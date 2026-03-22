@@ -144,8 +144,8 @@ Recently merged upstream features/fixes not yet in our fork.
 | Upstream | Title | Priority | Status |
 |---|---|---|---|
 | PR #710 | Variation/comment/NAG encoding in database | High | ⬜ Open |
-| `cbdf2a09` / #535 | Convert multiple PGNs to database | High | ⬜ Open |
-| PR #733 | Puzzle hints | Medium | ⬜ Open |
+| `cbdf2a09` / #535 | Convert multiple PGNs to database | High | ✅ Fixed | 310b27ca |
+| PR #733 | Puzzle hints | Medium | ✅ Fixed | 52800e7c |
 | PR #701 | Settings for all directories (puzzles, docs, engines) | Medium | ⬜ Open |
 | PR #722 | Types for local ONNX engine | Low | ⬜ Open |
 
@@ -179,16 +179,16 @@ Recently merged upstream features/fixes not yet in our fork.
 | BATCH 4: Easy Enhancements | 14 | **14** ✅ | 0 |
 | BATCH 5: Moderate Enhancements | 23 | 0 | **23** |
 | BATCH 6: Large Enhancements | 22 | 0 | **22** |
-| BATCH 7: Upstream Cherry-Picks | 15 | 0 | **15** |
-| **TOTAL** | **95** | **34** | **61** |
+| BATCH 7: Upstream Cherry-Picks | 15 | **2** ✅ | **13** |
+| **TOTAL** | **95** | **36** | **59** |
 
-**34 issues resolved. 61 remaining.**
+**36 issues resolved. 59 remaining.**
 
 Next highest-impact targets:
 1. **PR #710** — Variation/comment/NAG encoding in DB (data fidelity)
-2. **#535** — Convert multiple PGNs to database (highly requested)
-3. **PR #733** — Puzzle hints (clean standalone feature)
-4. **`b8612591`** — React Compiler fix for Vite 8
+2. **`b8612591`** — React Compiler fix for Vite 8
+3. **Tab icons** (`afbe3172`) — UI polish
+4. **Render performance improvements** (`32942d97`)
 
 ---
 
