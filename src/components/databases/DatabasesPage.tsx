@@ -279,14 +279,20 @@ export default function DatabasesPage() {
                         variant="default"
                         rightSection={<IconPlus size="1rem" />}
                         onClick={async () => {
-                          const file = await openDialog({
-                            filters: [{ name: "PGN", extensions: ["pgn"] }],
+                          const selected = await openDialog({
+                            multiple: true,
+                            filters: [{ name: "PGN", extensions: ["pgn", "pgn.zst", "pgn.bz2"] }],
                           });
-                          if (!file || typeof file !== "string") return;
+                          if (!selected) return;
+                          const files = Array.isArray(selected) ? selected : [selected];
+                          if (files.length === 0) return;
                           setConvertLoading(true);
-                          await commands.convertPgn(file, selectedDatabase.file, null, "", null);
-                          mutate();
-                          setConvertLoading(false);
+                          try {
+                            await commands.convertPgn(files, selectedDatabase.file, null, "", null);
+                            mutate();
+                          } finally {
+                            setConvertLoading(false);
+                          }
                         }}
                       >
                         {t("Databases.Settings.AddGames")}

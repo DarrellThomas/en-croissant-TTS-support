@@ -112,7 +112,7 @@ export function AccountCard({
     );
     unwrap(
       await commands.convertPgn(
-        filepath,
+        [filepath],
         dbPath,
         timestamp ? timestamp / 1000 : null,
         filename,

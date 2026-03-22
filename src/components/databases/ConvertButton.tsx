@@ -8,6 +8,7 @@ import classes from "@/components/common/GenericCard.module.css";
 type Progress = {
   total: number;
   elapsed: number;
+  sourceFileName: string | null;
 };
 
 function ConvertButton({
@@ -22,9 +23,13 @@ function ConvertButton({
 
   useEffect(() => {
     async function getProgress() {
-      await listen<number[]>("convert_progress", (event) => {
-        const progress = event.payload;
-        setProgress({ total: progress[0], elapsed: progress[1] / 1000 });
+      await listen<[number, number, string | null]>("convert_progress", (event) => {
+        const [totalGames, elapsedMs, sourceFileName] = event.payload;
+        setProgress({
+          total: totalGames,
+          elapsed: elapsedMs / 1000,
+          sourceFileName,
+        });
       });
     }
     getProgress();

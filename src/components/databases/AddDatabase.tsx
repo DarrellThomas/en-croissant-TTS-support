@@ -48,21 +48,24 @@ function AddDatabase({
 
   const { defaultDatabases, error, isLoading } = useDefaultDatabases(opened);
 
-  async function convertDB(path: string, title: string, description?: string) {
+  async function convertDB(paths: string[], title: string, description?: string) {
+    if (paths.length === 0) return;
     setLoading(true);
     const dbPath = await resolve(databaseDir, `${title}.db3`);
-    unwrap(await commands.convertPgn(path, dbPath, null, title, description ?? null));
-    setDatabases(await getDatabases());
-    setLoading(false);
+    try {
+      unwrap(await commands.convertPgn(paths, dbPath, null, title, description ?? null));
+      await setDatabases(await getDatabases());
+    } finally {
+      setLoading(false);
+    }
   }
 
-  const form = useForm<Partial<Extract<DatabaseInfo, { type: "success" }>>>({
+  const form = useForm<{ title: string; description: string; files: string[]; filename: string }>({
     initialValues: {
       title: "",
       description: "",
-      file: "",
+      files: [],
       filename: "",
-      indexed: false,
     },
 
     validate: {
@@ -71,8 +74,8 @@ function AddDatabase({
         if (databases.find((e) => e.type === "success" && e.title === value))
           return t("Common.NameAlreadyUsed");
       },
-      file: (value) => {
-        if (!value) return t("Common.RequirePath");
+      files: (value) => {
+        if (value.length === 0) return t("Common.RequirePath");
       },
     },
   });
@@ -114,7 +117,7 @@ function AddDatabase({
         <Tabs.Panel value="local" pt="xs">
           <form
             onSubmit={form.onSubmit(async (values) => {
-              convertDB(values.file!, values.title!, values.description);
+              await convertDB(values.files, values.title, values.description);
               setOpened(false);
             })}
           >
@@ -127,29 +130,39 @@ function AddDatabase({
               description={t("Databases.Add.ClickToSelectPGN")}
               onClick={async () => {
                 const selected = await open({
-                  multiple: false,
+                  multiple: true,
                   filters: [
                     {
                       name: "PGN file",
-                      extensions: ["pgn", "pgn.zst"],
+                      extensions: ["pgn", "pgn.zst", "pgn.bz2"],
                     },
                   ],
                 });
-                if (!selected || typeof selected === "object") return;
-                form.setFieldValue("file", selected);
-                const filename = selected.split(/(\\|\/)/g).pop();
-                if (filename) {
-                  form.setFieldValue("filename", filename);
+                if (!selected) return;
+
+                const selectedFiles = Array.isArray(selected) ? selected : [selected];
+                form.setFieldValue("files", selectedFiles);
+
+                const filenames = selectedFiles.map((f) => f.split(/(\\|\/)/g).pop() ?? f);
+                const firstFilename = filenames[0];
+                if (firstFilename) {
+                  const displayName =
+                    filenames.length > 1
+                      ? `${firstFilename} (+${filenames.length - 1})`
+                      : firstFilename;
+                  form.setFieldValue("filename", displayName);
                   if (!form.values.title) {
                     form.setFieldValue(
                       "title",
-                      capitalize(filename.replaceAll(/[_-]/g, " ").replace(".pgn", "")),
+                      capitalize(
+                        firstFilename.replaceAll(/[_-]/g, " ").replace(/\.pgn(\.(zst|bz2))?$/i, ""),
+                      ),
                     );
                   }
                 }
               }}
               filename={form.values.filename ?? null}
-              {...form.getInputProps("path")}
+              error={form.errors.files}
             />
 
             <Button fullWidth mt="xl" type="submit">
