@@ -477,6 +477,7 @@
     "Puzzle.Time": "Time",
     "Puzzle.TrackPuzzleTime": "Track Time",
     "Puzzle.TrackPuzzleTime.Desc": "Show time spent & average time spent",
+    "Puzzle.GetAHint": "Get a Hint",
     "Puzzle.ViewSolution": "View Solution",
     "RichText.Bold": "Bold",
     "RichText.BulletList": "Bullet list",
