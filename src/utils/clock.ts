@@ -29,6 +29,11 @@ export type TimeControlField = {
     moves?: number;
 };
 
+export const DEFAULT_TIME_CONTROL: TimeControlField = {
+    seconds: 180_000,
+    increment: 2_000,
+};
+
 type TimeControl = TimeControlField[];
 
 type ClockInfo = {

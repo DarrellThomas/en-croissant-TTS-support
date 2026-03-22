@@ -12,9 +12,11 @@ import { useTranslation } from "react-i18next";
 import type { GoMode } from "@/bindings";
 import TimeInput, { type TimeType } from "@/components/common/TimeInput";
 import EngineSettingsForm from "@/components/panels/analysis/EngineSettingsForm";
-import type { TimeControlField } from "@/utils/clock";
+import { DEFAULT_TIME_CONTROL, type TimeControlField } from "@/utils/clock";
 import type { EngineSettings, LocalEngine } from "@/utils/engines";
 import { EnginesSelect } from "./EnginesSelect";
+
+export { DEFAULT_TIME_CONTROL };
 
 export type OpponentSettings =
   | {
@@ -33,11 +35,6 @@ export type OpponentSettings =
       timeUnit?: TimeType;
       incrementUnit?: TimeType;
     };
-
-export const DEFAULT_TIME_CONTROL: TimeControlField = {
-  seconds: 180_000,
-  increment: 2_000,
-};
 
 export function OpponentForm({
   sameTimeControl,

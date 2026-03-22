@@ -15,7 +15,8 @@ import type {
 import type { ReviewLog } from "ts-fsrs";
 import { z } from "zod";
 import type { BestMoves, GoMode } from "@/bindings";
-import { DEFAULT_TIME_CONTROL, type OpponentSettings } from "@/components/boards/OpponentForm";
+import type { OpponentSettings } from "@/components/boards/OpponentForm";
+import { DEFAULT_TIME_CONTROL } from "@/utils/clock";
 import { type Position, positionSchema } from "@/components/files/opening";
 import type { LocalOptions } from "@/components/panels/database/DatabasePanel";
 import { positionFromFen, swapMove } from "@/utils/chessops";

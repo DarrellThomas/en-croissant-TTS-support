@@ -198,7 +198,7 @@ export default function NewTabHome({ id }: { id: string }) {
       label: t("Home.Card.PlayChess.Button"),
       onClick: () => {
         setTabs((prev: Tab[]) => {
-          const tab = prev.find((t) => t.value === id);
+          const tab = prev.find((tab) => tab.value === id);
           if (!tab) return prev;
           tab.name = t("Home.NewGame");
           tab.type = "play";
@@ -214,7 +214,7 @@ export default function NewTabHome({ id }: { id: string }) {
       onClick: () => {
         store.set(isMultiplayerFamily(id), true);
         setTabs((prev: Tab[]) => {
-          const tab = prev.find((t) => t.value === id);
+          const tab = prev.find((tab) => tab.value === id);
           if (!tab) return prev;
           tab.name = t("Home.Card.Multiplayer.Title");
           tab.type = "play";
@@ -229,7 +229,7 @@ export default function NewTabHome({ id }: { id: string }) {
       label: t("Home.Card.AnalysisBoard.Button"),
       onClick: () => {
         setTabs((prev: Tab[]) => {
-          const tab = prev.find((t) => t.value === id);
+          const tab = prev.find((tab) => tab.value === id);
           if (!tab) return prev;
           tab.name = t("Home.Card.AnalysisBoard.Title");
           tab.type = "analysis";
@@ -262,7 +262,7 @@ export default function NewTabHome({ id }: { id: string }) {
       label: t("Home.Card.Puzzle.Button"),
       onClick: () => {
         setTabs((prev) => {
-          const tab = prev.find((t) => t.value === id);
+          const tab = prev.find((tab) => tab.value === id);
           if (!tab) return prev;
           tab.name = t("Home.PuzzleTraining");
           tab.type = "puzzles";
