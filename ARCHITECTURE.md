@@ -47,19 +47,19 @@ The `specta` crate auto-generates TypeScript type definitions from these Rust fu
 
 ### Key Modules
 
-| Module | What It Does |
-|--------|-------------|
-| `db/mod.rs` | SQLite database via Diesel ORM — game queries, player stats, imports, position search |
-| `game.rs` | Live game engine — manages engine-vs-human and engine-vs-engine games, time controls, move validation |
-| `chess.rs` | Engine analysis — spawns UCI engines, streams best-move results back to frontend via events |
-| `engine/` | UCI protocol implementation — process spawning, stdin/stdout pipes, multi-PV support |
-| `pgn.rs` | PGN file reading/writing/tokenizing |
-| `opening.rs` | Opening name lookup from FEN (binary data baked into the app) |
-| `puzzle.rs` | Lichess puzzle database — memory-mapped random access |
-| `fs.rs` | File downloads with resume, executable permission setting |
-| `sound.rs` | Local HTTP server for audio streaming (Linux audio workaround) |
-| `tts.rs` | System TTS via speech-dispatcher (Linux) / native OS speech APIs, plus KittenTTS server management |
-| `oauth.rs` | OAuth2 flow for Lichess/Chess.com account linking |
+| Module       | What It Does                                                                                          |
+| ------------ | ----------------------------------------------------------------------------------------------------- |
+| `db/mod.rs`  | SQLite database via Diesel ORM — game queries, player stats, imports, position search                 |
+| `game.rs`    | Live game engine — manages engine-vs-human and engine-vs-engine games, time controls, move validation |
+| `chess.rs`   | Engine analysis — spawns UCI engines, streams best-move results back to frontend via events           |
+| `engine/`    | UCI protocol implementation — process spawning, stdin/stdout pipes, multi-PV support                  |
+| `pgn.rs`     | PGN file reading/writing/tokenizing                                                                   |
+| `opening.rs` | Opening name lookup from FEN (binary data baked into the app)                                         |
+| `puzzle.rs`  | Lichess puzzle database — memory-mapped random access                                                 |
+| `fs.rs`      | File downloads with resume, executable permission setting                                             |
+| `sound.rs`   | Local HTTP server for audio streaming (Linux audio workaround)                                        |
+| `tts.rs`     | System TTS via speech-dispatcher (Linux) / native OS speech APIs, plus KittenTTS server management    |
+| `oauth.rs`   | OAuth2 flow for Lichess/Chess.com account linking                                                     |
 
 ### Design Patterns
 
@@ -76,6 +76,7 @@ The `specta` crate auto-generates TypeScript type definitions from these Rust fu
 ### Build Pipeline: Vite
 
 `vite.config.ts` configures:
+
 - **React plugin** with Babel compiler
 - **TanStack Router plugin** — auto-generates route tree from the `routes/` folder
 - **Vanilla Extract** — zero-runtime CSS-in-JS
@@ -83,6 +84,7 @@ The `specta` crate auto-generates TypeScript type definitions from these Rust fu
 - **Dev server** on port 1420
 
 Build flow:
+
 ```
 pnpm dev   → Vite on :1420 + Tauri opens webview pointing to it
 pnpm build → tsc (typecheck) → vite build (bundle to dist/) → tauri build (native binary)
@@ -91,6 +93,7 @@ pnpm build → tsc (typecheck) → vite build (bundle to dist/) → tauri build 
 ### Entry: App.tsx
 
 The root component:
+
 - Initializes Tauri plugins (log, process, updater)
 - Loads user preferences from persistent atoms
 - Sets up Mantine UI theme
@@ -101,23 +104,25 @@ The root component:
 
 **Jotai atoms** (`src/state/atoms.ts`) — lightweight reactive state:
 
-| Category | Examples |
-|----------|---------|
-| Tabs | `tabsAtom`, `activeTabAtom` (multi-document interface) |
-| Directories | `storedDocumentDirAtom`, `storedDatabasesDirAtom` |
-| UI prefs | `primaryColorAtom`, `fontSizeAtom`, `pieceSetAtom` |
-| Engine | `engineMovesFamily`, `engineProgressFamily` (per-tab via atomFamily) |
-| TTS | `ttsEnabledAtom`, `ttsProviderAtom`, `ttsVoiceIdAtom`, `ttsVolumeAtom`, `ttsSpeedAtom`, `ttsLanguageAtom` |
+| Category    | Examples                                                                                                  |
+| ----------- | --------------------------------------------------------------------------------------------------------- |
+| Tabs        | `tabsAtom`, `activeTabAtom` (multi-document interface)                                                    |
+| Directories | `storedDocumentDirAtom`, `storedDatabasesDirAtom`                                                         |
+| UI prefs    | `primaryColorAtom`, `fontSizeAtom`, `pieceSetAtom`                                                        |
+| Engine      | `engineMovesFamily`, `engineProgressFamily` (per-tab via atomFamily)                                      |
+| TTS         | `ttsEnabledAtom`, `ttsProviderAtom`, `ttsVoiceIdAtom`, `ttsVolumeAtom`, `ttsSpeedAtom`, `ttsLanguageAtom` |
 
 Atoms with `atomWithStorage()` persist to localStorage automatically.
 
 **Zustand stores** for complex domain state:
+
 - `src/state/store/tree.ts` — game tree navigation, move branching, annotations, comments. Uses Immer for immutable updates.
 - `src/state/store/database.ts` — database view filters, selected game, pagination
 
 ### Routing: TanStack Router
 
 File-based routing in `src/routes/`:
+
 ```
 routes/
   __root.tsx          # Root layout (AppShell, menu bar)
@@ -130,15 +135,15 @@ routes/
 
 ### Components: src/components/
 
-| Group | Purpose |
-|-------|---------|
-| `boards/` | Chessboard (chessground), move input, eval bar, analysis display, promotion modal, arrow drawing |
-| `panels/` | Side panels: engine analysis (BestMoves), database position search, annotation editing, game info, practice mode |
-| `databases/` | Database UI: game table, player table, detail cards, filtering |
-| `settings/` | Preference forms, engine paths, TTS settings |
-| `home/` | Account cards, import UI |
-| `common/` | Shared: TreeStateContext, material display, comment speaker icon |
-| `tabs/` | Multi-tab bar |
+| Group        | Purpose                                                                                                          |
+| ------------ | ---------------------------------------------------------------------------------------------------------------- |
+| `boards/`    | Chessboard (chessground), move input, eval bar, analysis display, promotion modal, arrow drawing                 |
+| `panels/`    | Side panels: engine analysis (BestMoves), database position search, annotation editing, game info, practice mode |
+| `databases/` | Database UI: game table, player table, detail cards, filtering                                                   |
+| `settings/`  | Preference forms, engine paths, TTS settings                                                                     |
+| `home/`      | Account cards, import UI                                                                                         |
+| `common/`    | Shared: TreeStateContext, material display, comment speaker icon                                                 |
+| `tabs/`      | Multi-tab bar                                                                                                    |
 
 ---
 
@@ -155,7 +160,7 @@ export const commands = {
     return await TAURI_INVOKE("get_best_moves", { id, engine, tab, goMode, options });
   },
   // ~50 more commands...
-}
+};
 ```
 
 React components call them like normal async functions:
@@ -179,15 +184,15 @@ React: listen("best_moves_payload", (event) => updateBestMoves(event.payload))
 
 The app uses several official plugins for system access:
 
-| Plugin | Purpose |
-|--------|---------|
-| `@tauri-apps/plugin-fs` | Read/write files |
-| `@tauri-apps/plugin-dialog` | File pickers, message boxes |
-| `@tauri-apps/plugin-http` | HTTP client (engine downloads, cloud TTS) |
-| `@tauri-apps/plugin-shell` | Execute UCI engines |
-| `@tauri-apps/plugin-updater` | Auto-update checks |
-| `@tauri-apps/plugin-log` | Structured logging |
-| `@tauri-apps/plugin-os` | CPU/RAM detection |
+| Plugin                       | Purpose                                   |
+| ---------------------------- | ----------------------------------------- |
+| `@tauri-apps/plugin-fs`      | Read/write files                          |
+| `@tauri-apps/plugin-dialog`  | File pickers, message boxes               |
+| `@tauri-apps/plugin-http`    | HTTP client (engine downloads, cloud TTS) |
+| `@tauri-apps/plugin-shell`   | Execute UCI engines                       |
+| `@tauri-apps/plugin-updater` | Auto-update checks                        |
+| `@tauri-apps/plugin-log`     | Structured logging                        |
+| `@tauri-apps/plugin-os`      | CPU/RAM detection                         |
 
 ---
 
@@ -213,13 +218,13 @@ The core TTS implementation lives in `src/utils/tts.ts`. It's designed around a 
 
 Five providers are supported:
 
-| Provider | Type | Backend |
-|----------|------|---------|
-| **ElevenLabs** | Cloud | Neural voices via REST API. Returns MP3. |
-| **Google Cloud TTS** | Cloud | WaveNet voices via REST API. Returns base64-encoded MP3. |
-| **KittenTTS** | Local | Bundled TTS server, auto-started by the Rust backend. Communicates over HTTP on localhost. |
-| **OpenTTS** | Local | Self-hosted TTS server. Supports many engines (espeak, MaryTTS, Piper, etc.). |
-| **System TTS** | Local | OS-native speech engine via Rust/Tauri commands (speech-dispatcher on Linux, SAPI on Windows, AVSpeechSynthesizer on macOS). |
+| Provider             | Type  | Backend                                                                                                                      |
+| -------------------- | ----- | ---------------------------------------------------------------------------------------------------------------------------- |
+| **ElevenLabs**       | Cloud | Neural voices via REST API. Returns MP3.                                                                                     |
+| **Google Cloud TTS** | Cloud | WaveNet voices via REST API. Returns base64-encoded MP3.                                                                     |
+| **KittenTTS**        | Local | Bundled TTS server, auto-started by the Rust backend. Communicates over HTTP on localhost.                                   |
+| **OpenTTS**          | Local | Self-hosted TTS server. Supports many engines (espeak, MaryTTS, Piper, etc.).                                                |
+| **System TTS**       | Local | OS-native speech engine via Rust/Tauri commands (speech-dispatcher on Linux, SAPI on Windows, AVSpeechSynthesizer on macOS). |
 
 Provider selection is stored in a single Jotai atom (`ttsProviderAtom`). Switching providers is instant — change the atom, and the next `speakText()` call routes to the new backend.
 
@@ -252,7 +257,7 @@ Japanese: "ナイト テイクス e5, チェック"
 Russian:  "Конь берёт e5, шах"
 ```
 
-The language setting determines which vocabulary table is used for preprocessing *and* which voice/accent the TTS engine uses for synthesis.
+The language setting determines which vocabulary table is used for preprocessing _and_ which voice/accent the TTS engine uses for synthesis.
 
 ### Comment Cleaning
 
@@ -264,6 +269,7 @@ After cleaning: "7, Knight f3 was better"
 ```
 
 The `cleanCommentForTTS()` function:
+
 1. Strips PGN tags: `[%eval ...]`, `[%csl ...]`, `[%cal ...]`, `[%clk ...]`
 2. Removes duplicate annotation words (when "??" already said "Blunder")
 3. Expands inline SAN in prose: `"7.Nf3 controls e5"` → `"7, Knight f3 controls e5"`
@@ -304,7 +310,7 @@ Rapid arrow-key navigation creates a problem: if the user steps forward 5 times 
 ```typescript
 const thisGeneration = ++requestGeneration;
 // ... fetch audio ...
-if (thisGeneration !== requestGeneration) return;  // stale — discard
+if (thisGeneration !== requestGeneration) return; // stale — discard
 ```
 
 Each new `speakText()` call increments the counter and aborts any in-flight HTTP request via `AbortController`. When the audio arrives, it checks if its generation is still current. If the user has already moved on, the response is silently discarded. This gives clean, glitch-free audio even when clicking rapidly through moves.
@@ -313,11 +319,11 @@ Each new `speakText()` call increments the counter and aborts any in-flight HTTP
 
 The integration points are minimal:
 
-| File | What Happens |
-|------|-------------|
-| `src/state/store/tree.ts` | Every navigation function (`goToNext`, `goToPrevious`, etc.) calls `stopSpeaking()`. When auto-narrate is on, `goToNext` also calls `speakMoveNarration()`. |
-| `src/components/common/Comment.tsx` | A speaker icon next to each comment lets you manually trigger TTS for that comment. |
-| `src/components/settings/TTSSettings.tsx` | Settings UI for choosing provider, voice, language, volume, speed, and entering API keys. |
+| File                                      | What Happens                                                                                                                                                |
+| ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/state/store/tree.ts`                 | Every navigation function (`goToNext`, `goToPrevious`, etc.) calls `stopSpeaking()`. When auto-narrate is on, `goToNext` also calls `speakMoveNarration()`. |
+| `src/components/common/Comment.tsx`       | A speaker icon next to each comment lets you manually trigger TTS for that comment.                                                                         |
+| `src/components/settings/TTSSettings.tsx` | Settings UI for choosing provider, voice, language, volume, speed, and entering API keys.                                                                   |
 
 When TTS is turned off, none of this code runs. The app behaves identically to upstream En Croissant.
 

@@ -45,9 +45,7 @@ function AddEngine({
   const { t } = useTranslation();
 
   const [allEngines, setEngines] = useAtom(enginesAtom);
-  const engines = (allEngines ?? []).filter(
-    (e): e is LocalEngine => e.type === "local",
-  );
+  const engines = (allEngines ?? []).filter((e): e is LocalEngine => e.type === "local");
 
   const { os } = usePlatform();
 
@@ -67,8 +65,7 @@ function AddEngine({
     validate: {
       name: (value) => {
         if (!value) return t("Common.RequireName");
-        if (engines.find((e) => e.name === value))
-          return t("Common.NameAlreadyUsed");
+        if (engines.find((e) => e.name === value)) return t("Common.NameAlreadyUsed");
       },
       path: (value) => {
         if (!value) return t("Common.RequirePath");
@@ -77,11 +74,7 @@ function AddEngine({
   });
 
   return (
-    <Modal
-      opened={opened}
-      onClose={() => setOpened(false)}
-      title={t("Engines.Add.Title")}
-    >
+    <Modal opened={opened} onClose={() => setOpened(false)} title={t("Engines.Add.Title")}>
       <Tabs defaultValue="download">
         <Tabs.List>
           <Tabs.Tab value="download">{t("Common.Download")}</Tabs.Tab>
@@ -105,11 +98,7 @@ function AddEngine({
                 />
               ))}
               {error && (
-                <Alert
-                  icon={<IconAlertCircle size="1rem" />}
-                  title={t("Common.Error")}
-                  color="red"
-                >
+                <Alert icon={<IconAlertCircle size="1rem" />} title={t("Common.Error")} color="red">
                   {t("Engines.Add.ErrorFetch")}
                 </Alert>
               )}
@@ -167,9 +156,7 @@ function CloudCard({ engine }: { engine: RemoteEngine }) {
             {engine.url}
           </Text>
           <Button
-            disabled={
-              (engines ?? []).find((e) => e.type === engine.type) !== undefined
-            }
+            disabled={(engines ?? []).find((e) => e.type === engine.type) !== undefined}
             fullWidth
             onClick={() => {
               setEngines(async (prev) => [
@@ -217,29 +204,16 @@ function EngineCard({
       setDownloadError(null);
       try {
         const enginesDir = await getEnginesDir();
-        let path = await resolve(
-          enginesDir,
-          `${url.slice(url.lastIndexOf("/") + 1)}`,
-        );
+        let path = await resolve(enginesDir, `${url.slice(url.lastIndexOf("/") + 1)}`);
         if (url.endsWith(".zip") || url.endsWith(".tar")) {
           path = enginesDir;
         }
-        await commands.downloadFile(
-          `engine_${id}`,
-          url,
-          path,
-          null,
-          null,
-          null,
-        );
+        await commands.downloadFile(`engine_${id}`, url, path, null, null, null);
         let enginesDirPath = enginesDir;
         if (enginesDirPath.endsWith("/") || enginesDirPath.endsWith("\\")) {
           enginesDirPath = enginesDirPath.slice(0, -1);
         }
-        const enginePath = await join(
-          enginesDirPath,
-          ...engine.path.split("/"),
-        );
+        const enginePath = await join(enginesDirPath, ...engine.path.split("/"));
         await commands.setFileAsExecutable(enginePath);
         const config = unwrap(await commands.getEngineConfig(enginePath));
         setEngines(async (prev) => [
@@ -260,8 +234,7 @@ function EngineCard({
           },
         ]);
       } catch (e) {
-        const errorMessage =
-          e instanceof Error ? e.message : t("Engines.Add.DownloadFailed");
+        const errorMessage = e instanceof Error ? e.message : t("Engines.Add.DownloadFailed");
         setDownloadError(errorMessage);
         notifications.show({
           title: t("Common.Error"),

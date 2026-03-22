@@ -29,14 +29,7 @@ import type { Piece } from "chessops";
 import { makeUci, parseUci } from "chessops";
 import { INITIAL_FEN } from "chessops/fen";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { match } from "ts-pattern";
 import { useStore } from "zustand";
@@ -108,9 +101,7 @@ function gameResultToOutcome(result: GameResult): Outcome {
 
 type BackendMove = { uci: string; clock: number | null };
 
-function mapBackendMoves(
-  moves: { uci: string; clock: bigint | null }[],
-): BackendMove[] {
+function mapBackendMoves(moves: { uci: string; clock: bigint | null }[]): BackendMove[] {
   return moves.map((m) => ({
     uci: m.uci,
     clock: m.clock !== null ? Number(m.clock) : null,
@@ -136,12 +127,8 @@ function BoardGame() {
     );
   }
 
-  const [player1Settings, setPlayer1Settings] = useAtom(
-    gamePlayer1SettingsAtom,
-  );
-  const [player2Settings, setPlayer2Settings] = useAtom(
-    gamePlayer2SettingsAtom,
-  );
+  const [player1Settings, setPlayer1Settings] = useAtom(gamePlayer1SettingsAtom);
+  const [player2Settings, setPlayer2Settings] = useAtom(gamePlayer2SettingsAtom);
 
   function getPlayers() {
     let isPlayer1White = inputColor === "white";
@@ -182,9 +169,7 @@ function BoardGame() {
 
   // Multiplayer state
   const [isMultiplayer] = useAtom(currentIsMultiplayerAtom);
-  const [multiplayerState, setMultiplayerState] = useAtom(
-    currentMultiplayerStateAtom,
-  );
+  const [multiplayerState, setMultiplayerState] = useAtom(currentMultiplayerStateAtom);
   const [localColor] = useAtom(currentLocalColorAtom);
   const [peerName] = useAtom(currentPeerNameAtom);
   const [peerOnline, setPeerOnline] = useAtom(currentPeerOnlineAtom);
@@ -203,8 +188,7 @@ function BoardGame() {
   }
   const myName = isMultiplayer ? myNameRef.current : playerName;
 
-  const hasEngine =
-    players.white.type === "engine" || players.black.type === "engine";
+  const hasEngine = players.white.type === "engine" || players.black.type === "engine";
 
   const isPlayerVsEngine =
     (players.white.type === "human" && players.black.type === "engine") ||
@@ -215,10 +199,7 @@ function BoardGame() {
     let color = logsColor;
     if (players.white.type === "human" && players.black.type === "engine") {
       color = "black";
-    } else if (
-      players.black.type === "human" &&
-      players.white.type === "engine"
-    ) {
+    } else if (players.black.type === "human" && players.white.type === "engine") {
       color = "white";
     }
     const result = await commands.getGameEngineLogs(gameId, color);
@@ -300,9 +281,7 @@ function BoardGame() {
       disconnectFromRelay();
     }
     setTabs((prev) =>
-      prev.map((tab) =>
-        tab.value === activeTab ? { ...tab, type: "analysis" } : tab,
-      ),
+      prev.map((tab) => (tab.value === activeTab ? { ...tab, type: "analysis" } : tab)),
     );
   }
 
@@ -489,9 +468,7 @@ function BoardGame() {
     [gameId, gameState, isMultiplayer, localColor, pos, whiteTime, blackTime],
   );
 
-  const pendingMovesRef = useRef<
-    { uci: string; clock: number | null }[] | null
-  >(null);
+  const pendingMovesRef = useRef<{ uci: string; clock: number | null }[] | null>(null);
   const pendingTimesRef = useRef<{
     white: number | null;
     black: number | null;
@@ -548,12 +525,8 @@ function BoardGame() {
 
     const unlistenClock = events.clockUpdateEvent.listen(({ payload }) => {
       if (payload.gameId !== currentGameId) return;
-      setWhiteTime(
-        payload.whiteTime !== null ? Number(payload.whiteTime) : null,
-      );
-      setBlackTime(
-        payload.blackTime !== null ? Number(payload.blackTime) : null,
-      );
+      setWhiteTime(payload.whiteTime !== null ? Number(payload.whiteTime) : null);
+      setBlackTime(payload.blackTime !== null ? Number(payload.blackTime) : null);
     });
 
     const unlistenGameOver = events.gameOverEvent.listen(({ payload }) => {
@@ -607,19 +580,11 @@ function BoardGame() {
       cleanup1();
       cleanup2();
     };
-  }, [
-    isMultiplayer,
-    multiplayerState,
-    t,
-    setPeerReady,
-    setPeerOnline,
-    setMultiplayerState,
-  ]);
+  }, [isMultiplayer, multiplayerState, t, setPeerReady, setPeerOnline, setMultiplayerState]);
 
   // Multiplayer: listen for remote moves, resign, draw offers (needs gameId)
   useEffect(() => {
-    if (!isMultiplayer || multiplayerState.phase !== "connected" || !gameId)
-      return;
+    if (!isMultiplayer || multiplayerState.phase !== "connected" || !gameId) return;
 
     const currentGameId = gameId;
 
@@ -665,15 +630,7 @@ function BoardGame() {
       cleanup3();
       cleanup4();
     };
-  }, [
-    isMultiplayer,
-    multiplayerState,
-    gameId,
-    t,
-    setDrawOffer,
-    setGameState,
-    setResult,
-  ]);
+  }, [isMultiplayer, multiplayerState, gameId, t, setDrawOffer, setGameState, setResult]);
 
   // Multiplayer: peer online check interval
   useEffect(() => {
@@ -694,19 +651,12 @@ function BoardGame() {
 
           syncTreeWithMovesRef.current(mapBackendMoves(state.moves));
 
-          setWhiteTime(
-            state.whiteTime !== null ? Number(state.whiteTime) : null,
-          );
-          setBlackTime(
-            state.blackTime !== null ? Number(state.blackTime) : null,
-          );
+          setWhiteTime(state.whiteTime !== null ? Number(state.whiteTime) : null);
+          setBlackTime(state.blackTime !== null ? Number(state.blackTime) : null);
 
           if (state.status !== "playing") {
             setGameState("gameOver");
-            if (
-              typeof state.status === "object" &&
-              "finished" in state.status
-            ) {
+            if (typeof state.status === "object" && "finished" in state.status) {
               setResult(gameResultToOutcome(state.status.finished.result));
             }
           }
@@ -732,13 +682,10 @@ function BoardGame() {
     return "none";
   }, [players, isMultiplayer, localColor]);
 
-  const [sameTimeControl, setSameTimeControl] = useAtom(
-    gameSameTimeControlAtom,
-  );
+  const [sameTimeControl, setSameTimeControl] = useAtom(gameSameTimeControlAtom);
 
   const onePlayerIsEngine = players.white.type !== players.black.type;
-  const isEngineVsEngine =
-    players.white.type === "engine" && players.black.type === "engine";
+  const isEngineVsEngine = players.white.type === "engine" && players.black.type === "engine";
 
   function getResignationLosingColor(): "white" | "black" {
     if (isMultiplayer && localColor) {
@@ -863,29 +810,17 @@ function BoardGame() {
     <>
       <Portal target="#left" style={{ height: "100%" }}>
         <Board
-          editingMode={
-            gameState === "settingUp" && editingMode && !isMultiplayer
-          }
+          editingMode={gameState === "settingUp" && editingMode && !isMultiplayer}
           viewOnly={gameState !== "playing" && !editingMode}
           disableVariations
           boardRef={boardRef}
-          movable={
-            gameState === "settingUp" && editingMode && !isMultiplayer
-              ? "none"
-              : movable
-          }
-          whiteTime={
-            gameState === "playing" ? (whiteTime ?? undefined) : undefined
-          }
-          blackTime={
-            gameState === "playing" ? (blackTime ?? undefined) : undefined
-          }
+          movable={gameState === "settingUp" && editingMode && !isMultiplayer ? "none" : movable}
+          whiteTime={gameState === "playing" ? (whiteTime ?? undefined) : undefined}
+          blackTime={gameState === "playing" ? (blackTime ?? undefined) : undefined}
           onMove={handleHumanMove}
           selectedPiece={selectedPiece}
           cgRef={cgRef}
-          enablePremoves={
-            (isPlayerVsEngine || isMultiplayer) && gameState === "playing"
-          }
+          enablePremoves={(isPlayerVsEngine || isMultiplayer) && gameState === "playing"}
         />
       </Portal>
       <Portal target="#topRight" style={{ height: "100%", overflow: "hidden" }}>
@@ -896,13 +831,10 @@ function BoardGame() {
               onRefresh={fetchEngineLogs}
               additionalControls={
                 <>
-                  {players.white.type === "engine" &&
-                  players.black.type === "engine" ? (
+                  {players.white.type === "engine" && players.black.type === "engine" ? (
                     <SegmentedControl
                       value={logsColor}
-                      onChange={(value) =>
-                        setLogsColor(value as "white" | "black")
-                      }
+                      onChange={(value) => setLogsColor(value as "white" | "black")}
                       data={[
                         { value: "white", label: "White" },
                         { value: "black", label: "Black" },
@@ -937,9 +869,7 @@ function BoardGame() {
                             c={localReady ? "green" : "dimmed"}
                             fw={localReady ? 600 : 400}
                           >
-                            {localReady
-                              ? t("Multiplayer.Ready")
-                              : t("Multiplayer.NotReady")}
+                            {localReady ? t("Multiplayer.Ready") : t("Multiplayer.NotReady")}
                           </Text>
                         </Stack>
                         <Text size="xs" c="dimmed">
@@ -962,9 +892,7 @@ function BoardGame() {
                             c={peerReady ? "green" : "dimmed"}
                             fw={peerReady ? 600 : 400}
                           >
-                            {peerReady
-                              ? t("Multiplayer.Ready")
-                              : t("Multiplayer.NotReady")}
+                            {peerReady ? t("Multiplayer.Ready") : t("Multiplayer.NotReady")}
                           </Text>
                         </Stack>
                       </Group>
@@ -1092,9 +1020,7 @@ function BoardGame() {
                               c={localReady ? "green" : "dimmed"}
                               fw={localReady ? 600 : 400}
                             >
-                              {localReady
-                                ? t("Multiplayer.Ready")
-                                : t("Multiplayer.NotReady")}
+                              {localReady ? t("Multiplayer.Ready") : t("Multiplayer.NotReady")}
                             </Text>
                           )}
                         </Stack>
@@ -1122,9 +1048,7 @@ function BoardGame() {
                               c={peerReady ? "green" : "dimmed"}
                               fw={peerReady ? 600 : 400}
                             >
-                              {peerReady
-                                ? t("Multiplayer.Ready")
-                                : t("Multiplayer.NotReady")}
+                              {peerReady ? t("Multiplayer.Ready") : t("Multiplayer.NotReady")}
                             </Text>
                           )}
                         </Stack>
@@ -1137,16 +1061,10 @@ function BoardGame() {
                       <Button
                         variant="default"
                         color="red"
-                        onClick={
-                          isEngineVsEngine && !isMultiplayer
-                            ? handleAbort
-                            : handleResign
-                        }
+                        onClick={isEngineVsEngine && !isMultiplayer ? handleAbort : handleResign}
                         leftSection={<IconX />}
                       >
-                        {isEngineVsEngine && !isMultiplayer
-                          ? "Abort"
-                          : t("Multiplayer.Resign")}
+                        {isEngineVsEngine && !isMultiplayer ? "Abort" : t("Multiplayer.Resign")}
                       </Button>
                     )}
                     {gameState === "playing" && isMultiplayer && (
@@ -1190,11 +1108,7 @@ function BoardGame() {
                       </>
                     )}
                     {gameState === "gameOver" && !isMultiplayer && (
-                      <Button
-                        variant="default"
-                        onClick={handleNewGame}
-                        leftSection={<IconPlus />}
-                      >
+                      <Button variant="default" onClick={handleNewGame} leftSection={<IconPlus />}>
                         New Game
                       </Button>
                     )}
@@ -1221,16 +1135,13 @@ function BoardGame() {
                             },
                           });
                           sessionStorage.setItem(id, snapshot);
-                          const gameName = headers.white && headers.black
-                            ? `${headers.white} - ${headers.black}`
-                            : t("BoardAnalysis.Title", "Analysis");
+                          const gameName =
+                            headers.white && headers.black
+                              ? `${headers.white} - ${headers.black}`
+                              : t("BoardAnalysis.Title", "Analysis");
                           const name = `${t("BoardAnalysis.Title", "Analysis")}: ${gameName}`;
                           const newTab: Tab = { name, value: id, type: "analysis" };
-                          setTabs((prev) =>
-                            prev.length === 0
-                              ? [newTab]
-                              : [...prev, newTab],
-                          );
+                          setTabs((prev) => (prev.length === 0 ? [newTab] : [...prev, newTab]));
                           setActiveTab(id);
                         }}
                         leftSection={<IconExternalLink />}
@@ -1269,9 +1180,7 @@ function BoardGame() {
               topBar
               controls={
                 <BoardControls
-                  editingMode={
-                    gameState === "settingUp" && editingMode && !isMultiplayer
-                  }
+                  editingMode={gameState === "settingUp" && editingMode && !isMultiplayer}
                   toggleEditingMode={toggleEditingMode}
                   dirty={false}
                   canTakeBack={onePlayerIsEngine && !isMultiplayer}

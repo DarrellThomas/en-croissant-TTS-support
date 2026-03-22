@@ -46,10 +46,7 @@ function UpdateModal({
   }, [state, reset, onClose]);
 
   const progressCallback = useCallback(
-    (event: {
-      event: string;
-      data?: { contentLength?: number; chunkLength?: number };
-    }) => {
+    (event: { event: string; data?: { contentLength?: number; chunkLength?: number } }) => {
       if (event.event === "Started") {
         totalSizeRef.current = event.data?.contentLength ?? null;
         setTotalSize(totalSizeRef.current);
@@ -159,8 +156,8 @@ function UpdateModal({
 
         {state === "installing" && (
           <Text ta="center">
-            Installing update... A password prompt may appear. Please approve it
-            to complete the update.
+            Installing update... A password prompt may appear. Please approve it to complete the
+            update.
           </Text>
         )}
 

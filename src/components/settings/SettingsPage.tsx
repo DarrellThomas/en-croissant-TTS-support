@@ -75,7 +75,7 @@ import FontSizeSlider from "./FontSizeSlider";
 import KeybindInput from "./KeybindInput";
 import PiecesSelect from "./PiecesSelect";
 import RepertoireMinGamesSetting from "./RepertoireMinGamesSetting";
-import * as classes from "./SettingsPage.css";
+import classes from "./SettingsPage.module.css";
 import SettingsSwitch from "./SettingsSwitch";
 import SoundSelect from "./SoundSelect";
 import ThemeButton from "./ThemeButton";
@@ -201,11 +201,7 @@ function SettingRow({
       wrap="nowrap"
       gap="xl"
       className={classes.item}
-      style={
-        highlight
-          ? { backgroundColor: "var(--mantine-color-yellow-light)" }
-          : undefined
-      }
+      style={highlight ? { backgroundColor: "var(--mantine-color-yellow-light)" } : undefined}
     >
       <div>
         <Text>{title}</Text>
@@ -225,12 +221,12 @@ function PrivacyStatement() {
         We respect your privacy.
       </Text>
       <Text size="sm">
-        We do not collect any telemetry data. Zero. Nada. Zilch. Rien. Niente.
-        Nichts. Nul. Ничего. ゼロ. 零. 제로.
+        We do not collect any telemetry data. Zero. Nada. Zilch. Rien. Niente. Nichts. Nul. Ничего.
+        ゼロ. 零. 제로.
       </Text>
       <Text size="sm" c="dimmed">
-        If you run into issues and want to share your data to help us improve,
-        you know where to find us.
+        If you run into issues and want to share your data to help us improve, you know where to
+        find us.
       </Text>
     </Stack>
   );
@@ -259,9 +255,7 @@ export default function Page() {
   } = useLoaderData({ from: "/settings" });
   let [filesDirectory, setFilesDirectory] = useAtom(storedDocumentDirAtom);
   filesDirectory = filesDirectory || documentDir;
-  let [databasesDirectory, setDatabasesDirectory] = useAtom(
-    storedDatabasesDirAtom,
-  );
+  let [databasesDirectory, setDatabasesDirectory] = useAtom(storedDatabasesDirAtom);
   databasesDirectory = databasesDirectory || defaultDatabasesDir;
   let [enginesDirectory, setEnginesDirectory] = useAtom(storedEnginesDirAtom);
   enginesDirectory = enginesDirectory || defaultEnginesDir;
@@ -327,9 +321,7 @@ export default function Page() {
             ]}
             allowDeselect={false}
             value={moveNotationType}
-            onChange={(val) =>
-              setMoveNotationType(val as "letters" | "symbols")
-            }
+            onChange={(val) => setMoveNotationType(val as "letters" | "symbols")}
           />
         ),
       },
@@ -407,8 +399,7 @@ export default function Page() {
         id: "ranks-position",
         category: "board",
         title: "Rank Position",
-        description:
-          "Show rank numbers (1-8) on the left or right side of the board",
+        description: "Show rank numbers (1-8) on the left or right side of the board",
         keywords: ["coordinates", "ranks", "position", "left", "right"],
         render: () => (
           <Select
@@ -594,8 +585,7 @@ export default function Page() {
         id: "tts-enabled",
         category: "tts",
         title: "Text-to-Speech",
-        description:
-          "Enable text-to-speech narration for PGN annotations and comments",
+        description: "Enable text-to-speech narration for PGN annotations and comments",
         keywords: ["tts", "speech", "narrate", "elevenlabs", "voice", "read"],
         render: () => <TTSEnabledSwitch />,
       },
@@ -603,8 +593,7 @@ export default function Page() {
         id: "tts-auto-narrate",
         category: "tts",
         title: "Auto-Narrate on Move",
-        description:
-          "Automatically read annotations aloud when stepping through moves",
+        description: "Automatically read annotations aloud when stepping through moves",
         keywords: ["tts", "auto", "narrate", "step", "move"],
         render: () => <TTSAutoNarrateSwitch />,
       },
@@ -631,17 +620,8 @@ export default function Page() {
         id: "tts-setup",
         category: "tts",
         title: "TTS Setup",
-        description:
-          "Check and install dependencies for local TTS providers (KittenTTS, OpenTTS)",
-        keywords: [
-          "tts",
-          "setup",
-          "install",
-          "docker",
-          "python",
-          "dependencies",
-          "venv",
-        ],
+        description: "Check and install dependencies for local TTS providers (KittenTTS, OpenTTS)",
+        keywords: ["tts", "setup", "install", "docker", "python", "dependencies", "venv"],
         render: () => <TTSSetupButton />,
       },
       {
@@ -701,8 +681,7 @@ export default function Page() {
         id: "tts-api-key",
         category: "tts",
         title: "ElevenLabs API Key",
-        description:
-          "API key for ElevenLabs provider. Get one at elevenlabs.io",
+        description: "API key for ElevenLabs provider. Get one at elevenlabs.io",
         keywords: ["tts", "api", "key", "elevenlabs"],
         render: () => <TTSApiKeyInput />,
       },
@@ -721,16 +700,7 @@ export default function Page() {
         title: "OpenTTS Server URL",
         description:
           "URL of your OpenTTS server (e.g. http://localhost:5500). Run with: docker run -it -p 5500:5500 synesthesiam/opentts:en",
-        keywords: [
-          "tts",
-          "opentts",
-          "server",
-          "url",
-          "self-hosted",
-          "docker",
-          "start",
-          "stop",
-        ],
+        keywords: ["tts", "opentts", "server", "url", "self-hosted", "docker", "start", "stop"],
         render: () => <TTSOpenTTSUrlInput />,
       },
       {
@@ -739,16 +709,7 @@ export default function Page() {
         title: "KittenTTS Server URL",
         description:
           "URL of your KittenTTS server (English only). High-quality StyleTTS 2 voices. See TTS > Getting Started for setup.",
-        keywords: [
-          "tts",
-          "kittentts",
-          "server",
-          "url",
-          "kitten",
-          "styletts",
-          "start",
-          "stop",
-        ],
+        keywords: ["tts", "kittentts", "server", "url", "kitten", "styletts", "start", "stop"],
         render: () => <TTSKittenTTSUrlInput />,
       },
       {
@@ -757,14 +718,7 @@ export default function Page() {
         title: "KittenTTS CPU Threads",
         description:
           "Number of CPU threads for KittenTTS inference. 0 = auto (~4 threads). Increase for faster generation on machines with many cores. Restart server to apply.",
-        keywords: [
-          "tts",
-          "kittentts",
-          "threads",
-          "cpu",
-          "cores",
-          "performance",
-        ],
+        keywords: ["tts", "kittentts", "threads", "cpu", "cores", "performance"],
         render: () => <TTSKittenTTSThreadsInput />,
       },
       // Directories settings
@@ -1054,11 +1008,7 @@ export default function Page() {
               </Text>
             </Group>
             {categorySettings.map((setting) => (
-              <SettingRow
-                key={setting.id}
-                title={setting.title}
-                description={setting.description}
-              >
+              <SettingRow key={setting.id} title={setting.title} description={setting.description}>
                 {setting.render()}
               </SettingRow>
             ))}
@@ -1071,11 +1021,7 @@ export default function Page() {
   const renderCategorySettings = (category: SettingCategory) => {
     const categorySettings = settings.filter((s) => s.category === category);
     return categorySettings.map((setting) => (
-      <SettingRow
-        key={setting.id}
-        title={setting.title}
-        description={setting.description}
-      >
+      <SettingRow key={setting.id} title={setting.title} description={setting.description}>
         {setting.render()}
       </SettingRow>
     ));
@@ -1132,31 +1078,19 @@ export default function Page() {
             <Tabs.Tab value="anarchy" leftSection={<IconFlag size="1rem" />}>
               {t("Settings.Anarchy")}
             </Tabs.Tab>
-            <Tabs.Tab
-              value="appearance"
-              leftSection={<IconBrush size="1rem" />}
-            >
+            <Tabs.Tab value="appearance" leftSection={<IconBrush size="1rem" />}>
               {t("Settings.Appearance")}
             </Tabs.Tab>
             <Tabs.Tab value="sound" leftSection={<IconVolume size="1rem" />}>
               {t("Settings.Sound")}
             </Tabs.Tab>
-            <Tabs.Tab
-              value="tts"
-              leftSection={<IconMessageCircle size="1rem" />}
-            >
+            <Tabs.Tab value="tts" leftSection={<IconMessageCircle size="1rem" />}>
               {t("Settings.TTS")}
             </Tabs.Tab>
-            <Tabs.Tab
-              value="keybinds"
-              leftSection={<IconKeyboard size="1rem" />}
-            >
+            <Tabs.Tab value="keybinds" leftSection={<IconKeyboard size="1rem" />}>
               {t("Settings.Keybinds")}
             </Tabs.Tab>
-            <Tabs.Tab
-              value="directories"
-              leftSection={<IconFolder size="1rem" />}
-            >
+            <Tabs.Tab value="directories" leftSection={<IconFolder size="1rem" />}>
               {t("Settings.Directories")}
             </Tabs.Tab>
             <Tabs.Tab value="repertoire" leftSection={<IconBook size="1rem" />}>
@@ -1165,16 +1099,8 @@ export default function Page() {
             <Tabs.Tab value="network" leftSection={<IconNetwork size="1rem" />}>
               {t("Settings.Network")}
             </Tabs.Tab>
-            <Tooltip
-              label={LANGUAGE_WORD_ALL}
-              position="right"
-              multiline
-              w={280}
-            >
-              <Tabs.Tab
-                value="language"
-                leftSection={<span style={{ fontSize: "1rem" }}>🌐</span>}
-              >
+            <Tooltip label={LANGUAGE_WORD_ALL} position="right" multiline w={280}>
+              <Tabs.Tab value="language" leftSection={<span style={{ fontSize: "1rem" }}>🌐</span>}>
                 {t("Settings.Language")}
               </Tabs.Tab>
             </Tooltip>
@@ -1274,12 +1200,9 @@ export default function Page() {
 
                               // Show undo toast in previous language
                               const prevName =
-                                LANGUAGE_RESCUE.find(
-                                  (l) => l.value === prevLang,
-                                )?.native || prevLang;
-                              const msg =
-                                UNDO_MESSAGES[prevLang] ||
-                                UNDO_MESSAGES["en-US"];
+                                LANGUAGE_RESCUE.find((l) => l.value === prevLang)?.native ||
+                                prevLang;
+                              const msg = UNDO_MESSAGES[prevLang] || UNDO_MESSAGES["en-US"];
                               notifications.show({
                                 id: "language-undo",
                                 title: `${msg.changed} → ${lang.native}`,
@@ -1409,9 +1332,7 @@ export default function Page() {
                   {renderCategorySettings("network")}
                 </Tabs.Panel>
 
-                <Tabs.Panel value="privacy">
-                  {renderCategorySettings("privacy")}
-                </Tabs.Panel>
+                <Tabs.Panel value="privacy">{renderCategorySettings("privacy")}</Tabs.Panel>
               </Card>
             </ScrollArea>
             <Text size="xs" c="dimmed" ta="right">

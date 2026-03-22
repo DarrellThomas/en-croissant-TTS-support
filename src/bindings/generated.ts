@@ -570,12 +570,12 @@ async setupOpenttsPull() : Promise<Result<string, string>> {
 }
 },
 /**
- * Linux system-install updater: finds the extracted AppImage in /tmp and
- * installs it to /usr/bin and /usr/lib via a single pkexec prompt.
+ * Linux system-install updater: downloads the .deb from GitHub and installs
+ * via pkexec dpkg -i (shows one polkit auth prompt).
  */
-async installUpdateLinux() : Promise<Result<null, string>> {
+async downloadAndInstallLinux(version: string) : Promise<Result<null, string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("install_update_linux") };
+    return { status: "ok", data: await TAURI_INVOKE("download_and_install_linux", { version }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };

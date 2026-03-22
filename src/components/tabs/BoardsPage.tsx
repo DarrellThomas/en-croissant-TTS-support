@@ -26,7 +26,7 @@ import "react-mosaic-component/react-mosaic-component.css";
 import "@/styles/react-mosaic.css";
 import { platform } from "@tauri-apps/plugin-os";
 import { atomWithStorage } from "jotai/utils";
-import * as classes from "./BoardsPage.css";
+import classes from "./BoardsPage.module.css";
 
 export default function BoardsPage() {
   const { t } = useTranslation();
@@ -72,7 +72,13 @@ export default function BoardsPage() {
         await commands.abortGame(`${value}-game`);
       }
     },
-    [tabs, activeTab, setTabs, toggleSaveModal, setActiveTab, startTransition],
+    [
+	tabs,
+	activeTab,
+	setTabs,
+	toggleSaveModal,
+	setActiveTab
+],
   );
 
   function selectTab(index: number) {
@@ -130,7 +136,11 @@ export default function BoardsPage() {
         startTransition(() => setActiveTab(id));
       }
     },
-    [tabs, setTabs, setActiveTab, startTransition],
+    [
+	tabs,
+	setTabs,
+	setActiveTab
+],
   );
 
   useEffect(() => {
@@ -146,8 +156,7 @@ export default function BoardsPage() {
 
     window.addEventListener("keydown", handler, { capture: true });
 
-    return () =>
-      window.removeEventListener("keydown", handler, { capture: true });
+    return () => window.removeEventListener("keydown", handler, { capture: true });
   }, [closeTab]);
 
   const keyMap = useAtomValue(keyMapAtom);
@@ -156,7 +165,7 @@ export default function BoardsPage() {
     (v: string) => {
       startTransition(() => setActiveTab(v));
     },
-    [setActiveTab, startTransition],
+    [setActiveTab],
   );
   useHotkeys([
     [keyMap.CLOSE_TAB.keys, () => closeTab(activeTab)],
@@ -204,11 +213,7 @@ export default function BoardsPage() {
         >
           <Droppable droppableId="droppable" direction="horizontal">
             {(provided) => (
-              <div
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-                style={{ display: "flex" }}
-              >
+              <div ref={provided.innerRef} {...provided.droppableProps} style={{ display: "flex" }}>
                 {tabs.map((tab, i) => (
                   <Draggable key={tab.value} draggableId={tab.value} index={i}>
                     {(provided) => (
@@ -256,14 +261,7 @@ export default function BoardsPage() {
         </DragDropContext>
       </ScrollArea>
       {tabs.map((tab) => (
-        <Tabs.Panel
-          key={tab.value}
-          value={tab.value}
-          h="100%"
-          w="100%"
-          pb="sm"
-          px="xs"
-        >
+        <Tabs.Panel key={tab.value} value={tab.value} h="100%" w="100%" pb="sm" px="xs">
           <TabSwitch
             tab={tab}
             saveModalOpened={saveModalOpened}

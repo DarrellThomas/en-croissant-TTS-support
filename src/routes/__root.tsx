@@ -1,23 +1,14 @@
 import { AppShell } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import {
-  createRootRouteWithContext,
-  Outlet,
-  useNavigate,
-} from "@tanstack/react-router";
+import { createRootRouteWithContext, Outlet, useNavigate } from "@tanstack/react-router";
 import { TauriEvent } from "@tauri-apps/api/event";
-import {
-  Menu,
-  MenuItem,
-  PredefinedMenuItem,
-  Submenu,
-} from "@tauri-apps/api/menu";
+import { Menu, MenuItem, PredefinedMenuItem, Submenu } from "@tauri-apps/api/menu";
 import { appLogDir, resolve } from "@tauri-apps/api/path";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { open } from "@tauri-apps/plugin-dialog";
 import { platform } from "@tauri-apps/plugin-os";
 import { exit } from "@tauri-apps/plugin-process";
-import { open as shellOpen } from "@tauri-apps/plugin-shell";
+import { openPath, openUrl } from "@tauri-apps/plugin-opener";
 import { check, type Update } from "@tauri-apps/plugin-updater";
 import { useAtom, useAtomValue } from "jotai";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -46,15 +37,7 @@ type MenuAction = {
   label: string;
   shortcut?: string;
   action?: () => void;
-  item?:
-    | "Hide"
-    | "Copy"
-    | "Cut"
-    | "Paste"
-    | "SelectAll"
-    | "Undo"
-    | "Redo"
-    | "Quit";
+  item?: "Hide" | "Copy" | "Cut" | "Paste" | "SelectAll" | "Undo" | "Redo" | "Quit";
   submenu?: MenuAction[];
 };
 
@@ -336,7 +319,7 @@ function RootLayout() {
           {
             label: t("Menu.Help.Credits"),
             id: "credits",
-            action: () => shellOpen(docsUrl("/docs/credits/")),
+            action: () => openUrl(docsUrl("/docs/credits/")),
           },
         ],
       },
@@ -346,7 +329,7 @@ function RootLayout() {
           {
             label: t("Menu.Help.Docs"),
             id: "documentation",
-            action: () => shellOpen(docsUrl()),
+            action: () => openUrl(docsUrl()),
           },
           { label: "divider" },
           {
@@ -363,16 +346,13 @@ function RootLayout() {
                 title: "Logs",
                 message: `Opened logs in ${path}`,
               });
-              await shellOpen(path);
+              await openPath(path);
             },
           },
           {
             label: t("Menu.Help.ReportIssue"),
             id: "report_issue",
-            action: () =>
-              shellOpen(
-                "https://github.com/DarrellThomas/en-parlant/issues/new",
-              ),
+            action: () => openUrl("https://github.com/DarrellThomas/en-parlant/issues/new"),
           },
           { label: "divider" },
           ...(!isMacOS ? [checkForUpdatesOption, aboutOption] : []),
@@ -382,9 +362,7 @@ function RootLayout() {
     [t, checkForUpdates, createNewTab, keyMap, openNewFile, docsUrl],
   );
 
-  const { data: menu } = useSWRImmutable(["menu", menuActions], () =>
-    createMenu(menuActions),
-  );
+  const { data: menu } = useSWRImmutable(["menu", menuActions], () => createMenu(menuActions));
 
   useEffect(() => {
     if (!menu) return;
@@ -398,24 +376,19 @@ function RootLayout() {
   }, [menu, isNative]);
 
   useEffect(() => {
-    const unlisten = getCurrentWindow().listen(
-      TauriEvent.DRAG_DROP,
-      (event) => {
-        const payload = event.payload as { paths: string[] };
-        if (payload?.paths) {
-          const pgnFiles = payload.paths.filter((path) =>
-            path.toLowerCase().endsWith(".pgn"),
-          );
+    const unlisten = getCurrentWindow().listen(TauriEvent.DRAG_DROP, (event) => {
+      const payload = event.payload as { paths: string[] };
+      if (payload?.paths) {
+        const pgnFiles = payload.paths.filter((path) => path.toLowerCase().endsWith(".pgn"));
 
-          if (pgnFiles.length > 0) {
-            navigate({ to: "/" });
-            for (const file of pgnFiles) {
-              openFile(file, setTabs, setActiveTab);
-            }
+        if (pgnFiles.length > 0) {
+          navigate({ to: "/" });
+          for (const file of pgnFiles) {
+            openFile(file, setTabs, setActiveTab);
           }
         }
-      },
-    );
+      }
+    });
 
     return () => {
       unlisten.then((fn) => fn());
@@ -443,10 +416,7 @@ function RootLayout() {
       }}
     >
       <AboutModal opened={opened} setOpened={setOpened} />
-      <ClearDataModal
-        opened={clearDataOpened}
-        onClose={() => setClearDataOpened(false)}
-      />
+      <ClearDataModal opened={clearDataOpened} onClose={() => setClearDataOpened(false)} />
       <UpdateModal
         opened={updateModalOpened}
         onClose={() => setUpdateModalOpened(false)}

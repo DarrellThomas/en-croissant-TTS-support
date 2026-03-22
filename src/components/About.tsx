@@ -30,16 +30,9 @@ function AboutModal({
     load();
   }, []);
   return (
-    <Modal
-      centered
-      opened={opened}
-      onClose={() => setOpened(false)}
-      title="En Parlant~"
-    >
+    <Modal centered opened={opened} onClose={() => setOpened(false)} title="En Parlant~">
       <Text>Version: {info?.version}</Text>
-      <Text>
-        Built: {new Date(import.meta.env.VITE_BUILD_TIME).toLocaleString()}
-      </Text>
+      <Text>Built: {new Date(import.meta.env.VITE_BUILD_TIME).toLocaleString()}</Text>
       <Text>Tauri version: {info?.tauri}</Text>
       <Text>
         OS: {info?.os} {info?.architecture} {info?.osVersion}
@@ -47,11 +40,7 @@ function AboutModal({
 
       <br />
 
-      <Anchor
-        href="https://github.com/DarrellThomas/en-parlant"
-        target="_blank"
-        rel="noreferrer"
-      >
+      <Anchor href="https://github.com/DarrellThomas/en-parlant" target="_blank" rel="noreferrer">
         github.com/DarrellThomas/en-parlant
       </Anchor>
 
@@ -59,11 +48,7 @@ function AboutModal({
 
       <Text size="sm">
         Original En Croissant can be found at:{" "}
-        <Anchor
-          href="https://www.encroissant.org"
-          target="_blank"
-          rel="noreferrer"
-        >
+        <Anchor href="https://www.encroissant.org" target="_blank" rel="noreferrer">
           www.encroissant.org
         </Anchor>
       </Text>

@@ -10,12 +10,7 @@ import {
   Stack,
   Text,
 } from "@mantine/core";
-import {
-  IconBrain,
-  IconHeadphones,
-  IconKey,
-  IconSparkles,
-} from "@tabler/icons-react";
+import { IconBrain, IconHeadphones, IconKey, IconSparkles } from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-router";
 import { useAtom, useSetAtom } from "jotai";
 import { Trans, useTranslation } from "react-i18next";
@@ -100,21 +95,12 @@ export default function TTSDemoModal({
   const setActiveTab = useSetAtom(activeTabAtom);
   const navigate = useNavigate();
 
-  async function openDemo(
-    lang: string,
-    label: string,
-    gender: "male" | "female",
-  ) {
+  async function openDemo(lang: string, label: string, gender: "male" | "female") {
     try {
-      const res = await fetch(
-        `https://enparlant.redshed.ai/pgn/demo/tts-demo-${lang}.pgn`,
-      );
+      const res = await fetch(`https://enparlant.redshed.ai/pgn/demo/tts-demo-${lang}.pgn`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       let pgn = await res.text();
-      pgn = pgn.replace(
-        '[AudioSource "demo"]',
-        `[AudioSource "demo"]\n[AudioGender "${gender}"]`,
-      );
+      pgn = pgn.replace('[AudioSource "demo"]', `[AudioSource "demo"]\n[AudioGender "${gender}"]`);
       navigate({ to: "/" });
       createTab({
         tab: { name: `Demo \u2014 ${label}`, type: "analysis" },
@@ -168,10 +154,7 @@ export default function TTSDemoModal({
               </Badge>
             </Group>
             <Text size="xs" c="dimmed">
-              <Trans
-                i18nKey="TTSDemo.FreeOption.Desc"
-                components={{ bold: <strong /> }}
-              />
+              <Trans i18nKey="TTSDemo.FreeOption.Desc" components={{ bold: <strong /> }} />
             </Text>
           </Box>
 
@@ -192,10 +175,7 @@ export default function TTSDemoModal({
               </Badge>
             </Group>
             <Text size="xs" c="dimmed">
-              <Trans
-                i18nKey="TTSDemo.BYOK.Desc"
-                components={{ bold: <strong /> }}
-              />
+              <Trans i18nKey="TTSDemo.BYOK.Desc" components={{ bold: <strong /> }} />
             </Text>
           </Box>
         </SimpleGrid>

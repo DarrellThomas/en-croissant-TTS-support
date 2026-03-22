@@ -39,13 +39,13 @@ Everything in En Croissant, plus:
 
 ## TTS Providers at a Glance
 
-| Provider | Cost | Quality | Languages | Offline | Setup |
-|----------|------|---------|-----------|---------|-------|
-| **ElevenLabs** | Free tier (10K chars/mo) | Exceptional | 8 languages | No | API key |
-| **Google Cloud** | Free tier (1M chars/mo) | Very good | 8 languages | No | API key |
-| **KittenTTS** | Free | Good | English only | Yes | Python + model |
-| **System (OS Native)** | Free | Passable | OS-dependent | Yes | None |
-| **OpenTTS** | Free | Poor | European best | Yes | Docker |
+| Provider               | Cost                     | Quality     | Languages     | Offline | Setup          |
+| ---------------------- | ------------------------ | ----------- | ------------- | ------- | -------------- |
+| **ElevenLabs**         | Free tier (10K chars/mo) | Exceptional | 8 languages   | No      | API key        |
+| **Google Cloud**       | Free tier (1M chars/mo)  | Very good   | 8 languages   | No      | API key        |
+| **KittenTTS**          | Free                     | Good        | English only  | Yes     | Python + model |
+| **System (OS Native)** | Free                     | Passable    | OS-dependent  | Yes     | None           |
+| **OpenTTS**            | Free                     | Poor        | European best | Yes     | Docker         |
 
 > **Hardware note:** The local providers (KittenTTS and OpenTTS) run neural inference on your CPU. They need a modern multi-core processor (8+ cores recommended) to generate speech without noticeable lag.
 

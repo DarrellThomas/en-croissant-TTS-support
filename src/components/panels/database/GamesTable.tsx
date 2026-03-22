@@ -8,13 +8,7 @@ import type { NormalizedGame } from "@/bindings";
 import { activeTabAtom, tabsAtom } from "@/state/atoms";
 import { createTab } from "@/utils/tabs";
 
-function GamesTable({
-  games,
-  loading,
-}: {
-  games: NormalizedGame[];
-  loading: boolean;
-}) {
+function GamesTable({ games, loading }: { games: NormalizedGame[]; loading: boolean }) {
   const [, setTabs] = useAtom(tabsAtom);
   const setActiveTab = useSetAtom(activeTabAtom);
 

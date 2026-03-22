@@ -12,185 +12,178 @@ import { type GameHeaders, getGameName } from "./treeReducer";
 const INVALID_FILENAME_CHARS = /[\\/:*?"<>|]+/g;
 
 function getDefaultGameFilename(headers: GameHeaders) {
-  const baseName = getGameName(headers).trim();
-  const date = headers.date?.trim() || "";
-  const hasUsableBase = baseName.length > 0 && baseName !== "Unknown";
-  const hasUsableDate =
-    Boolean(date) && date !== "????.??.??" && date !== "????.??";
+    const baseName = getGameName(headers).trim();
+    const date = headers.date?.trim() || "";
+    const hasUsableBase = baseName.length > 0 && baseName !== "Unknown";
+    const hasUsableDate = Boolean(date) && date !== "????.??.??" && date !== "????.??";
 
-  let filename = hasUsableBase ? baseName : "";
-  if (hasUsableDate) {
-    filename = filename ? `${date}_${filename}` : date;
-  }
+    let filename = hasUsableBase ? baseName : "";
+    if (hasUsableDate) {
+        filename = filename ? `${date}_${filename}` : date;
+    }
 
-  filename = filename
-    .replace(INVALID_FILENAME_CHARS, " ")
-    .replace(/\s+/g, " ")
-    .trim();
+    filename = filename.replace(INVALID_FILENAME_CHARS, " ").replace(/\s+/g, " ").trim();
 
-  if (filename.length > 0) {
-    return filename;
-  }
+    if (filename.length > 0) {
+        return filename;
+    }
 
-  const now = new Date();
-  const today = now.toISOString().slice(0, 10);
-  const time = now.toISOString().slice(11, 16).replace(":", ".");
-  return `${today}_${time}_analysis`;
+    const now = new Date();
+    const today = now.toISOString().slice(0, 10);
+    const time = now.toISOString().slice(11, 16).replace(":", ".");
+    return `${today}_${time}_analysis`;
 }
 
 export const tabSchema = z.object({
-  name: z.string(),
-  value: z.string(),
-  type: z.enum(["new", "play", "analysis", "puzzles"]),
-  gameNumber: z.number().nullish(),
-  file: fileMetadataSchema.nullish(),
+    name: z.string(),
+    value: z.string(),
+    type: z.enum(["new", "play", "analysis", "puzzles"]),
+    gameNumber: z.number().nullish(),
+    file: fileMetadataSchema.nullish(),
 });
 
 export type Tab = z.infer<typeof tabSchema>;
 
 export function genID() {
-  function S4() {
-    return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
-  }
-  return S4() + S4();
+    function S4() {
+        return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+    }
+    return S4() + S4();
 }
 
 export async function createTab({
-  tab,
-  setTabs,
-  setActiveTab,
-  pgn,
-  headers,
-  fileInfo,
-  gameNumber,
-  position,
+    tab,
+    setTabs,
+    setActiveTab,
+    pgn,
+    headers,
+    fileInfo,
+    gameNumber,
+    position,
 }: {
-  tab: Omit<Tab, "value">;
-  setTabs: React.Dispatch<React.SetStateAction<Tab[]>>;
-  setActiveTab: React.Dispatch<React.SetStateAction<string | null>>;
-  pgn?: string;
-  headers?: GameHeaders;
-  fileInfo?: FileMetadata;
-  gameNumber?: number;
-  position?: number[];
+    tab: Omit<Tab, "value">;
+    setTabs: React.Dispatch<React.SetStateAction<Tab[]>>;
+    setActiveTab: React.Dispatch<React.SetStateAction<string | null>>;
+    pgn?: string;
+    headers?: GameHeaders;
+    fileInfo?: FileMetadata;
+    gameNumber?: number;
+    position?: number[];
 }) {
-  const id = genID();
+    const id = genID();
 
-  if (pgn !== undefined) {
-    const tree = await parsePGN(pgn, headers?.fen);
-    if (headers) {
-      tree.headers = headers;
-      if (position) {
-        tree.position = position;
-      }
-    }
-    sessionStorage.setItem(id, JSON.stringify({ version: 0, state: tree }));
+    if (pgn !== undefined) {
+        const tree = await parsePGN(pgn, headers?.fen);
+        if (headers) {
+            tree.headers = headers;
+            if (position) {
+                tree.position = position;
+            }
+        }
+        sessionStorage.setItem(id, JSON.stringify({ version: 0, state: tree }));
 
-    // Prefetch demo narration clips so playback is instant
-    if (
-      tree.headers.other?.AudioSource === "demo" &&
-      tree.headers.other?.Language
-    ) {
-      prefetchDemoClips(
-        tree.root,
-        tree.headers.other.Language,
-        tree.headers.other.AudioGender,
-      );
+        // Prefetch demo narration clips so playback is instant
+        if (tree.headers.other?.AudioSource === "demo" && tree.headers.other?.Language) {
+            prefetchDemoClips(
+                tree.root,
+                tree.headers.other.Language,
+                tree.headers.other.AudioGender,
+            );
+        }
     }
-  }
 
-  setTabs((prev) => {
-    if (
-      prev.length === 0 ||
-      (prev.length === 1 && prev[0].type === "new" && tab.type !== "new")
-    ) {
-      return [
-        {
-          ...tab,
-          value: id,
-          file: fileInfo,
-          gameNumber,
-        },
-      ];
-    }
-    return [
-      ...prev,
-      {
-        ...tab,
-        value: id,
-        file: fileInfo,
-        gameNumber,
-      },
-    ];
-  });
-  setActiveTab(id);
-  return id;
+    setTabs((prev) => {
+        if (
+            prev.length === 0 ||
+            (prev.length === 1 && prev[0].type === "new" && tab.type !== "new")
+        ) {
+            return [
+                {
+                    ...tab,
+                    value: id,
+                    file: fileInfo,
+                    gameNumber,
+                },
+            ];
+        }
+        return [
+            ...prev,
+            {
+                ...tab,
+                value: id,
+                file: fileInfo,
+                gameNumber,
+            },
+        ];
+    });
+    setActiveTab(id);
+    return id;
 }
 
 export async function saveToFile({
-  dir,
-  tab,
-  setCurrentTab,
-  store,
+    dir,
+    tab,
+    setCurrentTab,
+    store,
 }: {
-  dir: string;
-  tab: Tab | undefined;
-  setCurrentTab: React.Dispatch<React.SetStateAction<Tab>>;
-  store: StoreApi<TreeStoreState>;
+    dir: string;
+    tab: Tab | undefined;
+    setCurrentTab: React.Dispatch<React.SetStateAction<Tab>>;
+    store: StoreApi<TreeStoreState>;
 }) {
-  let filePath: string;
-  if (tab?.file) {
-    filePath = tab.file.path;
-  } else {
-    const headers = store.getState().headers;
-    const suggestedName = getDefaultGameFilename(headers) || "Game";
-    const defaultPath = await resolve(dir, `${suggestedName}.pgn`);
-    const userChoice = await save({
-      defaultPath,
-      filters: [
-        {
-          name: "PGN",
-          extensions: ["pgn"],
-        },
-      ],
-    });
-    if (userChoice === null) {
-      return;
-    }
-    if (userChoice.endsWith(".pgn")) {
-      filePath = userChoice;
+    let filePath: string;
+    if (tab?.file) {
+        filePath = tab.file.path;
     } else {
-      // on Linux filters for userChoice seemingly don't work
-      // so userChoice can end without 'pgn' extension
-      filePath = userChoice.concat(".pgn");
+        const headers = store.getState().headers;
+        const suggestedName = getDefaultGameFilename(headers) || "Game";
+        const defaultPath = await resolve(dir, `${suggestedName}.pgn`);
+        const userChoice = await save({
+            defaultPath,
+            filters: [
+                {
+                    name: "PGN",
+                    extensions: ["pgn"],
+                },
+            ],
+        });
+        if (userChoice === null) {
+            return;
+        }
+        if (userChoice.endsWith(".pgn")) {
+            filePath = userChoice;
+        } else {
+            // on Linux filters for userChoice seemingly don't work
+            // so userChoice can end without 'pgn' extension
+            filePath = userChoice.concat(".pgn");
+        }
+        setCurrentTab((prev) => {
+            return {
+                ...prev,
+                file: {
+                    type: "file",
+                    name: filePath,
+                    path: filePath,
+                    numGames: 1,
+                    metadata: {
+                        tags: [],
+                        type: "game",
+                    },
+                    lastModified: Date.now(),
+                },
+            };
+        });
     }
-    setCurrentTab((prev) => {
-      return {
-        ...prev,
-        file: {
-          type: "file",
-          name: filePath,
-          path: filePath,
-          numGames: 1,
-          metadata: {
-            tags: [],
-            type: "game",
-          },
-          lastModified: Date.now(),
-        },
-      };
-    });
-  }
-  await commands.writeGame(
-    filePath,
-    tab?.gameNumber || 0,
-    `${getPGN(store.getState().root, {
-      headers: store.getState().headers,
-      comments: true,
-      extraMarkups: true,
-      glyphs: true,
-      variations: true,
-    })}\n\n`,
-  );
-  store.getState().save();
+    await commands.writeGame(
+        filePath,
+        tab?.gameNumber || 0,
+        `${getPGN(store.getState().root, {
+            headers: store.getState().headers,
+            comments: true,
+            extraMarkups: true,
+            glyphs: true,
+            variations: true,
+        })}\n\n`,
+    );
+    store.getState().save();
 }

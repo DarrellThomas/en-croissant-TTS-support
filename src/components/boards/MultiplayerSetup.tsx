@@ -139,11 +139,7 @@ export default function MultiplayerSetup() {
           <Button onClick={handleCreate} disabled={!playerName.trim()}>
             {t("Multiplayer.CreateGame")}
           </Button>
-          <Button
-            variant="light"
-            onClick={() => setView("joining")}
-            disabled={!playerName.trim()}
-          >
+          <Button variant="light" onClick={() => setView("joining")} disabled={!playerName.trim()}>
             {t("Multiplayer.JoinGame")}
           </Button>
         </Group>
@@ -182,16 +178,8 @@ export default function MultiplayerSetup() {
           <CopyButton value={gameCode} timeout={2000}>
             {({ copied, copy }) => (
               <Tooltip label={copied ? t("Common.Copied") : "Copy"}>
-                <ActionIcon
-                  color={copied ? "teal" : "gray"}
-                  variant="subtle"
-                  onClick={copy}
-                >
-                  {copied ? (
-                    <IconCheck size="1rem" />
-                  ) : (
-                    <IconCopy size="1rem" />
-                  )}
+                <ActionIcon color={copied ? "teal" : "gray"} variant="subtle" onClick={copy}>
+                  {copied ? <IconCheck size="1rem" /> : <IconCopy size="1rem" />}
                 </ActionIcon>
               </Tooltip>
             )}

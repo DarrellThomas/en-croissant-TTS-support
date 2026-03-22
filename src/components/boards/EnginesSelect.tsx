@@ -12,9 +12,7 @@ export function EnginesSelect({
   setEngine: (engine: LocalEngine | null) => void;
 }) {
   const allEngines = useAtomValue(enginesAtom);
-  const engines = (allEngines ?? []).filter(
-    (e): e is LocalEngine => e.type === "local",
-  );
+  const engines = (allEngines ?? []).filter((e): e is LocalEngine => e.type === "local");
 
   useEffect(() => {
     if (engines.length > 0 && engine === null) {
@@ -26,9 +24,7 @@ export function EnginesSelect({
     <Select
       allowDeselect={false}
       data={engines
-        ?.filter(
-          (engine, i, arr) => arr.findIndex((e) => e.id === engine.id) === i,
-        )
+        ?.filter((engine, i, arr) => arr.findIndex((e) => e.id === engine.id) === i)
         .map((engine) => ({
           label: engine.name,
           value: engine.id,

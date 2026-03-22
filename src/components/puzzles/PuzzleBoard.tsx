@@ -14,7 +14,7 @@ import {
   ranksPositionAtom,
   showCoordinatesAtom,
 } from "@/state/atoms";
-import { chessboard } from "@/styles/Chessboard.css";
+import chessboardStyles from "@/styles/Chessboard.module.css";
 import { positionFromFen } from "@/utils/chessops";
 import type { Completion, Puzzle } from "@/utils/puzzles";
 import { getNodeAtPath, treeIteratorMainLine } from "@/utils/treeReducer";
@@ -121,7 +121,7 @@ function PuzzleBoard({
   return (
     <Box w="100%" h="100%" ref={parentRef}>
       <Box
-        className={chessboard}
+        className={chessboardStyles.chessboard}
         style={{
           maxWidth: parentHeight,
         }}
@@ -151,8 +151,7 @@ function PuzzleBoard({
             color:
               puzzle &&
               equal(position, Array(currentMove).fill(0)) &&
-              (puzzle.completion === "incomplete" ||
-                puzzle.completion === "incorrect")
+              (puzzle.completion === "incomplete" || puzzle.completion === "incorrect")
                 ? turn
                 : undefined,
             dests: dests,
@@ -163,8 +162,7 @@ function PuzzleBoard({
                 const move: NormalMove = { from, to };
                 if (
                   pos?.board.get(from)?.role === "pawn" &&
-                  ((dest[1] === "8" && turn === "white") ||
-                    (dest[1] === "1" && turn === "black"))
+                  ((dest[1] === "8" && turn === "white") || (dest[1] === "1" && turn === "black"))
                 ) {
                   setPendingMove(move);
                 } else {
@@ -174,9 +172,7 @@ function PuzzleBoard({
             },
           }}
           lastMove={
-            moveHighlight && currentNode.move
-              ? chessgroundMove(currentNode.move)
-              : undefined
+            moveHighlight && currentNode.move ? chessgroundMove(currentNode.move) : undefined
           }
           turnColor={turn}
           fen={currentNode.fen}

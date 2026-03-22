@@ -1,7 +1,7 @@
 import { Box, Stack, Text } from "@mantine/core";
 import cx from "clsx";
 import type { ReactNode } from "react";
-import * as classes from "./GenericCard.css";
+import classes from "./GenericCard.module.css";
 
 type Props<T> = {
   id: T;
@@ -45,13 +45,7 @@ export default function GenericCard<T>({
           <div className={classes.info}>
             {stats.map((stat) => (
               <div key={stat.label}>
-                <Text
-                  size="xs"
-                  c="dimmed"
-                  fw="bold"
-                  className={classes.label}
-                  mt="1rem"
-                >
+                <Text size="xs" c="dimmed" fw="bold" className={classes.label} mt="1rem">
                   {stat.label}
                 </Text>
                 <Text fw={700} size="lg" style={{ lineHeight: 1 }}>

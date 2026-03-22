@@ -1,12 +1,4 @@
-import {
-  Button,
-  Modal,
-  SimpleGrid,
-  Stack,
-  Text,
-  Textarea,
-  TextInput,
-} from "@mantine/core";
+import { Button, Modal, SimpleGrid, Stack, Text, Textarea, TextInput } from "@mantine/core";
 import { useLoaderData } from "@tanstack/react-router";
 import { exists, rename, writeTextFile } from "@tauri-apps/plugin-fs";
 import { useAtomValue } from "jotai";
@@ -72,11 +64,7 @@ export function CreateModal({
   }
 
   return (
-    <Modal
-      opened={opened}
-      onClose={() => setOpened(false)}
-      title={t("Files.Create.Title")}
-    >
+    <Modal opened={opened} onClose={() => setOpened(false)} title={t("Files.Create.Title")}>
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -106,9 +94,7 @@ export function CreateModal({
                 id={v.value}
                 isSelected={filetype === v.value}
                 setSelected={setFiletype}
-                Header={
-                  <Text ta="center">{t(`Files.FileType.${v.label}`)}</Text>
-                }
+                Header={<Text ta="center">{t(`Files.FileType.${v.label}`)}</Text>}
               />
             ))}
           </SimpleGrid>
@@ -157,10 +143,7 @@ export function EditModal({
       tags: [],
     };
 
-    const newPGNPath = metadata.path.replace(
-      `${metadata.name}.pgn`,
-      `${filename}.pgn`,
-    );
+    const newPGNPath = metadata.path.replace(`${metadata.name}.pgn`, `${filename}.pgn`);
 
     await rename(metadata.path, newPGNPath);
 
@@ -171,10 +154,7 @@ export function EditModal({
       }
       await rename(metadataPath, newPGNPath.replace(".pgn", ".info"));
     } else if (createSidecarFiles) {
-      await writeTextFile(
-        newPGNPath.replace(".pgn", ".info"),
-        JSON.stringify(newMetadata),
-      );
+      await writeTextFile(newPGNPath.replace(".pgn", ".info"), JSON.stringify(newMetadata));
     }
 
     mutate();
@@ -195,11 +175,7 @@ export function EditModal({
   }
 
   return (
-    <Modal
-      opened={opened}
-      onClose={() => setOpened(false)}
-      title={t("Files.Edit.Title")}
-    >
+    <Modal opened={opened} onClose={() => setOpened(false)} title={t("Files.Edit.Title")}>
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -227,9 +203,7 @@ export function EditModal({
                 id={v.value}
                 isSelected={filetype === v.value}
                 setSelected={setFiletype}
-                Header={
-                  <Text ta="center">{t(`Files.FileType.${v.label}`)}</Text>
-                }
+                Header={<Text ta="center">{t(`Files.FileType.${v.label}`)}</Text>}
               />
             ))}
           </SimpleGrid>

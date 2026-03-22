@@ -1,13 +1,4 @@
-import {
-  Accordion,
-  ActionIcon,
-  Box,
-  Group,
-  ScrollArea,
-  Stack,
-  Text,
-  Tooltip,
-} from "@mantine/core";
+import { Accordion, ActionIcon, Box, Group, ScrollArea, Stack, Text, Tooltip } from "@mantine/core";
 import { useToggle } from "@mantine/hooks";
 import { IconPlus } from "@tabler/icons-react";
 import { useAtom, useAtomValue } from "jotai";
@@ -47,11 +38,7 @@ function InfoPanel({ addGame }: { addGame?: () => void }) {
 
   return (
     <Stack h="100%" pl="sm" pt="sm">
-      <GameSelectorAccordion
-        games={games}
-        setGames={setGames}
-        addGame={addGame}
-      />
+      <GameSelectorAccordion games={games} setGames={setGames} addGame={addGame} />
       <ScrollArea offsetScrollbars>
         <FileInfo setGames={setGames} />
         <Stack>
@@ -120,13 +107,9 @@ function GameSelectorAccordion({
     },
   );
 
-  useHotkeys(
-    keyMap.PREVIOUS_GAME.keys,
-    () => setPage(Math.max(0, gameNumber - 1)),
-    {
-      enabled: !!currentTab?.file,
-    },
-  );
+  useHotkeys(keyMap.PREVIOUS_GAME.keys, () => setPage(Math.max(0, gameNumber - 1)), {
+    enabled: !!currentTab?.file,
+  });
 
   if (!currentTab?.file) return null;
 
@@ -139,9 +122,7 @@ function GameSelectorAccordion({
 
     if (!currentTab?.file) return;
 
-    const data = unwrap(
-      await commands.readGames(currentTab.file.path, page, page),
-    );
+    const data = unwrap(await commands.readGames(currentTab.file.path, page, page));
     const tree = await parsePGN(data[0]);
     setState(tree);
 

@@ -5,7 +5,7 @@ import cx from "clsx";
 import { useEffect } from "react";
 import type { Tab } from "@/utils/tabs";
 import { InlineInput } from "../common/InlineInput";
-import * as classes from "./BoardTab.css";
+import classes from "./BoardTab.module.css";
 
 export function BoardTab({
   tab,
@@ -100,10 +100,7 @@ export function BoardTab({
         >
           Duplicate Tab
         </Menu.Item>
-        <Menu.Item
-          leftSection={<IconEdit size="0.875rem" />}
-          onClick={() => toggleRenaming(true)}
-        >
+        <Menu.Item leftSection={<IconEdit size="0.875rem" />} onClick={() => toggleRenaming(true)}>
           Rename Tab
         </Menu.Item>
         <Menu.Item

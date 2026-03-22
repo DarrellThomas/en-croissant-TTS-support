@@ -67,8 +67,7 @@ function BoardAnalysis() {
       sessionStorage.setItem("demo-nav-hint-shown", "1");
       notifications.show({
         title: "Demo",
-        message:
-          "Use ← → arrow keys (or the nav buttons) to step through the game",
+        message: "Use ← → arrow keys (or the nav buttons) to step through the game",
         autoClose: 6000,
       });
     }
@@ -135,10 +134,7 @@ function BoardAnalysis() {
       const settingsAtom = tabEngineSettingsFamily({
         tab,
         engineId: firstEngine.id,
-        defaultSettings:
-          firstEngine.type === "local"
-            ? firstEngine.settings || []
-            : undefined,
+        defaultSettings: firstEngine.type === "local" ? firstEngine.settings || [] : undefined,
         defaultGo: firstEngine.go ?? undefined,
       });
       jotaiStore.set(settingsAtom, {
@@ -160,13 +156,10 @@ function BoardAnalysis() {
 
   const keyMap = useAtomValue(keyMapAtom);
 
-  const [currentTabSelected, setCurrentTabSelected] = useAtom(
-    currentTabSelectedAtom,
-  );
+  const [currentTabSelected, setCurrentTabSelected] = useAtom(currentTabSelectedAtom);
   const practiceTabSelected = useAtomValue(currentPracticeTabAtom);
   const isRepertoire = currentTab?.file?.metadata.type === "repertoire";
-  const practicing =
-    currentTabSelected === "practice" && practiceTabSelected === "train";
+  const practicing = currentTabSelected === "practice" && practiceTabSelected === "train";
   const practiceState = useAtomValue(practiceStateAtom);
   const isPracticeRating = practicing && practiceState.phase === "correct";
 
@@ -175,30 +168,12 @@ function BoardAnalysis() {
     [keyMap.CLEAR_SHAPES.keys, () => clearShapes()],
   ]);
   useHotkeys([
-    [
-      keyMap.ANNOTATION_BRILLIANT.keys,
-      () => !isPracticeRating && setAnnotation("!!"),
-    ],
-    [
-      keyMap.ANNOTATION_GOOD.keys,
-      () => !isPracticeRating && setAnnotation("!"),
-    ],
-    [
-      keyMap.ANNOTATION_INTERESTING.keys,
-      () => !isPracticeRating && setAnnotation("!?"),
-    ],
-    [
-      keyMap.ANNOTATION_DUBIOUS.keys,
-      () => !isPracticeRating && setAnnotation("?!"),
-    ],
-    [
-      keyMap.ANNOTATION_MISTAKE.keys,
-      () => !isPracticeRating && setAnnotation("?"),
-    ],
-    [
-      keyMap.ANNOTATION_BLUNDER.keys,
-      () => !isPracticeRating && setAnnotation("??"),
-    ],
+    [keyMap.ANNOTATION_BRILLIANT.keys, () => !isPracticeRating && setAnnotation("!!")],
+    [keyMap.ANNOTATION_GOOD.keys, () => !isPracticeRating && setAnnotation("!")],
+    [keyMap.ANNOTATION_INTERESTING.keys, () => !isPracticeRating && setAnnotation("!?")],
+    [keyMap.ANNOTATION_DUBIOUS.keys, () => !isPracticeRating && setAnnotation("?!")],
+    [keyMap.ANNOTATION_MISTAKE.keys, () => !isPracticeRating && setAnnotation("?")],
+    [keyMap.ANNOTATION_BLUNDER.keys, () => !isPracticeRating && setAnnotation("??")],
     [
       keyMap.PRACTICE_TAB.keys,
       () => {
@@ -261,69 +236,38 @@ function BoardAnalysis() {
           >
             <Tabs.List grow>
               {isRepertoire && (
-                <Tabs.Tab
-                  value="practice"
-                  leftSection={<IconTargetArrow size="1rem" />}
-                >
+                <Tabs.Tab value="practice" leftSection={<IconTargetArrow size="1rem" />}>
                   {t("Board.Tabs.Practice")}
                 </Tabs.Tab>
               )}
-              <Tabs.Tab
-                value="analysis"
-                leftSection={<IconZoomCheck size="1rem" />}
-              >
+              <Tabs.Tab value="analysis" leftSection={<IconZoomCheck size="1rem" />}>
                 {t("Board.Tabs.Analysis")}
               </Tabs.Tab>
-              <Tabs.Tab
-                value="database"
-                leftSection={<IconDatabase size="1rem" />}
-              >
+              <Tabs.Tab value="database" leftSection={<IconDatabase size="1rem" />}>
                 {t("Board.Tabs.Database")}
               </Tabs.Tab>
-              <Tabs.Tab
-                value="annotate"
-                leftSection={<IconNotes size="1rem" />}
-              >
+              <Tabs.Tab value="annotate" leftSection={<IconNotes size="1rem" />}>
                 {t("Board.Tabs.Annotate")}
               </Tabs.Tab>
-              <Tabs.Tab
-                value="info"
-                leftSection={<IconInfoCircle size="1rem" />}
-              >
+              <Tabs.Tab value="info" leftSection={<IconInfoCircle size="1rem" />}>
                 {t("Board.Tabs.Info")}
               </Tabs.Tab>
             </Tabs.List>
             {isRepertoire && (
-              <Tabs.Panel
-                value="practice"
-                flex={1}
-                style={{ overflowY: "hidden" }}
-              >
+              <Tabs.Panel value="practice" flex={1} style={{ overflowY: "hidden" }}>
                 <PracticePanel />
               </Tabs.Panel>
             )}
             <Tabs.Panel value="info" flex={1} style={{ overflowY: "hidden" }}>
               <InfoPanel addGame={addGame} />
             </Tabs.Panel>
-            <Tabs.Panel
-              value="database"
-              flex={1}
-              style={{ overflowY: "hidden" }}
-            >
+            <Tabs.Panel value="database" flex={1} style={{ overflowY: "hidden" }}>
               <DatabasePanel />
             </Tabs.Panel>
-            <Tabs.Panel
-              value="annotate"
-              flex={1}
-              style={{ overflowY: "hidden" }}
-            >
+            <Tabs.Panel value="annotate" flex={1} style={{ overflowY: "hidden" }}>
               <AnnotationPanel />
             </Tabs.Panel>
-            <Tabs.Panel
-              value="analysis"
-              flex={1}
-              style={{ overflowY: "hidden" }}
-            >
+            <Tabs.Panel value="analysis" flex={1} style={{ overflowY: "hidden" }}>
               <AnalysisPanel />
             </Tabs.Panel>
           </Tabs>

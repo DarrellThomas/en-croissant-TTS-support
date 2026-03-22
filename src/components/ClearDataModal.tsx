@@ -1,12 +1,4 @@
-import {
-  Anchor,
-  Button,
-  Checkbox,
-  Group,
-  Modal,
-  Stack,
-  Text,
-} from "@mantine/core";
+import { Anchor, Button, Checkbox, Group, Modal, Stack, Text } from "@mantine/core";
 import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -48,13 +40,7 @@ function clearAll() {
   sessionStorage.clear();
 }
 
-function ClearDataModal({
-  opened,
-  onClose,
-}: {
-  opened: boolean;
-  onClose: () => void;
-}) {
+function ClearDataModal({ opened, onClose }: { opened: boolean; onClose: () => void }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -93,12 +79,7 @@ function ClearDataModal({
   };
 
   return (
-    <Modal
-      centered
-      opened={opened}
-      onClose={onClose}
-      title={t("ClearData.Title")}
-    >
+    <Modal centered opened={opened} onClose={onClose} title={t("ClearData.Title")}>
       <Stack gap="md">
         <Text size="sm">{t("ClearData.Description")}</Text>
 
@@ -157,11 +138,7 @@ function ClearDataModal({
           <Button variant="default" onClick={onClose}>
             {t("Common.Cancel")}
           </Button>
-          <Button
-            color="red"
-            disabled={selected.size === 0}
-            onClick={handleClear}
-          >
+          <Button color="red" disabled={selected.size === 0} onClick={handleClear}>
             {t("ClearData.Confirm")}
           </Button>
         </Group>

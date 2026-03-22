@@ -58,22 +58,12 @@ interface DepCheck {
 
 export function TTSEnabledSwitch() {
   const [enabled, setEnabled] = useAtom(ttsEnabledAtom);
-  return (
-    <Switch
-      checked={enabled}
-      onChange={(e) => setEnabled(e.currentTarget.checked)}
-    />
-  );
+  return <Switch checked={enabled} onChange={(e) => setEnabled(e.currentTarget.checked)} />;
 }
 
 export function TTSAutoNarrateSwitch() {
   const [autoNarrate, setAutoNarrate] = useAtom(ttsAutoNarrateAtom);
-  return (
-    <Switch
-      checked={autoNarrate}
-      onChange={(e) => setAutoNarrate(e.currentTarget.checked)}
-    />
-  );
+  return <Switch checked={autoNarrate} onChange={(e) => setAutoNarrate(e.currentTarget.checked)} />;
 }
 
 export function TTSProviderSelect() {
@@ -128,9 +118,7 @@ export function TTSSetupButton() {
           if (!depsOk && !cancelled) {
             setInstalling(true);
             setInstallError(null);
-            setInstallPhase(
-              "Creating Python environment and installing packages (1-3 minutes)...",
-            );
+            setInstallPhase("Creating Python environment and installing packages (1-3 minutes)...");
             try {
               await invoke("setup_kittentts_venv");
               if (!cancelled) {
@@ -213,11 +201,7 @@ export function TTSSetupButton() {
                   ? "KittenTTS requires Python 3.10+. Install Python, then restart the app."
                   : "OpenTTS requires Docker with the OpenTTS image pulled."}
             </Text>
-            <Button
-              size="xs"
-              variant="light"
-              onClick={() => setWizardOpen(true)}
-            >
+            <Button size="xs" variant="light" onClick={() => setWizardOpen(true)}>
               Setup Guide
             </Button>
           </Group>
@@ -243,9 +227,7 @@ export function TTSSetupButton() {
           </Text>
         </Alert>
       )}
-      {depsMissing === null &&
-      provider !== "kittentts" &&
-      provider !== "opentts" ? null : (
+      {depsMissing === null && provider !== "kittentts" && provider !== "opentts" ? null : (
         <TTSSetupWizard
           opened={wizardOpen}
           onClose={() => setWizardOpen(false)}
@@ -301,9 +283,7 @@ export function TTSApiKeyInput() {
 export function TTSKittenTTSUrlInput() {
   const [url, setUrl] = useAtom(ttsKittenTTSUrlAtom);
   const [tempUrl, setTempUrl] = useState(url);
-  const [status, setStatus] = useState<"idle" | "starting" | "stopping">(
-    "idle",
-  );
+  const [status, setStatus] = useState<"idle" | "starting" | "stopping">("idle");
   const [result, setResult] = useState<string | null>(null);
   const [wizardOpen, setWizardOpen] = useState(false);
   const [, setServerStatus] = useAtom(ttsLocalServerStatusAtom);
@@ -403,9 +383,7 @@ export function TTSKittenTTSUrlInput() {
 export function TTSOpenTTSUrlInput() {
   const [url, setUrl] = useAtom(ttsOpenTTSUrlAtom);
   const [tempUrl, setTempUrl] = useState(url);
-  const [status, setStatus] = useState<"idle" | "starting" | "stopping">(
-    "idle",
-  );
+  const [status, setStatus] = useState<"idle" | "starting" | "stopping">("idle");
   const [result, setResult] = useState<string | null>(null);
   const [wizardOpen, setWizardOpen] = useState(false);
   const [, setServerStatus] = useAtom(ttsLocalServerStatusAtom);

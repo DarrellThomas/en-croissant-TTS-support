@@ -12,7 +12,7 @@ import {
 import { Link, useMatchRoute } from "@tanstack/react-router";
 import cx from "clsx";
 import { useTranslation } from "react-i18next";
-import * as classes from "./Sidebar.css";
+import classes from "./Sidebar.module.css";
 
 // "Language" in every supported language — always readable
 const LANGUAGE_TOOLTIP = [
@@ -59,8 +59,7 @@ function LanguageNavLink() {
   const match = useMatchRoute();
   const onSettingsRoute = match({ to: "/settings", fuzzy: true }) !== false;
   const isActive =
-    onSettingsRoute &&
-    new URLSearchParams(window.location.search).get("tab") === "language";
+    onSettingsRoute && new URLSearchParams(window.location.search).get("tab") === "language";
   return (
     <Tooltip label={LANGUAGE_TOOLTIP} position="right" multiline w={280}>
       <Link
@@ -105,11 +104,7 @@ export function SideBar() {
       <AppShellSection>
         <Stack justify="center" gap={0}>
           <LanguageNavLink />
-          <NavbarLink
-            icon={IconSettings}
-            label={t("SideBar.Settings")}
-            url="/settings"
-          />
+          <NavbarLink icon={IconSettings} label={t("SideBar.Settings")} url="/settings" />
         </Stack>
       </AppShellSection>
     </>

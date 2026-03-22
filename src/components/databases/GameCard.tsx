@@ -1,12 +1,4 @@
-import {
-  ActionIcon,
-  Divider,
-  Group,
-  Paper,
-  ScrollArea,
-  Stack,
-  Tooltip,
-} from "@mantine/core";
+import { ActionIcon, Divider, Group, Paper, ScrollArea, Stack, Tooltip } from "@mantine/core";
 import { IconTrash, IconZoomCheck } from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-router";
 import { useAtom, useSetAtom } from "jotai";

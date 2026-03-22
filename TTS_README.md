@@ -16,17 +16,17 @@ Load any PGN with annotations, press forward through the moves, and hear:
 
 The TTS engine doesn't just read raw text -- it understands chess notation:
 
-| Written in PGN | Spoken aloud |
-|-----------------|-------------|
-| `Nf3` | "Knight f3" |
-| `Bxe6+` | "Bishop takes e6, check" |
-| `O-O-O` | "castles queenside" |
-| `e8=Q#` | "e8 promotes to Queen, checkmate" |
-| `Rae1` | "Rook a e1" (disambiguation) |
-| `5.Qxd8+` (in comments) | "5, Queen takes d8, check" |
-| `en prise` | "on preez" (French pronunciation) |
-| `Ra8 is hanging` | "Rook on a8 is hanging" |
-| `R vs R` | "Rook versus Rook" |
+| Written in PGN               | Spoken aloud                             |
+| ---------------------------- | ---------------------------------------- |
+| `Nf3`                        | "Knight f3"                              |
+| `Bxe6+`                      | "Bishop takes e6, check"                 |
+| `O-O-O`                      | "castles queenside"                      |
+| `e8=Q#`                      | "e8 promotes to Queen, checkmate"        |
+| `Rae1`                       | "Rook a e1" (disambiguation)             |
+| `5.Qxd8+` (in comments)      | "5, Queen takes d8, check"               |
+| `en prise`                   | "on preez" (French pronunciation)        |
+| `Ra8 is hanging`             | "Rook on a8 is hanging"                  |
+| `R vs R`                     | "Rook versus Rook"                       |
 | `6...Bf5` (move number dots) | "6, Bishop f5" (natural pause, no "dot") |
 
 Comments are cleaned before speaking: `[%eval]`, `[%cal]`, `[%csl]` tags are stripped. Leading quality words that duplicate the NAG symbol are removed (so `?? {BLUNDER. The rook hangs}` doesn't stutter "Blunder. Blunder.").
@@ -49,21 +49,22 @@ Sign up at [elevenlabs.io](https://elevenlabs.io). The free tier gives you ~10,0
 
 Open En Parlant~ and go to **Settings > Sound**:
 
-| Setting | Description |
-|---------|-------------|
-| **Text-to-Speech** | Master toggle. Enable to activate all TTS features. |
-| **Auto-Narrate on Move** | When enabled, annotations are read aloud automatically as you step through moves with the arrow keys. |
-| **ElevenLabs API Key** | Paste your `sk_...` API key here. Stored locally. |
-| **TTS Voice** | Pick from your available ElevenLabs voices. A "Test" button lets you preview. |
-| **TTS Volume** | 0-100%. Independent of the board sound effects volume. |
-| **TTS Speed** | 0.5x to 2.0x playback speed. Applied client-side, so changing speed never invalidates the audio cache. |
-| **TTS Audio Cache** | "Clear Audio Cache" button. Use after editing PGN annotations to force fresh audio generation. |
+| Setting                  | Description                                                                                            |
+| ------------------------ | ------------------------------------------------------------------------------------------------------ |
+| **Text-to-Speech**       | Master toggle. Enable to activate all TTS features.                                                    |
+| **Auto-Narrate on Move** | When enabled, annotations are read aloud automatically as you step through moves with the arrow keys.  |
+| **ElevenLabs API Key**   | Paste your `sk_...` API key here. Stored locally.                                                      |
+| **TTS Voice**            | Pick from your available ElevenLabs voices. A "Test" button lets you preview.                          |
+| **TTS Volume**           | 0-100%. Independent of the board sound effects volume.                                                 |
+| **TTS Speed**            | 0.5x to 2.0x playback speed. Applied client-side, so changing speed never invalidates the audio cache. |
+| **TTS Audio Cache**      | "Clear Audio Cache" button. Use after editing PGN annotations to force fresh audio generation.         |
 
 ### 3. Load an Annotated PGN
 
 Import or open any PGN file with comments. Step through with arrow keys -- you'll hear every annotation narrated.
 
 For best results, annotations should follow standard PGN comment format:
+
 ```
 14. Re3! {Blocks the e-file and attacks the queen.} Be6 {But now the knight is undefended.}
 ```
@@ -98,13 +99,13 @@ src/
 
 ### Integration Points (minimal changes to existing code)
 
-| File | Change | Lines |
-|------|--------|-------|
-| `src/state/atoms.ts` | 6 persistent atoms for TTS settings | +24 |
-| `src/components/settings/SettingsPage.tsx` | 7 settings entries in Sound tab | +62 |
-| `src/state/store/tree.ts` | Auto-narrate on move navigation, stop on go-back | +24 |
-| `src/components/common/Comment.tsx` | Speaker icon button when TTS enabled | +33 |
-| `src/components/tabs/ImportModal.tsx` | `defaultPath` for file dialog | +1 |
+| File                                       | Change                                           | Lines |
+| ------------------------------------------ | ------------------------------------------------ | ----- |
+| `src/state/atoms.ts`                       | 6 persistent atoms for TTS settings              | +24   |
+| `src/components/settings/SettingsPage.tsx` | 7 settings entries in Sound tab                  | +62   |
+| `src/state/store/tree.ts`                  | Auto-narrate on move navigation, stop on go-back | +24   |
+| `src/components/common/Comment.tsx`        | Speaker icon button when TTS enabled             | +33   |
+| `src/components/tabs/ImportModal.tsx`      | `defaultPath` for file dialog                    | +1    |
 
 Total: **828 lines added**, 25 lines modified. The 2 new files account for 667 of those lines. The feature is almost entirely additive -- it doesn't change existing behavior when TTS is disabled.
 
@@ -159,25 +160,33 @@ This means you can scrub through a game quickly without audio piling up or playi
 These guidelines produce the best spoken narration:
 
 ### SAN in comments
+
 Use standard SAN notation. The preprocessor expands it:
+
 - `"After 7.Nf3, White controls e5"` -> "After 7, Knight f3, White controls e5"
 - `"The Bg5 pins the knight"` -> "The Bishop g5 pins the knight"
 
 ### Annotation symbols
+
 The NAG glyph (`!`, `??`, `!?`, etc.) generates spoken quality words automatically. Don't duplicate them in the comment:
-- Bad: `?? {BLUNDER. A terrible move...}`  (TTS says "Blunder. Blunder. A terrible move")
+
+- Bad: `?? {BLUNDER. A terrible move...}` (TTS says "Blunder. Blunder. A terrible move")
 - Good: `?? {A terrible move...}` (TTS says "Blunder. A terrible move")
 
 ### Move number dots
+
 Standard PGN notation works: `6...Bf5`. The preprocessor converts dots to commas for natural pauses instead of "dot dot dot."
 
 ### Periods for pacing
+
 Periods create natural TTS pauses. Use them between distinct ideas:
+
 ```
 {Doubled isolated e-pawns. The f-file is ripped open. The position is strategically won.}
 ```
 
 ### Arrows and circles
+
 `[%cal ...]` and `[%csl ...]` tags are stripped from audio automatically. Use them freely for visual annotations without affecting narration.
 
 ## ElevenLabs API Details

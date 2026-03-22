@@ -15,8 +15,7 @@ function normalizeTiptapMarkdown(comment: string) {
 
 function Comment({ comment }: { comment: string }) {
   const normalizedComment = normalizeTiptapMarkdown(comment);
-  const multipleLine =
-    normalizedComment.split("\n").filter((v) => v.trim() !== "").length > 1;
+  const multipleLine = normalizedComment.split("\n").filter((v) => v.trim() !== "").length > 1;
   const ttsEnabled = useAtomValue(ttsEnabledAtom);
 
   const handleSpeak = useCallback(() => {
@@ -24,12 +23,7 @@ function Comment({ comment }: { comment: string }) {
   }, [comment]);
 
   return (
-    <Group
-      gap={2}
-      align="flex-start"
-      display={multipleLine ? "flex" : "inline-flex"}
-      wrap="nowrap"
-    >
+    <Group gap={2} align="flex-start" display={multipleLine ? "flex" : "inline-flex"} wrap="nowrap">
       <Typography
         pl={0}
         mx={4}
@@ -40,11 +34,8 @@ function Comment({ comment }: { comment: string }) {
       >
         <Markdown
           components={{
-            a: ({ node, ...props }) => (
-              <a {...props} target="_blank" rel="noreferrer" />
-            ),
-            p: ({ node, ...props }) =>
-              multipleLine ? <p {...props} /> : <span {...props} />,
+            a: ({ node, ...props }) => <a {...props} target="_blank" rel="noreferrer" />,
+            p: ({ node, ...props }) => (multipleLine ? <p {...props} /> : <span {...props} />),
           }}
           rehypePlugins={[rehypeRaw, remarkGfm]}
         >

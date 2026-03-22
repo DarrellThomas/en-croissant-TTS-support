@@ -53,12 +53,7 @@ const colorSchemeManager = localStorageColorSchemeManager({
 });
 
 import ErrorComponent from "@/components/ErrorComponent";
-import {
-  getDatabasesDir,
-  getDocumentDir,
-  getEnginesDir,
-  getPuzzlesDir,
-} from "@/utils/directories";
+import { getDatabasesDir, getDocumentDir, getEnginesDir, getPuzzlesDir } from "@/utils/directories";
 import { initUserAgent } from "@/utils/http";
 import { routeTree } from "./routeTree.gen";
 
@@ -113,9 +108,7 @@ declare module "@tanstack/react-router" {
   }
 }
 
-const preloadReferenceDb = async (
-  store: ReturnType<typeof getDefaultStore>,
-) => {
+const preloadReferenceDb = async (store: ReturnType<typeof getDefaultStore>) => {
   const referenceDb = store.get(referenceDbAtom);
   if (referenceDb) {
     info(`Preloading reference database: ${referenceDb}`);

@@ -64,11 +64,7 @@ function AddPuzzle({
   }
 
   return (
-    <Modal
-      opened={opened}
-      onClose={() => setOpened(false)}
-      title={t("Databases.Add.Title")}
-    >
+    <Modal opened={opened} onClose={() => setOpened(false)} title={t("Databases.Add.Title")}>
       <Tabs defaultValue="web">
         <Tabs.List>
           <Tabs.Tab value="web">{t("Databases.Add.Web")}</Tabs.Tab>
@@ -83,17 +79,11 @@ function AddPuzzle({
                   databaseId={i}
                   key={i}
                   setPuzzleDbs={setPuzzleDbs}
-                  initInstalled={puzzleDbs.some(
-                    (e) => e.title.replace(".db3", "") === db.title,
-                  )}
+                  initInstalled={puzzleDbs.some((e) => e.title.replace(".db3", "") === db.title)}
                 />
               ))}
               {error && (
-                <Alert
-                  icon={<IconAlertCircle size="1rem" />}
-                  title={t("Common.Error")}
-                  color="red"
-                >
+                <Alert icon={<IconAlertCircle size="1rem" />} title={t("Common.Error")} color="red">
                   {t("Databases.Add.ErrorFetch")}
                 </Alert>
               )}
@@ -199,11 +189,7 @@ function PuzzleDbCard({
             }}
             onClick={() => {
               if (!puzzleDb.downloadLink) return;
-              downloadDatabase(
-                databaseId,
-                puzzleDb.downloadLink,
-                puzzleDb.title,
-              );
+              downloadDatabase(databaseId, puzzleDb.downloadLink, puzzleDb.title);
             }}
             inProgress={inProgress}
             setInProgress={setInProgress}

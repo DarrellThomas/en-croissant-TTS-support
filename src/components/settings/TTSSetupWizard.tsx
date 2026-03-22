@@ -11,13 +11,7 @@ import {
   Text,
   ThemeIcon,
 } from "@mantine/core";
-import {
-  IconAlertTriangle,
-  IconCheck,
-  IconCopy,
-  IconDownload,
-  IconX,
-} from "@tabler/icons-react";
+import { IconAlertTriangle, IconCheck, IconCopy, IconDownload, IconX } from "@tabler/icons-react";
 import { invoke } from "@tauri-apps/api/core";
 import { appDataDir, join } from "@tauri-apps/api/path";
 import { useCallback, useEffect, useState } from "react";
@@ -42,13 +36,7 @@ interface TTSSetupWizardProps {
 
 // --- KittenTTS wizard ---
 
-function KittenTTSWizard({
-  onClose,
-  onReady,
-}: {
-  onClose: () => void;
-  onReady?: () => void;
-}) {
+function KittenTTSWizard({ onClose, onReady }: { onClose: () => void; onReady?: () => void }) {
   const [active, setActive] = useState(0);
   const [checks, setChecks] = useState<Record<string, DepCheck | null>>({
     python: null,
@@ -89,10 +77,7 @@ function KittenTTSWizard({
   }, [runChecks]);
 
   const allPassed =
-    checks.python?.ok &&
-    checks.venv?.ok &&
-    checks.packages?.ok &&
-    checks.script?.ok;
+    checks.python?.ok && checks.venv?.ok && checks.packages?.ok && checks.script?.ok;
 
   const handleSetupVenv = async () => {
     setLoading("venv");
@@ -117,9 +102,7 @@ function KittenTTSWizard({
           color={stepColor(checks.python)}
         >
           <StepContent check={checks.python} loading={loading === "checking"}>
-            {checks.python && !checks.python.ok && (
-              <SudoHint command={checks.python.fix_hint} />
-            )}
+            {checks.python && !checks.python.ok && <SudoHint command={checks.python.fix_hint} />}
           </StepContent>
         </Stepper.Step>
 
@@ -132,11 +115,7 @@ function KittenTTSWizard({
           <StepContent check={checks.venv} loading={loading === "checking"}>
             {checks.venv && !checks.venv.ok && (
               <Stack gap="xs">
-                <Button
-                  size="sm"
-                  loading={loading === "venv"}
-                  onClick={handleSetupVenv}
-                >
+                <Button size="sm" loading={loading === "venv"} onClick={handleSetupVenv}>
                   Create Venv & Install Packages
                 </Button>
                 {setupError && (
@@ -158,11 +137,7 @@ function KittenTTSWizard({
           <StepContent check={checks.packages} loading={loading === "checking"}>
             {checks.packages && !checks.packages.ok && (
               <Stack gap="xs">
-                <Button
-                  size="sm"
-                  loading={loading === "venv"}
-                  onClick={handleSetupVenv}
-                >
+                <Button size="sm" loading={loading === "venv"} onClick={handleSetupVenv}>
                   Install Packages
                 </Button>
                 {setupError && (
@@ -184,8 +159,7 @@ function KittenTTSWizard({
           <StepContent check={checks.script} loading={loading === "checking"}>
             {checks.script && !checks.script.ok && (
               <Alert color="yellow" icon={<IconAlertTriangle size={16} />}>
-                The server script should be included with the application. Try
-                reinstalling.
+                The server script should be included with the application. Try reinstalling.
               </Alert>
             )}
           </StepContent>
@@ -202,11 +176,7 @@ function KittenTTSWizard({
       </Stepper>
 
       <Group justify="space-between" mt="md">
-        <Button
-          variant="subtle"
-          onClick={runChecks}
-          loading={loading === "checking"}
-        >
+        <Button variant="subtle" onClick={runChecks} loading={loading === "checking"}>
           Re-check All
         </Button>
         <Group gap="xs">
@@ -232,13 +202,7 @@ function KittenTTSWizard({
 
 // --- OpenTTS wizard ---
 
-function OpenTTSWizard({
-  onClose,
-  onReady,
-}: {
-  onClose: () => void;
-  onReady?: () => void;
-}) {
+function OpenTTSWizard({ onClose, onReady }: { onClose: () => void; onReady?: () => void }) {
   const [active, setActive] = useState(0);
   const [checks, setChecks] = useState<Record<string, DepCheck | null>>({
     docker: null,
@@ -321,9 +285,7 @@ function OpenTTSWizard({
           color={stepColor(checks.docker)}
         >
           <StepContent check={checks.docker} loading={loading === "checking"}>
-            {checks.docker && !checks.docker.ok && (
-              <SudoHint command={checks.docker.fix_hint} />
-            )}
+            {checks.docker && !checks.docker.ok && <SudoHint command={checks.docker.fix_hint} />}
           </StepContent>
         </Stepper.Step>
 
@@ -334,9 +296,7 @@ function OpenTTSWizard({
           color={stepColor(checks.running)}
         >
           <StepContent check={checks.running} loading={loading === "checking"}>
-            {checks.running && !checks.running.ok && (
-              <SudoHint command={checks.running.fix_hint} />
-            )}
+            {checks.running && !checks.running.ok && <SudoHint command={checks.running.fix_hint} />}
           </StepContent>
         </Stepper.Step>
 
@@ -350,15 +310,12 @@ function OpenTTSWizard({
             {checks.image && !checks.image.ok && (
               <Stack gap="xs">
                 <Alert color="yellow" icon={<IconAlertTriangle size={16} />}>
-                  The OpenTTS Docker image is ~1.5 GB. This may take a few
-                  minutes to download.
+                  The OpenTTS Docker image is ~1.5 GB. This may take a few minutes to download.
                 </Alert>
                 {loading === "download" && dlActive && (
                   <Group gap="xs">
                     <IconDownload size={16} />
-                    <Text size="sm">
-                      Downloading... {Math.round(dlProgress)}%
-                    </Text>
+                    <Text size="sm">Downloading... {Math.round(dlProgress)}%</Text>
                   </Group>
                 )}
                 {loading === "loading" && (
@@ -396,11 +353,7 @@ function OpenTTSWizard({
       </Stepper>
 
       <Group justify="space-between" mt="md">
-        <Button
-          variant="subtle"
-          onClick={runChecks}
-          loading={loading === "checking"}
-        >
+        <Button variant="subtle" onClick={runChecks} loading={loading === "checking"}>
           Re-check All
         </Button>
         <Group gap="xs">
@@ -459,12 +412,7 @@ function StepContent({
   return (
     <Stack gap="sm" mt="sm">
       <Group gap="xs">
-        <ThemeIcon
-          size="sm"
-          color={check.ok ? "green" : "red"}
-          variant="light"
-          radius="xl"
-        >
+        <ThemeIcon size="sm" color={check.ok ? "green" : "red"} variant="light" radius="xl">
           {check.ok ? <IconCheck size={12} /> : <IconX size={12} />}
         </ThemeIcon>
         <Text size="sm">{check.label}</Text>
@@ -483,9 +431,7 @@ function SudoHint({ command }: { command: string }) {
   return (
     <Alert color="yellow" icon={<IconAlertTriangle size={16} />}>
       <Stack gap="xs">
-        <Text size="sm">
-          This requires running in a terminal with appropriate permissions:
-        </Text>
+        <Text size="sm">This requires running in a terminal with appropriate permissions:</Text>
         <Group gap="xs" align="center">
           <Code block style={{ flex: 1 }}>
             {command}
@@ -497,9 +443,7 @@ function SudoHint({ command }: { command: string }) {
                 variant="light"
                 color={copied ? "green" : undefined}
                 onClick={copy}
-                leftSection={
-                  copied ? <IconCheck size={14} /> : <IconCopy size={14} />
-                }
+                leftSection={copied ? <IconCheck size={14} /> : <IconCopy size={14} />}
               >
                 {copied ? "Copied" : "Copy"}
               </Button>
