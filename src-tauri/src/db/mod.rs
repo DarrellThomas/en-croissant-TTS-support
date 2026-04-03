@@ -801,6 +801,22 @@ fn build_game_order_sql(sort: &GameSort, direction: &SortDirection) -> &'static 
     }
 }
 
+/// Choose an INDEXED BY hint that lets SQLite walk the sort-order index and
+/// filter by ELO on the fly, instead of materializing all matching rows and
+/// then filesort-ing them.  For Date DESC (the default) this reduces the scan
+/// from ~1.16 M rows to ~1,700 rows on a 9.5 M-game database (~5 ms vs ~2 s).
+fn index_hint_for_sort(sort: &GameSort, direction: &SortDirection) -> &'static str {
+    match (sort, direction) {
+        (GameSort::Date, SortDirection::Desc) | (GameSort::Date, SortDirection::Asc) => {
+            "INDEXED BY games_date_time_idx"
+        }
+        (GameSort::WhiteElo, _) => "INDEXED BY games_white_elo_date_time_idx",
+        (GameSort::BlackElo, _) => "INDEXED BY games_black_elo_date_time_idx",
+        // ID and PlyCount: let SQLite choose (rowid and plycount index are fine)
+        _ => "",
+    }
+}
+
 fn load_any_side_elo_candidate_ids(
     db: &mut SqliteConnection,
     range1: Option<(i32, i32)>,
@@ -810,18 +826,17 @@ fn load_any_side_elo_candidate_ids(
     let white_filter = build_elo_filter_sql("WhiteElo", range1, range2);
     let black_filter = build_elo_filter_sql("BlackElo", range1, range2);
     let order_sql = build_game_order_sql(&query_options.sort, &query_options.direction);
+    let index_hint = index_hint_for_sort(&query_options.sort, &query_options.direction);
 
+    // OR with an index hint: SQLite walks the sort-order index and filters by ELO
+    // on the fly.  For Date DESC this is ~400x faster than the old UNION subquery
+    // (5 ms vs 2 s on 9.5 M games) because only ~1,700 rows are touched instead
+    // of materialising and sorting 1.16 M matching rows.
+    let combined_filter = format!("{white_filter} OR {black_filter}");
     let mut sql = format!(
         "SELECT ID, Date, UTCTime, WhiteElo, BlackElo, PlyCount
-         FROM (
-             SELECT ID, Date, UTCTime, WhiteElo, BlackElo, PlyCount
-             FROM Games
-             WHERE {white_filter}
-             UNION
-             SELECT ID, Date, UTCTime, WhiteElo, BlackElo, PlyCount
-             FROM Games
-             WHERE {black_filter}
-         )
+         FROM Games {index_hint}
+         WHERE {combined_filter}
          ORDER BY {order_sql}"
     );
 
@@ -991,6 +1006,8 @@ pub struct GameQuery {
     #[specta(optional)]
     pub options: Option<QueryOptions<GameSort>>,
     #[specta(optional)]
+    pub include_moves: Option<bool>,
+    #[specta(optional)]
     pub player1: Option<i32>,
     #[specta(optional)]
     pub player2: Option<i32>,
@@ -1041,6 +1058,7 @@ pub async fn get_games(
 
     let mut count: Option<i64> = None;
     let any_side_elo_fast_path = can_use_any_side_elo_fast_path(&query);
+    let include_moves = query.include_moves.unwrap_or(true);
     let query_options = query.options.clone().unwrap_or_default();
 
     let mut ids_query = games::table.into_boxed();
@@ -1250,12 +1268,24 @@ pub async fn get_games(
         ids_query.select(games::id).load(db)?
     };
     let games = load_games_with_metadata(db, &ids)?;
-    let normalized_games = normalize_games(games);
+    let normalized_games = normalize_games(games, include_moves);
 
     Ok(QueryResponse {
         data: normalized_games,
         count: count.map(|c| c as i32),
     })
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn get_db_game(
+    file: PathBuf,
+    game_id: i32,
+    state: tauri::State<'_, AppState>,
+) -> Result<Option<NormalizedGame>, Error> {
+    let db = &mut get_db_or_create(&state, file.to_str().unwrap(), ConnectionOptions::default())?;
+    let games = load_games_with_metadata(db, &[game_id])?;
+    Ok(normalize_games(games, true).into_iter().next())
 }
 
 fn load_games_with_metadata(
@@ -1291,50 +1321,67 @@ fn load_games_with_metadata(
     Ok(detailed_games)
 }
 
-fn normalize_games(games: Vec<(Game, Player, Player, Event, Site)>) -> Vec<NormalizedGame> {
+fn normalize_game(
+    game: Game,
+    white: Player,
+    black: Player,
+    event: Event,
+    site: Site,
+    include_moves: bool,
+) -> NormalizedGame {
+    let fen: Fen = game
+        .fen
+        .as_ref()
+        .map(|f| Fen::from_ascii(f.as_bytes()).unwrap())
+        .unwrap_or_default();
+    let game_result = game.result.clone().unwrap_or_default();
+    let result_token = if game_result.is_empty() {
+        "*".to_string()
+    } else {
+        game_result.clone()
+    };
+
+    NormalizedGame {
+        id: game.id,
+        event: event.name.unwrap_or_default(),
+        event_id: event.id,
+        site: site.name.unwrap_or_default(),
+        site_id: site.id,
+        date: game.date,
+        time: game.time,
+        round: game.round,
+        white: white.name.unwrap_or_default(),
+        white_id: game.white_id,
+        white_elo: game.white_elo,
+        black: black.name.unwrap_or_default(),
+        black_id: game.black_id,
+        black_elo: game.black_elo,
+        result: Outcome::from_str(&game_result).unwrap_or_default(),
+        time_control: game.time_control,
+        eco: game.eco,
+        ply_count: game.ply_count,
+        fen: fen.to_string(),
+        moves: if include_moves {
+            let movetext = decode_game_to_movetext(&game.moves, fen).unwrap_or_default();
+            if movetext.is_empty() {
+                result_token
+            } else {
+                format!("{} {}", movetext, result_token)
+            }
+        } else {
+            String::new()
+        },
+    }
+}
+
+fn normalize_games(
+    games: Vec<(Game, Player, Player, Event, Site)>,
+    include_moves: bool,
+) -> Vec<NormalizedGame> {
     games
         .into_iter()
         .map(|(game, white, black, event, site)| {
-            let fen: Fen = game
-                .fen
-                .map(|f| Fen::from_ascii(f.as_bytes()).unwrap())
-                .unwrap_or_default();
-            let game_result = game.result.clone().unwrap_or_default();
-            let result_token = if game_result.is_empty() {
-                "*".to_string()
-            } else {
-                game_result.clone()
-            };
-
-            NormalizedGame {
-                id: game.id,
-                event: event.name.unwrap_or_default(),
-                event_id: event.id,
-                site: site.name.unwrap_or_default(),
-                site_id: site.id,
-                date: game.date,
-                time: game.time,
-                round: game.round,
-                white: white.name.unwrap_or_default(),
-                white_id: game.white_id,
-                white_elo: game.white_elo,
-                black: black.name.unwrap_or_default(),
-                black_id: game.black_id,
-                black_elo: game.black_elo,
-                result: Outcome::from_str(&game_result).unwrap_or_default(),
-                time_control: game.time_control,
-                eco: game.eco,
-                ply_count: game.ply_count,
-                fen: fen.to_string(),
-                moves: {
-                    let movetext = decode_game_to_movetext(&game.moves, fen).unwrap_or_default();
-                    if movetext.is_empty() {
-                        result_token
-                    } else {
-                        format!("{} {}", movetext, result_token)
-                    }
-                },
-            }
+            normalize_game(game, white, black, event, site, include_moves)
         })
         .collect()
 }

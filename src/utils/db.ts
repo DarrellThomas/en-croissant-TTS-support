@@ -47,6 +47,7 @@ export async function query_games(
 ): Promise<QueryResponse<NormalizedGame[]>> {
     return unwrap(
         await commands.getGames(db, {
+            include_moves: query.include_moves ?? true,
             player1: query.player1,
             range1: normalizeRange(query.range1),
             player2: query.player2,
@@ -66,6 +67,10 @@ export async function query_games(
             },
         }),
     );
+}
+
+export async function get_db_game(db: string, gameId: number): Promise<NormalizedGame | null> {
+    return unwrap(await commands.getDbGame(db, gameId));
 }
 
 export async function query_players(

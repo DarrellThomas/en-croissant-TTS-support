@@ -24,7 +24,7 @@ import useSWR from "swr";
 import { useStore } from "zustand";
 import type { GameQuery, GameSort, NormalizedGame, Outcome } from "@/bindings";
 import { activeTabAtom, tabsAtom } from "@/state/atoms";
-import { query_games } from "@/utils/db";
+import { get_db_game, query_games } from "@/utils/db";
 import { createTab } from "@/utils/tabs";
 import { DatabaseViewStateContext } from "./DatabaseViewStateContext";
 import GameCard from "./GameCard";
@@ -94,7 +94,10 @@ function GameTable() {
     : query;
 
   const { data, error, isLoading, mutate } = useSWR(["games", file, gamesQuery], () =>
-    query_games(file, gamesQuery),
+    query_games(file, {
+      ...gamesQuery,
+      include_moves: false,
+    }),
   );
   const { data: countData, isLoading: isCountLoading } = useSWR(
     deferCount && data !== undefined
@@ -115,6 +118,12 @@ function GameTable() {
   const games = data?.data ?? [];
   const count = deferCount ? countData?.count : data?.count;
   const quickEloRange = getQuickEloRange(query);
+  const selectedGameId =
+    selectedGame !== undefined && selectedGame !== null ? games[selectedGame]?.id : undefined;
+  const { data: selectedGameRecord, isLoading: isSelectedGameLoading } = useSWR(
+    selectedGameId !== undefined ? ["game", file, selectedGameId] : null,
+    () => get_db_game(file, selectedGameId!),
+  );
 
   const applyFilterQuery = (patch: Partial<GameQuery>) => {
     setSelectedGame(undefined);
@@ -127,6 +136,26 @@ function GameTable() {
         page: 1,
       },
     });
+  };
+
+  const openGame = async (record: NormalizedGame) => {
+    const fullGame =
+      selectedGameRecord?.id === record.id ? selectedGameRecord : await get_db_game(file, record.id);
+    if (!fullGame) {
+      return;
+    }
+
+    createTab({
+      tab: {
+        name: `${fullGame.white} - ${fullGame.black}`,
+        type: "analysis",
+      },
+      setTabs,
+      setActiveTab,
+      pgn: fullGame.moves,
+      headers: fullGame,
+    });
+    navigate({ to: "/" });
   };
 
   useHotkeys([
@@ -311,17 +340,7 @@ function GameTable() {
           records={games}
           fetching={isLoading}
           onRowDoubleClick={({ record }) => {
-            createTab({
-              tab: {
-                name: `${record.white} - ${record.black}`,
-                type: "analysis",
-              },
-              setTabs,
-              setActiveTab,
-              pgn: record.moves,
-              headers: record,
-            });
-            navigate({ to: "/" });
+            void openGame(record);
           }}
           columns={[
             {
@@ -419,7 +438,15 @@ function GameTable() {
       }
       preview={
         selectedGame !== undefined && selectedGame !== null && games[selectedGame] ? (
-          <GameCard game={games[selectedGame]} file={file} mutate={mutate} />
+          selectedGameRecord ? (
+            <GameCard game={selectedGameRecord} file={file} mutate={mutate} />
+          ) : (
+            <Center h="100%">
+              <Text c="dimmed">
+                {isSelectedGameLoading ? "Loading game..." : t("Databases.Game.NoSelection")}
+              </Text>
+            </Center>
+          )
         ) : (
           <Center h="100%">
             <Text>{t("Databases.Game.NoSelection")}</Text>

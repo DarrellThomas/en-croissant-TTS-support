@@ -46,7 +46,7 @@ use crate::chess::{
 };
 use crate::db::{
     clear_games, convert_pgn, create_indexes, delete_database, delete_db_game, delete_empty_games,
-    delete_indexes, export_to_pgn, get_player, get_players_game_info, get_tournaments,
+    delete_indexes, export_to_pgn, get_db_game, get_player, get_players_game_info, get_tournaments,
     preload_reference_db, search_position, MmapSearchIndex,
 };
 use crate::game::{
@@ -163,6 +163,7 @@ fn main() {
             get_tournaments,
             get_db_info,
             get_games,
+            get_db_game,
             search_position,
             get_players,
             get_puzzle_db_info,
