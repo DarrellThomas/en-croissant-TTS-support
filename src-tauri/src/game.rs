@@ -1000,9 +1000,13 @@ async fn request_engine_move(
         // move — flag immediately so the error handler sees a finished game.
         if current_time == Some(0) {
             let result = if turn == Color::White {
-                GameResult::BlackWins { reason: GameEndReason::Timeout }
+                GameResult::BlackWins {
+                    reason: GameEndReason::Timeout,
+                }
             } else {
-                GameResult::WhiteWins { reason: GameEndReason::Timeout }
+                GameResult::WhiteWins {
+                    reason: GameEndReason::Timeout,
+                }
             };
             drop(ctrl);
             let mut ctrl = controller.write().await;

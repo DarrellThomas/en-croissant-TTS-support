@@ -64,8 +64,7 @@ use crate::puzzle::{
 };
 use crate::sound::get_sound_server_port;
 use crate::system_tts::{
-    system_tts_list_voices, system_tts_set_voice, system_tts_speak, system_tts_stop,
-    SystemTtsState,
+    system_tts_list_voices, system_tts_set_voice, system_tts_speak, system_tts_stop, SystemTtsState,
 };
 use crate::tts_servers::{
     check_docker_installed, check_docker_running, check_kittentts_packages, check_kittentts_script,
@@ -361,11 +360,9 @@ async fn download_and_install_linux(app: tauri::AppHandle, version: String) -> R
                     if start.elapsed() > timeout {
                         let _ = child.kill();
                         std::fs::remove_file(&deb_path).ok();
-                        return Err(
-                            "Authentication timed out (120 s). \
+                        return Err("Authentication timed out (120 s). \
                              Is a polkit agent (e.g. gnome-polkit) running?"
-                                .to_string(),
-                        );
+                            .to_string());
                     }
                     std::thread::sleep(std::time::Duration::from_millis(200));
                 }

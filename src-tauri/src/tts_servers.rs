@@ -17,10 +17,15 @@ pub fn fetch_tts_audio(url: String) -> Result<Vec<u8>, String> {
         .map_err(|e| format!("TTS fetch error: {}", e))?;
 
     if !response.status().is_success() {
-        return Err(format!("TTS server error {}: {}", response.status(), response.text().unwrap_or_default()));
+        return Err(format!(
+            "TTS server error {}: {}",
+            response.status(),
+            response.text().unwrap_or_default()
+        ));
     }
 
-    response.bytes()
+    response
+        .bytes()
         .map(|b| b.to_vec())
         .map_err(|e| format!("Failed to read TTS audio: {}", e))
 }
@@ -72,7 +77,10 @@ fn find_kittentts_paths(app_handle: &tauri::AppHandle) -> KittenTtsPaths {
     }
 
     // Tauri bundled resources — scripts live here (read-only is fine)
-    if let Ok(res_dir) = app_handle.path().resolve("scripts", tauri::path::BaseDirectory::Resource) {
+    if let Ok(res_dir) = app_handle
+        .path()
+        .resolve("scripts", tauri::path::BaseDirectory::Resource)
+    {
         script_candidates.push(res_dir.join("kittentts-server.py"));
 
         // Windows: check for PyInstaller exe
@@ -96,25 +104,34 @@ fn find_kittentts_paths(app_handle: &tauri::AppHandle) -> KittenTtsPaths {
     #[cfg(target_os = "windows")]
     script_candidates.push(std::path::PathBuf::from("scripts/kittentts-server.exe"));
 
-    let script = script_candidates.iter()
+    let script = script_candidates
+        .iter()
         .find(|p| p.exists())
         .map(|p| p.to_string_lossy().to_string());
 
     // Validate venv by checking for the actual Python binary, not just the directory
-    let python = venv_candidates.iter()
+    let python = venv_candidates
+        .iter()
         .map(|v| v.join(VENV_PYTHON))
         .find(|p| p.exists())
         .map(|p| p.to_string_lossy().to_string());
 
-    let venv_dir = venv_candidates.iter()
+    let venv_dir = venv_candidates
+        .iter()
         .find(|v| v.join(VENV_PYTHON).exists())
         .map(|p| p.to_string_lossy().to_string());
 
-    let models_dir = models_candidates.iter()
+    let models_dir = models_candidates
+        .iter()
         .find(|p| p.exists())
         .map(|p| p.to_string_lossy().to_string());
 
-    KittenTtsPaths { script, python, venv_dir, models_dir }
+    KittenTtsPaths {
+        script,
+        python,
+        venv_dir,
+        models_dir,
+    }
 }
 
 // --- Dependency check commands ---
@@ -167,7 +184,11 @@ pub fn check_docker_running() -> DepCheck {
             DepCheck {
                 ok: false,
                 label: "Docker not running".into(),
-                detail: stderr.lines().next().unwrap_or("Docker daemon is not active").to_string(),
+                detail: stderr
+                    .lines()
+                    .next()
+                    .unwrap_or("Docker daemon is not active")
+                    .to_string(),
                 fix_hint: hint.into(),
             }
         }
@@ -221,7 +242,11 @@ pub fn check_opentts_image() -> DepCheck {
 #[tauri::command]
 #[specta::specta]
 pub fn check_python_installed() -> DepCheck {
-    let python_cmd = if cfg!(target_os = "windows") { "python" } else { "python3" };
+    let python_cmd = if cfg!(target_os = "windows") {
+        "python"
+    } else {
+        "python3"
+    };
     match Command::new(python_cmd).arg("--version").output() {
         Ok(output) if output.status.success() => {
             let ver = String::from_utf8_lossy(&output.stdout).trim().to_string();
@@ -291,7 +316,10 @@ pub fn check_kittentts_packages(app_handle: tauri::AppHandle) -> DepCheck {
     };
 
     match Command::new(&python)
-        .args(["-c", "import kittentts; import flask; import soundfile; import numpy"])
+        .args([
+            "-c",
+            "import kittentts; import flask; import soundfile; import numpy",
+        ])
         .output()
     {
         Ok(output) if output.status.success() => DepCheck {
@@ -362,7 +390,9 @@ pub fn setup_kittentts_venv(app_handle: tauri::AppHandle) -> Result<String, Stri
     }
 
     // Create venv in user-writable app data dir
-    let kittentts_dir = app_handle.path().app_data_dir()
+    let kittentts_dir = app_handle
+        .path()
+        .app_data_dir()
         .map_err(|e| format!("Cannot determine app data directory: {}", e))?
         .join("kittentts");
     let venv_dir = kittentts_dir.join(".venv");
@@ -374,7 +404,11 @@ pub fn setup_kittentts_venv(app_handle: tauri::AppHandle) -> Result<String, Stri
     std::fs::create_dir_all(&kittentts_dir)
         .map_err(|e| format!("Cannot create directory {}: {}", kittentts_dir.display(), e))?;
 
-    let python_cmd = if cfg!(target_os = "windows") { "python" } else { "python3" };
+    let python_cmd = if cfg!(target_os = "windows") {
+        "python"
+    } else {
+        "python3"
+    };
 
     // Check Python is available
     let python_check = Command::new(python_cmd).arg("--version").output();
@@ -405,21 +439,31 @@ pub fn setup_kittentts_venv(app_handle: tauri::AppHandle) -> Result<String, Stri
             return Err(format!(
                 "Failed to create venv: {}{}",
                 stderr,
-                if stderr.contains("ensurepip") { ". Fix: sudo apt install python3-venv" } else { "" }
+                if stderr.contains("ensurepip") {
+                    ". Fix: sudo apt install python3-venv"
+                } else {
+                    ""
+                }
             ));
         }
     }
 
     // Find requirements.txt using same priority as other resources
     let mut req_candidates: Vec<std::path::PathBuf> = Vec::new();
-    if let Ok(res_dir) = app_handle.path().resolve("scripts", tauri::path::BaseDirectory::Resource) {
+    if let Ok(res_dir) = app_handle
+        .path()
+        .resolve("scripts", tauri::path::BaseDirectory::Resource)
+    {
         req_candidates.push(res_dir.join("requirements.txt"));
     }
     #[cfg(target_os = "linux")]
-    req_candidates.push(std::path::PathBuf::from("/usr/lib/en-parlant/scripts/requirements.txt"));
+    req_candidates.push(std::path::PathBuf::from(
+        "/usr/lib/en-parlant/scripts/requirements.txt",
+    ));
     req_candidates.push(std::path::PathBuf::from("scripts/requirements.txt"));
 
-    let requirements = req_candidates.iter()
+    let requirements = req_candidates
+        .iter()
         .find(|p| p.exists())
         .map(|p| p.to_string_lossy().to_string());
 
@@ -543,7 +587,11 @@ pub fn opentts_stop() -> Result<String, String> {
 
 #[tauri::command]
 #[specta::specta]
-pub fn kittentts_start(app_handle: tauri::AppHandle, state: State<'_, TtsServerState>, threads: Option<u32>) -> Result<String, String> {
+pub fn kittentts_start(
+    app_handle: tauri::AppHandle,
+    state: State<'_, TtsServerState>,
+    threads: Option<u32>,
+) -> Result<String, String> {
     let mut pid_lock = state.kittentts_pid.lock().map_err(|e| e.to_string())?;
 
     // Check if already running
@@ -568,7 +616,11 @@ pub fn kittentts_start(app_handle: tauri::AppHandle, state: State<'_, TtsServerS
         Command::new(&script)
     } else {
         let python = paths.python.unwrap_or_else(|| {
-            if cfg!(target_os = "windows") { "python".to_string() } else { "python3".to_string() }
+            if cfg!(target_os = "windows") {
+                "python".to_string()
+            } else {
+                "python3".to_string()
+            }
         });
         let mut c = Command::new(&python);
         c.arg(&script);
@@ -621,7 +673,11 @@ pub fn kittentts_start(app_handle: tauri::AppHandle, state: State<'_, TtsServerS
             let reader = std::io::BufReader::new(stderr);
             for line in reader.lines() {
                 match line {
-                    Ok(line) if line.contains("Error") || line.contains("error") || line.contains("Traceback") => {
+                    Ok(line)
+                        if line.contains("Error")
+                            || line.contains("error")
+                            || line.contains("Traceback") =>
+                    {
                         error!("KittenTTS: {}", line);
                     }
                     Ok(line) if line.contains("Warning") || line.contains("warning") => {

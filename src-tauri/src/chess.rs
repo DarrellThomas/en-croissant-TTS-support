@@ -385,8 +385,11 @@ pub async fn get_best_moves(
                 let mut proc = process.lock().await;
                 match parse_one(&normalize_uci_line(&line)) {
                     UciMessage::Info(attrs) => {
-                        match parse_uci_attrs(attrs, &proc.options.fen.parse()?, &proc.options.moves)
-                        {
+                        match parse_uci_attrs(
+                            attrs,
+                            &proc.options.fen.parse()?,
+                            &proc.options.moves,
+                        ) {
                             Ok(best_moves) => {
                                 if best_moves.score.lower_bound == Some(true)
                                     || best_moves.score.upper_bound == Some(true)
@@ -477,10 +480,11 @@ pub async fn get_best_moves(
                 // Tick timeout — flush buffered payload if enough time has passed
                 if let Some(payload) = buffered_payload.clone() {
                     let mut proc = process.lock().await;
-                    let should_flush = proc.last_event_sent.map_or(
-                        proc.start.elapsed() >= min_time_before_first,
-                        |t| t.elapsed() >= max_buffer_hold,
-                    );
+                    let should_flush = proc
+                        .last_event_sent
+                        .map_or(proc.start.elapsed() >= min_time_before_first, |t| {
+                            t.elapsed() >= max_buffer_hold
+                        });
                     if should_flush {
                         proc.last_event_sent = Some(Instant::now());
                         payload.emit(&app)?;
