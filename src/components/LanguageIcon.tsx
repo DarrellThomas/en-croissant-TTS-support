@@ -5,8 +5,8 @@ export default function LanguageIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       viewBox="0 0 512 512"
-      width="1.5rem"
-      height="1.5rem"
+      width="1.75rem"
+      height="1.75rem"
       fill="currentColor"
       xmlns="http://www.w3.org/2000/svg"
       {...props}

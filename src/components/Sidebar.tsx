@@ -53,7 +53,7 @@ function NavbarLink({ url, icon: Icon, label }: NavbarLinkProps) {
           [classes.active]: match({ to: url, fuzzy: true }) !== false,
         })}
       >
-        <Icon size="1.5rem" stroke={1.5} />
+        <Icon size="1.75rem" stroke={1.5} />
       </Link>
     </Tooltip>
   );

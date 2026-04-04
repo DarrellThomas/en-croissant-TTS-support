@@ -937,17 +937,6 @@ function BoardGame() {
               {gameState === "settingUp" && !isMultiplayer && (
                 <ScrollArea h="100%" offsetScrollbars>
                   <Stack>
-                    <Button
-                      onClick={() => startGame()}
-                      fullWidth
-                      size="md"
-                      variant="filled"
-                      color="teal"
-                      disabled={error !== null}
-                    >
-                      {t("Board.Opponent.StartGame")}
-                    </Button>
-
                     <Group>
                       <Text flex={1} ta="center" fz="lg" fw="bold">
                         {match(inputColor)
@@ -984,6 +973,17 @@ function BoardGame() {
                         />
                       </Group>
                     </Box>
+
+                    <Button
+                      onClick={() => startGame()}
+                      fullWidth
+                      size="md"
+                      variant="filled"
+                      color="teal"
+                      disabled={error !== null}
+                    >
+                      {t("Board.Opponent.StartGame")}
+                    </Button>
 
                     <Checkbox
                       label={t("Board.Opponent.SameTimeControl")}

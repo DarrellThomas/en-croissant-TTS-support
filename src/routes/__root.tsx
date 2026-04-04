@@ -424,7 +424,7 @@ function RootLayout() {
   return (
     <AppShell
       navbar={{
-        width: zenMode ? 0 : "3rem",
+        width: zenMode ? 0 : "3.5rem",
         breakpoint: 0,
         collapsed: { desktop: zenMode, mobile: zenMode },
       }}
