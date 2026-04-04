@@ -119,7 +119,11 @@ function GameNotation({ topBar, controls }: { topBar?: boolean; controls?: React
                     zIndex={2}
                   />
                 )}
-                {showComments && rootComment && <Comment comment={rootComment} />}
+                {showComments && rootComment && (
+                  <Box p="sm" fz="sm">
+                    <Comment comment={rootComment} />
+                  </Box>
+                )}
                 {tableView ? (
                   <TableNotation targetRef={targetRef} />
                 ) : (
