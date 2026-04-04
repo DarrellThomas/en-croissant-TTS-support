@@ -286,6 +286,9 @@ export const boardImageAtom = atomWithStorage<string>("board-image", "gray.svg")
 export const primaryColorAtom = atomWithStorage<MantineColor>("mantine-primary-color", "blue");
 export const sessionsAtom = atomWithStorage<Session[]>("sessions", []);
 export const nativeBarAtom = atomWithStorage<boolean>("native-bar", false);
+export const zenModeAtom = atomWithStorage<boolean>("zen-mode", false, undefined, {
+    getOnInit: true,
+});
 // Recent Files
 
 export type RecentFile = {

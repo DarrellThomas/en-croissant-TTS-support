@@ -1452,8 +1452,18 @@ export function isAutoNarrateEnabled(): boolean {
 // Build narration text for a node (same as what would be spoken)
 function narrationForNode(node: TreeNode, lang: string): string | null {
     if (!node.comment && node.annotations.length === 0) return null;
-    const childSans = node.children.slice(0, 3).map((c) => c.san).filter(Boolean) as string[];
-    return buildNarration(node.san, node.comment, node.annotations, node.halfMoves, lang, childSans);
+    const childSans = node.children
+        .slice(0, 3)
+        .map((c) => c.san)
+        .filter(Boolean) as string[];
+    return buildNarration(
+        node.san,
+        node.comment,
+        node.annotations,
+        node.halfMoves,
+        lang,
+        childSans,
+    );
 }
 
 // Precache all narrations for a game tree in the background

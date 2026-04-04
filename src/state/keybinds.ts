@@ -55,6 +55,7 @@ const keys: KeyMap = {
     GENERATE_REPORT: { name: "Generate game report", keys: "f12" },
     PREVIOUS_GAME: { name: "Previous game", keys: "pageup" },
     NEXT_GAME: { name: "Next game", keys: "pagedown" },
+    ZEN_MODE: { name: "Toggle Zen Mode", keys: "shift+z" },
 };
 
 export const keyMapAtom = atomWithStorage("keybinds", keys, defaultStorage(keys, localStorage));

@@ -3,12 +3,13 @@ import { ActionIcon, ScrollArea, Tabs } from "@mantine/core";
 import { useHotkeys, useToggle } from "@mantine/hooks";
 import { IconPlus } from "@tabler/icons-react";
 import { useAtom, useAtomValue } from "jotai";
+import cx from "clsx";
 import { type ReactNode, startTransition, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Mosaic, type MosaicNode } from "react-mosaic-component";
 import { match } from "ts-pattern";
 import { commands } from "@/bindings";
-import { activeTabAtom, tabsAtom } from "@/state/atoms";
+import { activeTabAtom, tabsAtom, zenModeAtom } from "@/state/atoms";
 import { keyMapAtom } from "@/state/keybinds";
 import { createTab, genID, type Tab } from "@/utils/tabs";
 import { stopSpeaking } from "@/utils/tts";
@@ -34,6 +35,7 @@ export default function BoardsPage() {
   const [tabs, setTabs] = useAtom(tabsAtom);
   const [activeTab, setActiveTab] = useAtom(activeTabAtom);
   const [saveModalOpened, toggleSaveModal] = useToggle();
+  const zenMode = useAtomValue(zenModeAtom);
 
   useEffect(() => {
     if (tabs.length === 0) {
@@ -189,7 +191,11 @@ export default function BoardsPage() {
       activateTabWithKeyboard={false}
       className={classes.tabsContainer}
     >
-      <ScrollArea scrollbarSize={6} className={classes.tabsHeader}>
+      <ScrollArea
+        scrollbarSize={6}
+        className={classes.tabsHeader}
+        style={{ display: zenMode ? "none" : undefined }}
+      >
         <DragDropContext
           onDragEnd={({ destination, source }) =>
             destination?.index !== undefined &&
@@ -258,6 +264,7 @@ export default function BoardsPage() {
             toggleSaveModal={toggleSaveModal}
             closeTab={closeTab}
             activeTab={activeTab}
+            zenMode={zenMode}
           />
         </Tabs.Panel>
       ))}
@@ -295,23 +302,32 @@ function TabSwitch({
   toggleSaveModal,
   closeTab,
   activeTab,
+  zenMode,
 }: {
   tab: Tab;
   saveModalOpened: boolean;
   toggleSaveModal: () => void;
   closeTab: (value: string | null, forced?: boolean) => void;
   activeTab: string | null;
+  zenMode: boolean;
 }) {
   const [windowsState, setWindowsState] = useAtom(windowsStateAtom);
+
+  const zenNode: MosaicNode<ViewId> | null = zenMode ? "left" : windowsState.currentNode;
+
+  const mosaicClass = zenMode ? "zen-mode" : undefined;
 
   return match(tab.type)
     .with("new", () => <NewTabHome id={tab.value} />)
     .with("play", () => (
       <TreeStateProvider id={tab.value}>
         <Mosaic<ViewId>
+          className={cx(mosaicClass)}
           renderTile={(id) => fullLayout[id]}
-          value={windowsState.currentNode}
-          onChange={(currentNode) => setWindowsState({ currentNode })}
+          value={zenNode}
+          onChange={(currentNode) => {
+            if (!zenMode) setWindowsState({ currentNode });
+          }}
           resize={{ minimumPaneSizePercentage: 0 }}
         />
         <BoardGame />
@@ -320,9 +336,12 @@ function TabSwitch({
     .with("analysis", () => (
       <TreeStateProvider id={tab.value}>
         <Mosaic<ViewId>
+          className={cx(mosaicClass)}
           renderTile={(id) => fullLayout[id]}
-          value={windowsState.currentNode}
-          onChange={(currentNode) => setWindowsState({ currentNode })}
+          value={zenNode}
+          onChange={(currentNode) => {
+            if (!zenMode) setWindowsState({ currentNode });
+          }}
           resize={{ minimumPaneSizePercentage: 0 }}
         />
         <BoardAnalysis />
@@ -336,9 +355,12 @@ function TabSwitch({
     .with("puzzles", () => (
       <TreeStateProvider id={tab.value}>
         <Mosaic<ViewId>
+          className={cx(mosaicClass)}
           renderTile={(id) => fullLayout[id]}
-          value={windowsState.currentNode}
-          onChange={(currentNode) => setWindowsState({ currentNode })}
+          value={zenNode}
+          onChange={(currentNode) => {
+            if (!zenMode) setWindowsState({ currentNode });
+          }}
           resize={{ minimumPaneSizePercentage: 0 }}
         />
         <Puzzles id={tab.value} />

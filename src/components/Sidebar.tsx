@@ -1,5 +1,5 @@
 "use no memo";
-import { AppShellSection, Stack, Tooltip } from "@mantine/core";
+import { AppShellSection, Stack, Tooltip, UnstyledButton } from "@mantine/core";
 import {
   type Icon,
   IconChess,
@@ -11,7 +11,10 @@ import {
 } from "@tabler/icons-react";
 import { Link, useMatchRoute } from "@tanstack/react-router";
 import cx from "clsx";
+import { useAtom } from "jotai";
 import { useTranslation } from "react-i18next";
+import { zenModeAtom } from "@/state/atoms";
+import ZenIcon from "./ZenIcon";
 import classes from "./Sidebar.module.css";
 
 // "Language" in every supported language — always readable
@@ -89,6 +92,7 @@ const linksdata = [
 
 export function SideBar() {
   const { t } = useTranslation();
+  const [zenMode, setZenMode] = useAtom(zenModeAtom);
 
   const links = linksdata.map((link) => (
     <NavbarLink {...link} label={t(`SideBar.${link.label}`)} key={link.label} />
@@ -103,6 +107,14 @@ export function SideBar() {
       </AppShellSection>
       <AppShellSection>
         <Stack justify="center" gap={0}>
+          <Tooltip label="Zen Mode (Shift+Z, Esc to exit)" position="right">
+            <UnstyledButton
+              className={cx(classes.link, { [classes.active]: zenMode })}
+              onClick={() => setZenMode((z) => !z)}
+            >
+              <ZenIcon />
+            </UnstyledButton>
+          </Tooltip>
           <LanguageNavLink />
           <NavbarLink icon={IconSettings} label={t("SideBar.Settings")} url="/settings" />
         </Stack>

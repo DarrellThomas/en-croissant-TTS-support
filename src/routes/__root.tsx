@@ -1,4 +1,4 @@
-import { AppShell } from "@mantine/core";
+import { AppShell, Tooltip } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { createRootRouteWithContext, Outlet, useNavigate } from "@tanstack/react-router";
 import { TauriEvent } from "@tauri-apps/api/event";
@@ -22,7 +22,7 @@ import ClearDataModal from "@/components/ClearDataModal";
 import { SideBar } from "@/components/Sidebar";
 import TopBar from "@/components/TopBar";
 import UpdateModal from "@/components/UpdateModal";
-import { activeTabAtom, nativeBarAtom, tabsAtom } from "@/state/atoms";
+import { activeTabAtom, nativeBarAtom, tabsAtom, zenModeAtom } from "@/state/atoms";
 import { keyMapAtom } from "@/state/keybinds";
 import { openFile } from "@/utils/files";
 import { createTab } from "@/utils/tabs";
@@ -106,6 +106,7 @@ export const Route = createRootRouteWithContext<{
 
 function RootLayout() {
   const isNative = useAtomValue(nativeBarAtom);
+  const [zenMode, setZenMode] = useAtom(zenModeAtom);
   const navigate = useNavigate();
 
   const [, setTabs] = useAtom(tabsAtom);
@@ -195,6 +196,10 @@ function RootLayout() {
 
   useHotkeys(keyMap.NEW_TAB.keys, createNewTab);
   useHotkeys(keyMap.OPEN_FILE.keys, openNewFile);
+  useHotkeys(keyMap.ZEN_MODE.keys, () => setZenMode((z) => !z));
+  useHotkeys("Escape", () => {
+    if (zenMode) setZenMode(false);
+  });
   const [opened, setOpened] = useState(false);
   const [clearDataOpened, setClearDataOpened] = useState(false);
 
@@ -380,7 +385,10 @@ function RootLayout() {
 
   useEffect(() => {
     if (!menu) return;
-    if (isNative || (import.meta.env.VITE_PLATFORM !== "win32" && import.meta.env.VITE_PLATFORM !== "linux")) {
+    if (
+      isNative ||
+      (import.meta.env.VITE_PLATFORM !== "win32" && import.meta.env.VITE_PLATFORM !== "linux")
+    ) {
       menu.setAsAppMenu();
       getCurrentWindow().setDecorations(true);
     } else {
@@ -409,23 +417,23 @@ function RootLayout() {
     };
   }, [navigate, setTabs, setActiveTab]);
 
+  const hasCustomHeader =
+    !isNative &&
+    (import.meta.env.VITE_PLATFORM === "win32" || import.meta.env.VITE_PLATFORM === "linux");
+
   return (
     <AppShell
       navbar={{
-        width: "3rem",
+        width: zenMode ? 0 : "3rem",
         breakpoint: 0,
+        collapsed: { desktop: zenMode, mobile: zenMode },
       }}
-      header={
-        isNative || (import.meta.env.VITE_PLATFORM !== "win32" && import.meta.env.VITE_PLATFORM !== "linux")
-          ? undefined
-          : {
-              height: "2.25rem",
-            }
-      }
+      header={hasCustomHeader && !zenMode ? { height: "2.25rem" } : undefined}
       styles={{
         main: {
           height: "100vh",
           userSelect: "none",
+          transition: "padding 150ms ease",
         },
       }}
     >
@@ -436,15 +444,40 @@ function RootLayout() {
         onClose={() => setUpdateModalOpened(false)}
         update={pendingUpdate}
       />
-      {!isNative && (import.meta.env.VITE_PLATFORM === "win32" || import.meta.env.VITE_PLATFORM === "linux") && (
+      {hasCustomHeader && !zenMode && (
         <AppShell.Header>
           <TopBar menuActions={menuActions} />
         </AppShell.Header>
       )}
-      <AppShell.Navbar>
-        <SideBar />
-      </AppShell.Navbar>
+      {!zenMode && (
+        <AppShell.Navbar>
+          <SideBar />
+        </AppShell.Navbar>
+      )}
       <AppShell.Main>
+        {zenMode && (
+          <Tooltip label="Click to exit Zen Mode (Esc)" position="right">
+            <div
+              onClick={() => setZenMode(false)}
+              style={{
+                position: "fixed",
+                left: 0,
+                top: 0,
+                width: 6,
+                height: "100vh",
+                cursor: "pointer",
+                zIndex: 1000,
+                background: "transparent",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "var(--mantine-primary-color-filled)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "transparent";
+              }}
+            />
+          </Tooltip>
+        )}
         <Outlet />
       </AppShell.Main>
     </AppShell>
