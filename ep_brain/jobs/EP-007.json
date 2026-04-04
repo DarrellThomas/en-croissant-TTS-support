@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "job_id": "EP-007",
   "title": "Cherry-pick PR #720: Strip [%timestamp] annotations from PGN comments",
-  "state": "spec",
+  "state": "done",
   "type": "cherry_pick",
   "priority": 2,
   "source": {
@@ -73,5 +73,13 @@
     "All tests pass",
     "Verified in running app",
     "Committed and pushed"
+  ],
+  "iteration_log": [
+    {
+      "timestamp": "2026-04-04T03:30:30Z",
+      "action": "Verified already cherry-picked",
+      "result": "Timestamp stripping present at chess.ts:417 with broader regex",
+      "keep_or_discard": "keep"
+    }
   ]
 }

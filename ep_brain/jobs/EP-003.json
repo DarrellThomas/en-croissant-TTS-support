@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "job_id": "EP-003",
   "title": "Cherry-pick PR #778: Update chessground to 10.1.1 (black line artifacts fix)",
-  "state": "planning",
+  "state": "done",
   "type": "cherry_pick",
   "priority": 1,
   "source": {
@@ -47,7 +47,9 @@
     },
     "performance": {
       "no_regression": true,
-      "requirements": ["No visible stutter or flicker during piece movement"]
+      "requirements": [
+        "No visible stutter or flicker during piece movement"
+      ]
     },
     "compatibility": {
       "backward_compatible": true,
@@ -81,7 +83,10 @@
       "Verify premove highlighting (play vs engine, premove a response)"
     ]
   },
-  "primary_files": ["package.json", "pnpm-lock.yaml"],
+  "primary_files": [
+    "package.json",
+    "pnpm-lock.yaml"
+  ],
   "done_criteria": [
     "chessground bumped to ^10.1.1 in package.json",
     "pnpm-lock.yaml updated",

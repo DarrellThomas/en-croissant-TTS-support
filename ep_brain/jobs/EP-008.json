@@ -1,0 +1,91 @@
+{
+  "schema_version": "1.0",
+  "job_id": "EP-008",
+  "title": "Fix puzzle bug: async checkMove race condition",
+  "state": "planning",
+  "type": "cherry_pick",
+  "priority": 1,
+  "source": {
+    "upstream_commit": "262fa5a6",
+    "url": "https://github.com/franciscoBSalgueiro/en-croissant/commit/262fa5a6",
+    "ep_brain_ref": "`262fa5a6`",
+    "notes": "Upstream commit from Mar 2026. Fixes race condition in puzzle auto-advance."
+  },
+  "description": "When 'jump to next puzzle immediately' is enabled and the user solves a puzzle, the completion callback and puzzle generation fire synchronously. This causes a race condition where the old puzzle state hasn't reset before the new puzzle loads. The fix makes checkMove async and awaits both changeCompletion and generatePuzzle, then calls reset() before returning.",
+  "notes": [
+    "2 files changed: PuzzleBoard.tsx and Puzzles.tsx",
+    "Key changes: (1) checkMove becomes async, (2) changeCompletion and generatePuzzle signatures become Promise-returning, (3) await both + reset() after generatePuzzle",
+    "The Puzzles.tsx change updates the prop type signatures from sync to async"
+  ],
+  "scope": {
+    "in_scope": [
+      "Make checkMove async in PuzzleBoard.tsx",
+      "Await changeCompletion and generatePuzzle calls",
+      "Add reset() call after generatePuzzle in the jump-to-next path",
+      "Update function signatures in Puzzles.tsx to return Promise<void>"
+    ],
+    "out_of_scope": [
+      "Puzzle database logic",
+      "Puzzle theme filtering",
+      "TTS narration of puzzles"
+    ]
+  },
+  "contracts": {
+    "correctness": {
+      "requirements": [
+        "Solving a puzzle with 'jump to next immediately' advances to next puzzle cleanly",
+        "Puzzle board resets properly between puzzles (no stale pieces)",
+        "Incorrect move still marks puzzle as incorrect",
+        "Completion counter updates correctly"
+      ],
+      "edge_cases": [
+        "Rapid-fire solving — solve 3 puzzles quickly in sequence",
+        "Solving the last puzzle in the database",
+        "Solving with 'jump to next' disabled (should still work as before)"
+      ]
+    },
+    "performance": {
+      "no_regression": true
+    },
+    "compatibility": {
+      "backward_compatible": true,
+      "migration_needed": false
+    }
+  },
+  "acceptance_gates": [
+    "cargo test passes",
+    "pnpm format && pnpm lint:fix clean",
+    "Puzzle solving with auto-advance works without visual glitches",
+    "Puzzle solving without auto-advance still works"
+  ],
+  "test_plan": {
+    "automated": [
+      {
+        "name": "cargo test",
+        "command": "cd src-tauri && cargo test"
+      },
+      {
+        "name": "lint",
+        "command": "pnpm lint:fix"
+      }
+    ],
+    "manual": [
+      "Open Puzzles, enable 'jump to next puzzle immediately' in settings",
+      "Solve 5 puzzles in a row — board should reset cleanly between each",
+      "Disable 'jump to next' and solve a puzzle — should show completion, not auto-advance",
+      "Intentionally fail a puzzle, then solve the next — completion should say 'incorrect' for the first"
+    ]
+  },
+  "primary_files": [
+    "src/components/puzzles/PuzzleBoard.tsx",
+    "src/components/puzzles/Puzzles.tsx"
+  ],
+  "done_criteria": [
+    "checkMove is async with awaited callbacks",
+    "Prop signatures updated to Promise<void>",
+    "reset() called after generatePuzzle in auto-advance path",
+    "All tests pass",
+    "Manual puzzle testing confirms no visual glitches",
+    "Committed and pushed"
+  ]
+}

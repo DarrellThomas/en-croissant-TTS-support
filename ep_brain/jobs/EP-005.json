@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "job_id": "EP-005",
   "title": "Cherry-pick PR #738: fix: open OAuth URL via tauri-plugin-opener on Linux",
-  "state": "spec",
+  "state": "done",
   "type": "cherry_pick",
   "priority": 2,
   "source": {
@@ -83,5 +83,13 @@
     "All tests pass",
     "Verified in running app",
     "Committed and pushed"
+  ],
+  "iteration_log": [
+    {
+      "timestamp": "2026-04-04T03:29:45Z",
+      "action": "Verified already cherry-picked",
+      "result": "plugin-opener already replaces plugin-shell in all files",
+      "keep_or_discard": "keep"
+    }
   ]
 }
