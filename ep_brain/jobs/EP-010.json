@@ -1,0 +1,86 @@
+{
+  "schema_version": "1.0",
+  "job_id": "EP-010",
+  "title": "Fix ElevenLabs TTS 'request canceled' toast on replay/backtrack",
+  "state": "planning",
+  "type": "bugfix",
+  "priority": 1,
+  "source": {
+    "notes": "User report: navigating backward over a move and replaying TTS triggers a yellow toast 'ElevenLabs TTS failed TypeError: request canceled'. Voice continues working but toast is disruptive."
+  },
+  "description": "When the user backtracks or replays a move, stopSpeaking() aborts the in-flight ElevenLabs fetch via AbortController. In Tauri's webview, the aborted fetch throws TypeError('request canceled') instead of the standard DOMException with name='AbortError'. The catch block at tts.ts:1324 only checks for DOMException/AbortError, so the TypeError falls through to the cloud provider error handler at line 1345 which shows the toast. The fix: broaden the abort detection to also catch TypeError with 'cancel' in the message.",
+  "notes": [
+    "Root cause: tts.ts:1324 — `if (e instanceof DOMException && e.name === 'AbortError') return;`",
+    "Tauri webview throws TypeError('request canceled') not DOMException('AbortError')",
+    "This also affects the timeout path at line 1277 (15s abort) — same error type",
+    "The toast text is: 'ElevenLabs TTS failed' / 'TypeError: request canceled'",
+    "Audio from cache works fine — the error only happens on in-flight API requests"
+  ],
+  "scope": {
+    "in_scope": [
+      "Broaden abort detection in the catch block at tts.ts:1322-1324",
+      "Silently return on any abort/cancel-related error, not just DOMException",
+      "Also handle the 'Failed to fetch' variant that some webviews throw on abort"
+    ],
+    "out_of_scope": [
+      "Changing the TTS provider logic",
+      "Changing the abort/stopSpeaking flow",
+      "Google Cloud TTS (uses same abort pattern but may have same issue — fix both)"
+    ]
+  },
+  "contracts": {
+    "correctness": {
+      "requirements": [
+        "No toast appears when backtracking over a narrated move",
+        "No toast appears when rapidly clicking through moves during auto-narrate",
+        "Real errors (bad API key, network down, rate limit) still show toasts",
+        "Timeout errors (15s) still show the timeout-specific toast message"
+      ],
+      "edge_cases": [
+        "Rapid forward/backward navigation — should never show cancel toasts",
+        "Navigate away mid-sentence — should stop cleanly, no toast",
+        "Network actually drops during TTS — should still show error toast",
+        "Invalid API key — should still show error toast"
+      ]
+    },
+    "performance": {
+      "no_regression": true
+    },
+    "compatibility": {
+      "backward_compatible": true,
+      "migration_needed": false
+    }
+  },
+  "acceptance_gates": [
+    "pnpm format && pnpm lint:fix clean",
+    "No toast on backtrack/replay with valid ElevenLabs key",
+    "Toast still appears for genuine errors (bad key, network failure)"
+  ],
+  "test_plan": {
+    "automated": [
+      {
+        "name": "lint",
+        "command": "pnpm lint:fix"
+      }
+    ],
+    "manual": [
+      "Enable ElevenLabs TTS with valid API key and auto-narrate on",
+      "Navigate through 5+ moves, then backtrack 3 moves — NO cancel toasts should appear",
+      "Rapidly click forward/backward through moves — NO cancel toasts",
+      "Click the speaker icon on a move to replay — should play without toast",
+      "Set an invalid API key, try narration — SHOULD show error toast (not 'request canceled')",
+      "Disconnect network, try narration — SHOULD show timeout/network error toast"
+    ]
+  },
+  "primary_files": [
+    "src/utils/tts.ts"
+  ],
+  "done_criteria": [
+    "Abort/cancel errors are silently swallowed (no toast)",
+    "Real API errors still produce user-visible toasts",
+    "Timeout errors still produce the 'timed out' toast",
+    "All lint passes",
+    "Manual testing confirms no spurious toasts on backtrack/replay",
+    "Committed and pushed"
+  ]
+}
