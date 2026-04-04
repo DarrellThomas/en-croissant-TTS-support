@@ -435,7 +435,15 @@ function innerParsePGN(tokens: Token[], fen: string = INITIAL_FEN, halfMoves = 0
             }
             const newTree = innerParsePGN(variation, prevNode.fen, root.halfMoves - 1);
             if (newTree.root.children.length > 0) {
-                prevNode.children.push(newTree.root.children[0]);
+                const variationChild = newTree.root.children[0];
+                // Preserve comments from before the first move in a variation
+                // e.g. ({Note that} 45. Rxe4+...) — root.comment would be "Note that"
+                if (newTree.root.comment) {
+                    variationChild.comment = variationChild.comment
+                        ? `${newTree.root.comment} ${variationChild.comment}`
+                        : newTree.root.comment;
+                }
+                prevNode.children.push(variationChild);
             }
         } else if (token.type === "ParenClose") {
         } else if (token.type === "Nag") {

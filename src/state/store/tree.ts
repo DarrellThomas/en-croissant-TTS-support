@@ -139,12 +139,17 @@ export const createTreeStore = (id?: string, initialTree?: TreeState) => {
                         if (state.position.length === 0 && node.comment) {
                             speakComment(node.comment, state.headers);
                         } else if (nextNode.comment || nextNode.annotations.length > 0) {
+                            const childSans = nextNode.children
+                                .slice(0, 3)
+                                .map((c) => c.san)
+                                .filter(Boolean) as string[];
                             speakMoveNarration(
                                 nextNode.san,
                                 nextNode.comment,
                                 nextNode.annotations,
                                 nextNode.halfMoves,
                                 state.headers,
+                                childSans,
                             );
                         }
                     }
@@ -329,12 +334,17 @@ export const createTreeStore = (id?: string, initialTree?: TreeState) => {
                 if (move.length > 0 && isAutoNarrateEnabled()) {
                     const targetNode = getNodeAtPath(state.root, move);
                     if (targetNode.comment || targetNode.annotations.length > 0) {
+                        const childSans = targetNode.children
+                            .slice(0, 3)
+                            .map((c) => c.san)
+                            .filter(Boolean) as string[];
                         speakMoveNarration(
                             targetNode.san,
                             targetNode.comment,
                             targetNode.annotations,
                             targetNode.halfMoves,
                             state.headers,
+                            childSans,
                         );
                     }
                 }

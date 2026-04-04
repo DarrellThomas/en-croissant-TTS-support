@@ -654,8 +654,17 @@ export function cleanCommentForTTS(comment: string, lang = "en"): string {
 
     let text = comment;
 
+    // Pattern 4: Join hard line breaks from 80-char PGN wrapping into single line
+    text = text.replace(/\r?\n/g, " ");
+
     // Strip PGN embedded tags: [%eval ...], [%csl ...], [%cal ...], [%clk ...]
     text = text.replace(/\[%(?:eval|csl|cal|clk|timestamp)\s+[^\]]*\]/g, "");
+
+    // Pattern 2: Section dividers (--- or longer) → remove
+    text = text.replace(/—{2,}|–{2,}|-{3,}/g, "");
+
+    // Pattern 10: Strip single quotes around chess terms — TTS handles them poorly
+    text = text.replace(/['']/g, "");
 
     // Strip annotation symbols that might appear in text
     text = text.replace(/^(?:\?\?|\?!|!\?|!!|\?|!)\s*/g, "");
@@ -666,6 +675,16 @@ export function cleanCommentForTTS(comment: string, lang = "en"): string {
         /^(?:BLUNDER|BRILLIANT|EXCELLENT|GOOD|MISTAKE|INACCURACY|DUBIOUS)[.!,:]?\s*/i,
         "",
     );
+
+    // Pattern 9: Hyphenated square references: "h1-square" → "h1 square"
+    text = text.replace(/\b([a-h][1-8])-square/g, "$1 square");
+
+    // Pattern 1 & 6: Move ranges with optional ... prefix: "...h5-h4" or "h5-h4" → "h5 to h4"
+    text = text.replace(/\.{3}([a-h][1-8])-([a-h][1-8])/g, "$1 to $2");
+    text = text.replace(/\b([a-h][1-8])-([a-h][1-8])\b/g, "$1 to $2");
+
+    // Pattern 3: Black move indicator "..." before SAN — normalize to dots for expandInlineSAN
+    // e.g. "48...Be7+" — the triple dots are already handled by expandInlineSAN's regex
 
     // Expand inline SAN notation in comment text
     text = expandInlineSAN(text, lang);
@@ -686,6 +705,9 @@ export function cleanCommentForTTS(comment: string, lang = "en"): string {
 
     // Apply chess vocabulary fixes
     text = applyChessVocab(text, lang);
+
+    // Pattern 5: Clean trailing punctuation artifacts from PGN
+    text = text.replace(/[;]+\s*$/g, "");
 
     // Clean up multiple spaces and trim
     text = text.replace(/\s+/g, " ").trim();
@@ -709,6 +731,7 @@ export function buildNarration(
     annotations: string[],
     halfMoves: number,
     lang = "en",
+    childSans: string[] = [],
 ): string {
     const parts: string[] = [];
 
@@ -724,7 +747,16 @@ export function buildNarration(
     if (annoSpoken) parts.push(annoSpoken);
 
     // Comment text — separated by pause
-    const cleanComment = cleanCommentForTTS(comment, lang);
+    let cleanComment = cleanCommentForTTS(comment, lang);
+
+    // Pattern 11: Fragment comments that continue into moves.
+    // When a comment ends without terminal punctuation, append the following
+    // child moves in spoken form to complete the sentence.
+    if (cleanComment && childSans.length > 0 && !/[.!?]$/.test(cleanComment)) {
+        const spokenMoves = childSans.map((s) => sanToSpoken(s, lang)).join(", ");
+        cleanComment += ` ${spokenMoves}.`;
+    }
+
     if (cleanComment) parts.push(cleanComment);
 
     // Join with pauses (period + space gives TTS a natural breath)
@@ -1380,6 +1412,7 @@ export async function speakMoveNarration(
     annotations: string[],
     halfMoves: number,
     headers?: GameHeaders,
+    childSans: string[] = [],
 ): Promise<void> {
     // Demo mode — works regardless of provider setting
     if (headers?.other?.AudioSource === "demo" && headers?.other?.Language) {
@@ -1398,7 +1431,7 @@ export async function speakMoveNarration(
 
     // All other providers: build narration text and speak it
     const lang = store.get(ttsLanguageAtom) || "en";
-    const narration = buildNarration(san, comment, annotations, halfMoves, lang);
+    const narration = buildNarration(san, comment, annotations, halfMoves, lang, childSans);
     if (narration) {
         await speakText(narration);
     }
@@ -1419,7 +1452,8 @@ export function isAutoNarrateEnabled(): boolean {
 // Build narration text for a node (same as what would be spoken)
 function narrationForNode(node: TreeNode, lang: string): string | null {
     if (!node.comment && node.annotations.length === 0) return null;
-    return buildNarration(node.san, node.comment, node.annotations, node.halfMoves, lang);
+    const childSans = node.children.slice(0, 3).map((c) => c.san).filter(Boolean) as string[];
+    return buildNarration(node.san, node.comment, node.annotations, node.halfMoves, lang, childSans);
 }
 
 // Precache all narrations for a game tree in the background
