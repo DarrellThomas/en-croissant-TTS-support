@@ -14,6 +14,7 @@ import cx from "clsx";
 import { useAtom } from "jotai";
 import { useTranslation } from "react-i18next";
 import { zenModeAtom } from "@/state/atoms";
+import LanguageIcon from "./LanguageIcon";
 import ZenIcon from "./ZenIcon";
 import classes from "./Sidebar.module.css";
 
@@ -72,7 +73,7 @@ function LanguageNavLink() {
           [classes.active]: isActive,
         })}
       >
-        <span style={{ fontSize: "1.5rem", lineHeight: 1 }}>🌐</span>
+        <LanguageIcon />
       </Link>
     </Tooltip>
   );
