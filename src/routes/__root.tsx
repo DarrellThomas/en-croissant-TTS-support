@@ -463,7 +463,7 @@ function RootLayout() {
                 position: "fixed",
                 left: 0,
                 top: 0,
-                width: 6,
+                width: 24,
                 height: "100vh",
                 cursor: "pointer",
                 zIndex: 1000,
