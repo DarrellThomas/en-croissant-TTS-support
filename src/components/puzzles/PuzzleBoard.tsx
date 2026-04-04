@@ -30,8 +30,8 @@ function PuzzleBoard({
 }: {
   puzzles: Puzzle[];
   currentPuzzle: number;
-  changeCompletion: (completion: Completion) => void;
-  generatePuzzle: (db: string) => void;
+  changeCompletion: (completion: Completion) => Promise<void>;
+  generatePuzzle: (db: string) => Promise<void>;
   db: string | null;
 }) {
   const store = useContext(TreeStateContext)!;
@@ -78,7 +78,7 @@ function PuzzleBoard({
   const showCoordinates = useAtomValue(showCoordinatesAtom);
   const ranksPosition = useAtomValue(ranksPositionAtom);
 
-  function checkMove(move: Move) {
+  async function checkMove(move: Move) {
     if (!pos) return;
     if (!puzzle) return;
 
@@ -89,12 +89,14 @@ function PuzzleBoard({
     if (puzzle.moves[currentMove] === uci || newPos.isCheckmate()) {
       if (currentMove === puzzle.moves.length - 1) {
         if (puzzle.completion !== "incorrect") {
-          changeCompletion("correct");
+          await changeCompletion("correct");
         }
         setEnded(false);
 
         if (db && jumpToNextPuzzleImmediately) {
-          generatePuzzle(db);
+          await generatePuzzle(db);
+          reset();
+          return;
         }
       }
       const newMoves = puzzle.moves.slice(currentMove, currentMove + 2);
@@ -110,7 +112,7 @@ function PuzzleBoard({
         changeHeaders: false,
       });
       if (!ended) {
-        changeCompletion("incorrect");
+        await changeCompletion("incorrect");
       }
       setEnded(true);
     }

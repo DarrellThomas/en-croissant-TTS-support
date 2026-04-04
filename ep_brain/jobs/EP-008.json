@@ -24,11 +24,7 @@
       "Add reset() call after generatePuzzle in the jump-to-next path",
       "Update function signatures in Puzzles.tsx to return Promise<void>"
     ],
-    "out_of_scope": [
-      "Puzzle database logic",
-      "Puzzle theme filtering",
-      "TTS narration of puzzles"
-    ]
+    "out_of_scope": ["Puzzle database logic", "Puzzle theme filtering", "TTS narration of puzzles"]
   },
   "contracts": {
     "correctness": {
@@ -76,10 +72,7 @@
       "Intentionally fail a puzzle, then solve the next — completion should say 'incorrect' for the first"
     ]
   },
-  "primary_files": [
-    "src/components/puzzles/PuzzleBoard.tsx",
-    "src/components/puzzles/Puzzles.tsx"
-  ],
+  "primary_files": ["src/components/puzzles/PuzzleBoard.tsx", "src/components/puzzles/Puzzles.tsx"],
   "done_criteria": [
     "checkMove is async with awaited callbacks",
     "Prop signatures updated to Promise<void>",
