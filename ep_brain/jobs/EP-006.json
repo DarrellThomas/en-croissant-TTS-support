@@ -1,0 +1,80 @@
+{
+  "schema_version": "1.0",
+  "job_id": "EP-006",
+  "title": "Cherry-pick PR #677: Fix audio playback on Linux",
+  "state": "spec",
+  "type": "cherry_pick",
+  "priority": 2,
+  "source": {
+    "upstream_pr": 677,
+    "url": "https://github.com/franciscoBSalgueiro/en-croissant/pull/677",
+    "notes": "Merged 2026-02-10T17:28:38Z"
+  },
+  "description": "On Linux, Tauri's convertFileSrc (asset://) protocol doesn't work reliably for audio playback. This PR works around the issue by starting a local HTTP sound server (using axum) on Linux only, and serving sound files from 127.0.0.1 on a random port.\r\n\r\nOn macOS and Windows, the existing convertFileSrc/resolveResource approach is preserved unchanged.\r\n\r\nChanges\r\n\r\n  - src-tauri/src/sound.rs (new): Adds a local axum HTTP server (Linux-only, gated with #[cfg(target_os = \"linux\")]) that serves sound ",
+  "notes": [
+    "Upstream files: src-tauri/src/main.rs, src-tauri/src/sound.rs, src/bindings/generated.ts, src/utils/sound.ts",
+    "Labels: none"
+  ],
+  "scope": {
+    "in_scope": [
+      "Port upstream PR #677 changes to our fork",
+      "Resolve any merge conflicts with our modifications",
+      "Verify the fix works in our build"
+    ],
+    "out_of_scope": [
+      "Unrelated changes to the same files",
+      "Upstream features we haven't adopted"
+    ]
+  },
+  "contracts": {
+    "correctness": {
+      "requirements": [
+        "The bug/feature from PR #677 works correctly",
+        "No regressions in existing functionality"
+      ],
+      "edge_cases": [
+        "TODO: identify edge cases"
+      ]
+    },
+    "performance": {
+      "no_regression": true
+    },
+    "compatibility": {
+      "backward_compatible": true,
+      "migration_needed": false
+    }
+  },
+  "acceptance_gates": [
+    "cargo test passes",
+    "pnpm format && pnpm lint:fix clean",
+    "PR #677 behavior verified in running app"
+  ],
+  "test_plan": {
+    "automated": [
+      {
+        "name": "cargo test",
+        "command": "cd src-tauri && cargo test"
+      },
+      {
+        "name": "lint",
+        "command": "pnpm lint:fix"
+      }
+    ],
+    "manual": [
+      "Verify PR #677 fix in running app",
+      "TODO: specific verification steps"
+    ]
+  },
+  "primary_files": [
+    "src-tauri/src/main.rs",
+    "src-tauri/src/sound.rs",
+    "src/bindings/generated.ts",
+    "src/utils/sound.ts"
+  ],
+  "done_criteria": [
+    "PR #677 changes successfully ported",
+    "All tests pass",
+    "Verified in running app",
+    "Committed and pushed"
+  ]
+}

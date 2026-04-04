@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "job_id": "EP-002",
   "title": "Cherry-pick PR #782: Fix regex in the chess.com link import",
-  "state": "planning",
+  "state": "done",
   "type": "cherry_pick",
   "priority": 1,
   "source": {

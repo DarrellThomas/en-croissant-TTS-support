@@ -1,0 +1,87 @@
+{
+  "schema_version": "1.0",
+  "job_id": "EP-005",
+  "title": "Cherry-pick PR #738: fix: open OAuth URL via tauri-plugin-opener on Linux",
+  "state": "spec",
+  "type": "cherry_pick",
+  "priority": 2,
+  "source": {
+    "upstream_pr": 738,
+    "url": "https://github.com/franciscoBSalgueiro/en-croissant/pull/738",
+    "notes": "Merged 2026-03-12T11:18:05Z"
+  },
+  "description": "`shell().open()` doesn't reliably invoke xdg-open on KDE Linux, so the browser never opened during Lichess authentication.\r\nThis PR just migrates to `tauri-plugin-opener` as the existing TODO comment suggested.",
+  "notes": [
+    "Upstream files: package.json, pnpm-lock.yaml, src-tauri/Cargo.lock, src-tauri/Cargo.toml, src-tauri/capabilities/main.json, src-tauri/src/error.rs, src-tauri/src/main.rs, src-tauri/src/oauth.rs, src-tauri/tauri.conf.json, src/components/common/OpenFolderButton.tsx",
+    "Labels: none"
+  ],
+  "scope": {
+    "in_scope": [
+      "Port upstream PR #738 changes to our fork",
+      "Resolve any merge conflicts with our modifications",
+      "Verify the fix works in our build"
+    ],
+    "out_of_scope": [
+      "Unrelated changes to the same files",
+      "Upstream features we haven't adopted"
+    ]
+  },
+  "contracts": {
+    "correctness": {
+      "requirements": [
+        "The bug/feature from PR #738 works correctly",
+        "No regressions in existing functionality"
+      ],
+      "edge_cases": [
+        "TODO: identify edge cases"
+      ]
+    },
+    "performance": {
+      "no_regression": true
+    },
+    "compatibility": {
+      "backward_compatible": true,
+      "migration_needed": false
+    }
+  },
+  "acceptance_gates": [
+    "cargo test passes",
+    "pnpm format && pnpm lint:fix clean",
+    "PR #738 behavior verified in running app"
+  ],
+  "test_plan": {
+    "automated": [
+      {
+        "name": "cargo test",
+        "command": "cd src-tauri && cargo test"
+      },
+      {
+        "name": "lint",
+        "command": "pnpm lint:fix"
+      }
+    ],
+    "manual": [
+      "Verify PR #738 fix in running app",
+      "TODO: specific verification steps"
+    ]
+  },
+  "primary_files": [
+    "package.json",
+    "pnpm-lock.yaml",
+    "src-tauri/Cargo.lock",
+    "src-tauri/Cargo.toml",
+    "src-tauri/capabilities/main.json",
+    "src-tauri/src/error.rs",
+    "src-tauri/src/main.rs",
+    "src-tauri/src/oauth.rs",
+    "src-tauri/tauri.conf.json",
+    "src/components/common/OpenFolderButton.tsx",
+    "src/routes/__root.tsx"
+  ],
+  "done_criteria": [
+    "PR #738 changes successfully ported",
+    "All tests pass",
+    "Verified in running app",
+    "Committed and pushed"
+  ]
+}

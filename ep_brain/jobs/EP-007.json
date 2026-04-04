@@ -1,23 +1,23 @@
 {
   "schema_version": "1.0",
-  "job_id": "EP-004",
-  "title": "Cherry-pick PR #712: Fix castling via text Move Input",
-  "state": "done",
+  "job_id": "EP-007",
+  "title": "Cherry-pick PR #720: Strip [%timestamp] annotations from PGN comments",
+  "state": "spec",
   "type": "cherry_pick",
   "priority": 2,
   "source": {
-    "upstream_pr": 712,
-    "url": "https://github.com/franciscoBSalgueiro/en-croissant/pull/712",
-    "notes": "Merged 2026-03-01T23:02:09Z"
+    "upstream_pr": 720,
+    "url": "https://github.com/franciscoBSalgueiro/en-croissant/pull/720",
+    "notes": "Merged 2026-03-01T23:44:07Z"
   },
-  "description": "## Summary\n\nFixes #316.\n\n- The `cleanSan()` function in `parseKeyboardMove()` had a `length > 2` guard that blocked 2-character inputs like `OO` and `00` from being recognized as kingside castling\n- Literal string matching (`\"o-o\"`, `\"o-o-o\"`) only caught exact lowercase hyphenated forms, missing `O-O`, `0-0`, `OO`, `00`, etc.\n- Replaced with regex-based normalization that accepts any combination of `O`/`o`/`0` with optional hyphens for both kingside and queenside castling\n\n## Test plan\n\n- [ ] E",
+  "description": "## Summary\n- Strip `[%timestamp N]` annotations from PGN comment text after parsing\n- Chess.com exports include both `[%clk 0:09:59.9]` and `[%timestamp 1]` in move comments. The `[%clk]` is already parsed by chessops, but `[%timestamp]` was left in the displayed comment text, cluttering the notation\n- The `[%timestamp]` value represents elapsed seconds since game start (not remaining clock time), so it can't be reliably converted to a clock value without time control info. The `[%clk]` value is",
   "notes": [
     "Upstream files: src/utils/chess.ts",
     "Labels: none"
   ],
   "scope": {
     "in_scope": [
-      "Port upstream PR #712 changes to our fork",
+      "Port upstream PR #720 changes to our fork",
       "Resolve any merge conflicts with our modifications",
       "Verify the fix works in our build"
     ],
@@ -29,7 +29,7 @@
   "contracts": {
     "correctness": {
       "requirements": [
-        "The bug/feature from PR #712 works correctly",
+        "The bug/feature from PR #720 works correctly",
         "No regressions in existing functionality"
       ],
       "edge_cases": [
@@ -47,7 +47,7 @@
   "acceptance_gates": [
     "cargo test passes",
     "pnpm format && pnpm lint:fix clean",
-    "PR #712 behavior verified in running app"
+    "PR #720 behavior verified in running app"
   ],
   "test_plan": {
     "automated": [
@@ -61,7 +61,7 @@
       }
     ],
     "manual": [
-      "Verify PR #712 fix in running app",
+      "Verify PR #720 fix in running app",
       "TODO: specific verification steps"
     ]
   },
@@ -69,17 +69,9 @@
     "src/utils/chess.ts"
   ],
   "done_criteria": [
-    "PR #712 changes successfully ported",
+    "PR #720 changes successfully ported",
     "All tests pass",
     "Verified in running app",
     "Committed and pushed"
-  ],
-  "iteration_log": [
-    {
-      "timestamp": "2026-04-04T02:47:22Z",
-      "action": "Verified already cherry-picked",
-      "result": "cleanSan already uses the new regex-based castling normalization",
-      "keep_or_discard": "keep"
-    }
   ]
 }

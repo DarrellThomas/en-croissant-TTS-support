@@ -1,35 +1,55 @@
 {
   "schema_version": "1.0",
   "job_id": "EP-003",
-  "title": "Cherry-pick PR #778: updates chessground to 10.1.1 to resolve black line artifacts on chess tiles",
-  "state": "spec",
+  "title": "Cherry-pick PR #778: Update chessground to 10.1.1 (black line artifacts fix)",
+  "state": "planning",
   "type": "cherry_pick",
   "priority": 1,
   "source": {
     "upstream_pr": 778,
     "url": "https://github.com/franciscoBSalgueiro/en-croissant/pull/778",
-    "notes": "Merged 2026-03-29T20:13:31Z"
+    "notes": "Merged 2026-03-29T20:13:31Z. Fixes visual black line artifacts on chess tile boundaries."
   },
-  "description": "Updates chessground to 10.1.1, which includes a fix I contributed in\r\nhttps://github.com/lichess-org/chessground/pull/382 for black line artifacts at square boundaries on WebKitGTK (used by Tauri apps on Linux).\r\n\r\ne.g:\r\n\r\n<img width=\"952\" height=\"660\" alt=\"Screenshot_20260322_232930\" src=\"https://github.com/user-attachments/assets/05a1a85a-697c-4747-a33b-45e807dc5291\" />\r\n\r\n\r\nAfter updating, the board seems fine now.",
-  "notes": ["Upstream files: package.json, pnpm-lock.yaml", "Labels: none"],
+  "description": "Bump @lichess-org/chessground from 10.0.2 to 10.1.1. This resolves black line rendering artifacts that appear between chess tiles on certain displays/zoom levels. The change is a dependency version bump only — no source code changes beyond package.json and pnpm-lock.yaml.",
+  "notes": [
+    "IMPORTANT: We have a custom CSS override at src/styles/chessgroundBaseOverride.css",
+    "This override fixes coordinate positioning (Francisco's CSS was backwards)",
+    "Must verify coordinate display still works correctly after the bump",
+    "chessground 10.1.1 may have changed its own CSS — check for conflicts",
+    "The bump is ^10.1.1 so pnpm install will pull the latest 10.x"
+  ],
   "scope": {
     "in_scope": [
-      "Port upstream PR #778 changes to our fork",
-      "Resolve any merge conflicts with our modifications",
-      "Verify the fix works in our build"
+      "Bump @lichess-org/chessground version in package.json",
+      "Run pnpm install to update lockfile",
+      "Verify board renders correctly with no black line artifacts",
+      "Verify coordinate overlay still works with our CSS override"
     ],
-    "out_of_scope": ["Unrelated changes to the same files", "Upstream features we haven't adopted"]
+    "out_of_scope": [
+      "Rewriting chessgroundBaseOverride.css (unless the bump breaks it)",
+      "Other dependency updates"
+    ]
   },
   "contracts": {
     "correctness": {
       "requirements": [
-        "The bug/feature from PR #778 works correctly",
-        "No regressions in existing functionality"
+        "Board renders with no black line artifacts between tiles",
+        "Piece movement works (drag and click)",
+        "Board orientation (flip) works",
+        "Coordinate display works in all modes (edge, all squares, none)"
       ],
-      "edge_cases": ["TODO: identify edge cases"]
+      "edge_cases": [
+        "Board at different zoom levels (Ctrl+/-, browser zoom)",
+        "Board as black (flipped orientation) — coordinates must be correct",
+        "Premove highlights still render",
+        "Arrow drawing still works"
+      ]
     },
     "performance": {
-      "no_regression": true
+      "no_regression": true,
+      "requirements": [
+        "No visible stutter or flicker during piece movement"
+      ]
     },
     "compatibility": {
       "backward_compatible": true,
@@ -37,28 +57,42 @@
     }
   },
   "acceptance_gates": [
-    "cargo test passes",
-    "pnpm format && pnpm lint:fix clean",
-    "PR #778 behavior verified in running app"
+    "pnpm install succeeds",
+    "pnpm tauri dev launches without errors",
+    "Board renders cleanly — no black lines between tiles",
+    "Coordinates display correctly (edge mode, both orientations)",
+    "pnpm format && pnpm lint:fix clean"
   ],
   "test_plan": {
     "automated": [
       {
-        "name": "cargo test",
-        "command": "cd src-tauri && cargo test"
+        "name": "pnpm install",
+        "command": "pnpm install"
       },
       {
         "name": "lint",
         "command": "pnpm lint:fix"
       }
     ],
-    "manual": ["Verify PR #778 fix in running app", "TODO: specific verification steps"]
+    "manual": [
+      "Open app, verify board has no black line artifacts between tiles",
+      "Zoom in/out (Ctrl+/Ctrl-) and check for artifacts at different zoom levels",
+      "Flip board and verify coordinates are still correct",
+      "Play a few moves (drag and click) to verify interaction works",
+      "Check arrow drawing still works (right-click drag on board)",
+      "Verify premove highlighting (play vs engine, premove a response)"
+    ]
   },
-  "primary_files": ["package.json", "pnpm-lock.yaml"],
+  "primary_files": [
+    "package.json",
+    "pnpm-lock.yaml"
+  ],
   "done_criteria": [
-    "PR #778 changes successfully ported",
-    "All tests pass",
-    "Verified in running app",
+    "chessground bumped to ^10.1.1 in package.json",
+    "pnpm-lock.yaml updated",
+    "No black line artifacts on board",
+    "Coordinate CSS override still works",
+    "All visual checks pass",
     "Committed and pushed"
   ]
 }
