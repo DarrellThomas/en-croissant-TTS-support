@@ -1,28 +1,63 @@
 {
   "schema_version": "1.0",
   "job_id": "EP-009",
-  "title": "Render performance improvements (React 19 use() + FenSearch lazy loading)",
-  "state": "spec",
+  "title": "Render performance improvements (upstream 32942d97)",
+  "state": "planning",
   "type": "cherry_pick",
   "priority": 2,
-  "source": {},
-  "description": "Render performance improvements (React 19 use() + FenSearch lazy loading)",
+  "source": {
+    "upstream_commit": "32942d97",
+    "url": "https://github.com/franciscoBSalgueiro/en-croissant/commit/32942d97",
+    "ep_brain_ref": "`32942d97`",
+    "notes": "Upstream commit Mar 13 2026. Multiple render perf improvements across 7 files."
+  },
+  "description": "Bundle of render performance fixes: remove unused atom subscriptions causing unnecessary re-renders, defer FenSearch API calls until the user actually types, memoize tree stats computation, wrap root comment in styled Box, and migrate from useContext to React 19 use() for better re-render boundaries. Also disables immer autoFreeze for performance in production.",
+  "notes": [
+    "7 source files changed (plus package.json/lockfile for proxy-memoize dep)",
+    "React 19 use() replaces useContext in FenSearch.tsx, InfoPanel.tsx — use() integrates with Suspense/transitions",
+    "proxy-memoize is a NEW dependency — needs adding to package.json",
+    "immer setAutoFreeze(false) prevents deep-freezing large tree state objects",
+    "VERIFIED: none of these changes exist in our fork yet"
+  ],
   "scope": {
     "in_scope": [
-      "TODO: define what this job covers"
+      "Change 1: DetachedEval.tsx — remove unused engineProgressFamily atom subscription",
+      "Change 2: GameNotation.tsx — wrap root comment in Box with padding/font-size",
+      "Change 3: FenSearch.tsx — (a) useContext→use(), (b) make currentFen prop optional with internal fallback, (c) add hasTyped gate to defer SWR API call until user types",
+      "Change 4: InfoPanel.tsx — (a) useContext→use() in both components, (b) replace inline useMemo(getTreeStats) with useStore(store, getStats) selector, (c) remove currentNode/FenSearch currentFen prop",
+      "Change 5: RepertoireInfo.tsx — replace useMemo(getTreeStats) with useStore(store, getStats)",
+      "Change 6: index.tsx — import and call setAutoFreeze(false) from immer",
+      "Change 7: repertoire.ts — make getTreeStats private, add memoized getStats export using proxy-memoize",
+      "Change 8: package.json — add proxy-memoize dependency"
     ],
     "out_of_scope": [
-      "TODO: define what is excluded"
+      "Other performance work not in this commit",
+      "Changing the tree data structure",
+      "React Compiler changes (already done in separate cherry-pick)"
     ]
   },
   "contracts": {
     "correctness": {
       "requirements": [
-        "TODO: define correctness requirements"
+        "FenSearch still shows opening names when user types a FEN",
+        "FenSearch no longer fires API calls on every board position change (only when user types)",
+        "DetachedEval still displays correctly (removing unused atom shouldn't change anything)",
+        "Root comment in notation panel has proper padding/spacing",
+        "Tree stats in InfoPanel and RepertoireInfo still display correctly",
+        "No immer freeze errors in console"
+      ],
+      "edge_cases": [
+        "FenSearch with no currentFen prop — should use internal store fen",
+        "Rapid move navigation — should not trigger opening name lookups",
+        "Large game tree (100+ nodes) — tree stats should not recompute on every render"
       ]
     },
     "performance": {
-      "no_regression": true
+      "no_regression": true,
+      "requirements": [
+        "Reduced re-renders during move navigation (measurable in React DevTools Profiler)",
+        "No SWR API calls during board navigation (only on user FEN input)"
+      ]
     },
     "compatibility": {
       "backward_compatible": true,
@@ -30,15 +65,17 @@
     }
   },
   "acceptance_gates": [
-    "All automated tests pass",
+    "pnpm install succeeds (proxy-memoize added)",
+    "pnpm tauri dev launches without errors",
     "pnpm format && pnpm lint:fix clean",
-    "TODO: add job-specific gates"
+    "No console errors during normal game navigation",
+    "FenSearch works when user types but doesn't fire on navigation"
   ],
   "test_plan": {
     "automated": [
       {
-        "name": "cargo test",
-        "command": "cd src-tauri && cargo test"
+        "name": "pnpm install",
+        "command": "pnpm install"
       },
       {
         "name": "lint",
@@ -46,13 +83,32 @@
       }
     ],
     "manual": [
-      "TODO: define manual verification steps"
+      "Open a game, navigate forward/backward with arrow keys — should feel smooth, no lag",
+      "Open browser console (Inspect > Network tab) — verify no search_opening_name API calls during navigation",
+      "Click into FenSearch input and type a FEN — API call should fire and show opening name",
+      "Check Info panel shows tree stats (total moves, depth, leafs)",
+      "Open a game with a root comment — verify it displays with proper padding",
+      "Open Repertoire practice — verify stats display correctly"
     ]
   },
   "primary_files": [
-    "TODO: list files to be modified"
+    "package.json",
+    "pnpm-lock.yaml",
+    "src/components/common/DetachedEval.tsx",
+    "src/components/common/GameNotation.tsx",
+    "src/components/panels/info/FenSearch.tsx",
+    "src/components/panels/info/InfoPanel.tsx",
+    "src/components/panels/practice/RepertoireInfo.tsx",
+    "src/index.tsx",
+    "src/utils/repertoire.ts"
   ],
   "done_criteria": [
-    "TODO: define when this job is complete"
+    "All 8 changes applied",
+    "proxy-memoize dependency added",
+    "pnpm install succeeds",
+    "All lint passes",
+    "No console errors during navigation",
+    "FenSearch only fires API on user input",
+    "Committed and pushed"
   ]
 }
