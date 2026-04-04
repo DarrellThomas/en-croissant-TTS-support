@@ -165,30 +165,32 @@ function NotationHeader() {
     <Stack gap="xs" pt="xs">
       <Group justify="space-between" px="sm">
         <OpeningName />
-        <Group gap="sm">
-          <Tooltip label={invisible ? t("Notation.ShowMoves") : t("Notation.HideMoves")}>
-            <ActionIcon onClick={() => setInvisible((v) => !v)}>
-              {invisible ? <IconEyeOff size="1rem" /> : <IconEye size="1rem" />}
-            </ActionIcon>
-          </Tooltip>
-          <Tooltip label={tableView ? t("Notation.NormalView") : t("Notation.TableView")}>
-            <ActionIcon onClick={() => setTableView((v) => !v)}>
-              {tableView ? <IconList size="1rem" /> : <IconLayoutList size="1rem" />}
-            </ActionIcon>
-          </Tooltip>
-          <Tooltip label={showComments ? t("Notation.HideComments") : t("Notation.ShowComments")}>
-            <ActionIcon onClick={() => setShowComments((v) => !v)}>
-              {showComments ? <IconArticle size="1rem" /> : <IconArticleOff size="1rem" />}
-            </ActionIcon>
-          </Tooltip>
-          <Tooltip
-            label={showVariations ? t("Notation.HideVariations") : t("Notation.ShowVariations")}
-          >
-            <ActionIcon onClick={() => setShowVariations((v) => !v)}>
-              {showVariations ? <IconArrowsSplit size="1rem" /> : <IconArrowRight size="1rem" />}
-            </ActionIcon>
-          </Tooltip>
-        </Group>
+        <Tooltip.Group openDelay={300}>
+          <Group gap="sm">
+            <Tooltip label={invisible ? t("Notation.ShowMoves") : t("Notation.HideMoves")}>
+              <ActionIcon onClick={() => setInvisible((v) => !v)}>
+                {invisible ? <IconEyeOff size="1rem" /> : <IconEye size="1rem" />}
+              </ActionIcon>
+            </Tooltip>
+            <Tooltip label={tableView ? t("Notation.NormalView") : t("Notation.TableView")}>
+              <ActionIcon onClick={() => setTableView((v) => !v)}>
+                {tableView ? <IconList size="1rem" /> : <IconLayoutList size="1rem" />}
+              </ActionIcon>
+            </Tooltip>
+            <Tooltip label={showComments ? t("Notation.HideComments") : t("Notation.ShowComments")}>
+              <ActionIcon onClick={() => setShowComments((v) => !v)}>
+                {showComments ? <IconArticle size="1rem" /> : <IconArticleOff size="1rem" />}
+              </ActionIcon>
+            </Tooltip>
+            <Tooltip
+              label={showVariations ? t("Notation.HideVariations") : t("Notation.ShowVariations")}
+            >
+              <ActionIcon onClick={() => setShowVariations((v) => !v)}>
+                {showVariations ? <IconArrowsSplit size="1rem" /> : <IconArrowRight size="1rem" />}
+              </ActionIcon>
+            </Tooltip>
+          </Group>
+        </Tooltip.Group>
       </Group>
       <Divider />
     </Stack>
