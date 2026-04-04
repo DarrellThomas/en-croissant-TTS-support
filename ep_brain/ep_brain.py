@@ -1115,6 +1115,31 @@ def cmd_serve(conn, args):
                 q = "SELECT * FROM tasks" + ("" if status == "all" else f" WHERE status='{status}'")
                 self.send_json([dict(r) for r in conn.execute(q + " ORDER BY sort_order").fetchall()])
 
+            # ── Jobs API (GET) ────────────────────────────────────
+            elif parsed.path == "/api/jobs":
+                state_filter = qs.get("state", [None])[0]
+                JOBS_DIR.mkdir(exist_ok=True)
+                jobs = []
+                for p in sorted(JOBS_DIR.glob("EP-*.json")):
+                    try:
+                        j = _load_job(p)
+                        if state_filter and j.get("state") != state_filter:
+                            continue
+                        jobs.append({
+                            "job_id": j["job_id"], "title": j["title"],
+                            "state": j["state"], "type": j["type"],
+                            "priority": j["priority"],
+                        })
+                    except Exception:
+                        pass
+                self.send_json(jobs)
+
+            elif m := re.match(r"^/api/jobs/(EP-\d+)$", parsed.path):
+                path = JOBS_DIR / f"{m.group(1)}.json"
+                if not path.exists():
+                    self.send_json({"error": "not found"}, 404); return
+                self.send_json(_load_job(path))
+
             else:
                 self.send_json({"error": "not found"}, 404)
 
@@ -1151,11 +1176,91 @@ def cmd_serve(conn, args):
                 p2 = export_tasks_md(conn)
                 self.send_json({"ok": True, "files": [p1, p2]})
 
+            # ── Jobs API (POST) ───────────────────────────────────
+            elif m := re.match(r"^/api/jobs/(EP-\d+)/state$", path):
+                job_id = m.group(1)
+                jp = JOBS_DIR / f"{job_id}.json"
+                if not jp.exists():
+                    self.send_json({"error": "not found"}, 404); return
+                new_state = body.get("state")
+                valid = ["spec", "planning", "in_progress", "testing", "review", "done", "blocked", "discarded"]
+                if new_state not in valid:
+                    self.send_json({"error": f"invalid state, must be one of {valid}"}, 400); return
+                job = _load_job(jp)
+                old_state = job["state"]
+                job["state"] = new_state
+                _save_job(jp, job)
+                self.send_json({"ok": True, "job_id": job_id, "old_state": old_state, "new_state": new_state})
+
+            elif m := re.match(r"^/api/jobs/(EP-\d+)/log$", path):
+                job_id = m.group(1)
+                jp = JOBS_DIR / f"{job_id}.json"
+                if not jp.exists():
+                    self.send_json({"error": "not found"}, 404); return
+                job = _load_job(jp)
+                if "iteration_log" not in job:
+                    job["iteration_log"] = []
+                entry = {
+                    "timestamp": now_utc(),
+                    "action": body.get("action", ""),
+                    "result": body.get("result", ""),
+                    "keep_or_discard": body.get("keep_or_discard", "keep"),
+                }
+                if body.get("notes"):
+                    entry["notes"] = body["notes"]
+                if body.get("files_changed"):
+                    entry["files_changed"] = body["files_changed"]
+                job["iteration_log"].append(entry)
+                _save_job(jp, job)
+                self.send_json({"ok": True, "job_id": job_id, "iteration": len(job["iteration_log"])})
+
+            elif m := re.match(r"^/api/jobs/(EP-\d+)/done$", path):
+                """Convenience: set state=done, mark ep_brain issue done, log it."""
+                job_id = m.group(1)
+                jp = JOBS_DIR / f"{job_id}.json"
+                if not jp.exists():
+                    self.send_json({"error": "not found"}, 404); return
+                job = _load_job(jp)
+                old_state = job["state"]
+                job["state"] = "done"
+                if "iteration_log" not in job:
+                    job["iteration_log"] = []
+                job["iteration_log"].append({
+                    "timestamp": now_utc(),
+                    "action": body.get("action", "Marked done via API"),
+                    "result": body.get("result", "Complete"),
+                    "keep_or_discard": "keep",
+                    "notes": body.get("notes", ""),
+                })
+                _save_job(jp, job)
+
+                # Also mark the ep_brain issue done if there's a source PR
+                issue_ref = None
+                pr = job.get("source", {}).get("upstream_pr")
+                if pr:
+                    issue_ref = f"PR #{pr}"
+                    commit = body.get("commit", git_head())
+                    ts = now_utc()
+                    rows = conn.execute("SELECT * FROM issues WHERE ref=?", (issue_ref,)).fetchall()
+                    for r in rows:
+                        if r["status"] != "done":
+                            conn.execute(
+                                "UPDATE issues SET status='done', status_label='Fixed', our_commit=?, updated_at=? WHERE id=?",
+                                (commit, ts, r["id"]))
+                            audit(conn, "issues", r["id"], "status", r["status"], "done", commit)
+                    conn.commit()
+
+                self.send_json({
+                    "ok": True, "job_id": job_id,
+                    "old_state": old_state, "new_state": "done",
+                    "issue_closed": issue_ref,
+                })
+
             else:
                 self.send_json({"error": "not found"}, 404)
 
-    print(f"ep_brain serving on http://localhost:{port}  (Ctrl-C to stop)")
-    HTTPServer(("127.0.0.1", port), Handler).serve_forever()
+    print(f"ep_brain serving on http://0.0.0.0:{port}  (Ctrl-C to stop)")
+    HTTPServer(("0.0.0.0", port), Handler).serve_forever()
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Jobs subsystem — durable JSON specs in ep_brain/jobs/
