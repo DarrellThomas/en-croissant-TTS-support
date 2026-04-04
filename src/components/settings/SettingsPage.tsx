@@ -490,7 +490,7 @@ export default function Page() {
         keywords: ["theme", "dark", "light", "color"],
         render: () => <ThemeButton />,
       },
-      ...(import.meta.env.VITE_PLATFORM === "win32"
+      ...(import.meta.env.VITE_PLATFORM === "win32" || import.meta.env.VITE_PLATFORM === "linux"
         ? [
             {
               id: "title-bar",

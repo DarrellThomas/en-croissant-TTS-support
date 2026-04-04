@@ -380,7 +380,7 @@ function RootLayout() {
 
   useEffect(() => {
     if (!menu) return;
-    if (isNative || import.meta.env.VITE_PLATFORM !== "win32") {
+    if (isNative || (import.meta.env.VITE_PLATFORM !== "win32" && import.meta.env.VITE_PLATFORM !== "linux")) {
       menu.setAsAppMenu();
       getCurrentWindow().setDecorations(true);
     } else {
@@ -416,7 +416,7 @@ function RootLayout() {
         breakpoint: 0,
       }}
       header={
-        isNative || import.meta.env.VITE_PLATFORM !== "win32"
+        isNative || (import.meta.env.VITE_PLATFORM !== "win32" && import.meta.env.VITE_PLATFORM !== "linux")
           ? undefined
           : {
               height: "2.25rem",
@@ -436,7 +436,7 @@ function RootLayout() {
         onClose={() => setUpdateModalOpened(false)}
         update={pendingUpdate}
       />
-      {!isNative && import.meta.env.VITE_PLATFORM === "win32" && (
+      {!isNative && (import.meta.env.VITE_PLATFORM === "win32" || import.meta.env.VITE_PLATFORM === "linux") && (
         <AppShell.Header>
           <TopBar menuActions={menuActions} />
         </AppShell.Header>
