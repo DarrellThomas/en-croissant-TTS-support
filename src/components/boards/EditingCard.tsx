@@ -75,12 +75,18 @@ function EditingCard({
       <FenInput currentFen={fen} />
       <Divider my="md" />
       <Group gap="xs" mb="sm">
-        <Tooltip label={t("BoardEditor.SwapColors", { defaultValue: "Swap colors & side to move" })}>
+        <Tooltip
+          label={t("BoardEditor.SwapColors", { defaultValue: "Swap colors & side to move" })}
+        >
           <ActionIcon variant="default" onClick={handleInvert}>
             <IconArrowsExchange size={16} />
           </ActionIcon>
         </Tooltip>
-        <Tooltip label={t("BoardEditor.MirrorPosition", { defaultValue: "Mirror position (keep side to move)" })}>
+        <Tooltip
+          label={t("BoardEditor.MirrorPosition", {
+            defaultValue: "Mirror position (keep side to move)",
+          })}
+        >
           <ActionIcon variant="default" onClick={handleMirror}>
             <IconFlipVertical size={16} />
           </ActionIcon>

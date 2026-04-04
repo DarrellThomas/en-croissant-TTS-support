@@ -100,9 +100,7 @@ function GameTable() {
     }),
   );
   const { data: countData, isLoading: isCountLoading } = useSWR(
-    deferCount && data !== undefined
-      ? ["games-count", file, query]
-      : null,
+    deferCount && data !== undefined ? ["games-count", file, query] : null,
     () =>
       query_games(file, {
         ...query,
@@ -140,7 +138,9 @@ function GameTable() {
 
   const openGame = async (record: NormalizedGame) => {
     const fullGame =
-      selectedGameRecord?.id === record.id ? selectedGameRecord : await get_db_game(file, record.id);
+      selectedGameRecord?.id === record.id
+        ? selectedGameRecord
+        : await get_db_game(file, record.id);
     if (!fullGame) {
       return;
     }
@@ -257,9 +257,7 @@ function GameTable() {
                         { value: 3000, label: "3000" },
                       ]}
                       value={query.range1 ?? FULL_ELO_RANGE}
-                      onChangeEnd={(value) =>
-                        applyFilterQuery({ range1: toStoredEloRange(value) })
-                      }
+                      onChangeEnd={(value) => applyFilterQuery({ range1: toStoredEloRange(value) })}
                     />
                   </InputWrapper>
 
@@ -274,9 +272,7 @@ function GameTable() {
                         { value: 3000, label: "3000" },
                       ]}
                       value={query.range2 ?? FULL_ELO_RANGE}
-                      onChangeEnd={(value) =>
-                        applyFilterQuery({ range2: toStoredEloRange(value) })
-                      }
+                      onChangeEnd={(value) => applyFilterQuery({ range2: toStoredEloRange(value) })}
                     />
                   </InputWrapper>
                 </Group>

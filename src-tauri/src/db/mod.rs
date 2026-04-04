@@ -1362,7 +1362,13 @@ fn normalize_game(
         ply_count: game.ply_count,
         fen: fen.to_string(),
         moves: if include_moves {
-            let movetext = decode_game_to_movetext(&game.moves, fen).unwrap_or_default();
+            let movetext = match decode_game_to_movetext(&game.moves, fen) {
+                Ok(mt) => mt,
+                Err(e) => {
+                    log::warn!("Failed to decode moves for game {}: {}", game.id, e);
+                    String::new()
+                }
+            };
             if movetext.is_empty() {
                 result_token
             } else {
@@ -2355,5 +2361,109 @@ mod tests {
         assert_eq!(games.len(), 1);
         let movetext = decode_game_to_movetext(&games[0].moves, Fen::default()).unwrap();
         assert_eq!(movetext, "1. e4! (1. d4?) 1... e5!");
+    }
+
+    #[test]
+    fn importer_preserves_mainline_comments_user_format() {
+        // Exact format from user's with-comments.pgn: newline-separated brace
+        // comments with em-dashes and long text
+        let pgn = r#"[Event "Test"]
+[Site "Belgrade"]
+[Date "1970.03.29"]
+[Round "1"]
+[White "Ivkov, Borislav"]
+[Black "Keres, Paul"]
+[Result "1/2-1/2"]
+[WhiteElo "2570"]
+[BlackElo "2600"]
+
+1. e4
+{ White opens with e4 — central control, immediate piece development, and the sharpest test of Black's intentions from move one. }
+1... e5 2. Nf3 Nc6 3. Bb5 a6 4. Ba4 d6
+{ The choice is d6 rather than the sharper lines — this is the Steinitz Deferred. }
+5. O-O Bd7 6. c3 Nge7 1/2-1/2
+"#;
+
+        let mut importer = Importer::new(None);
+        let games: Vec<TempGame> = BufferedReader::new(pgn.as_bytes())
+            .into_iter(&mut importer)
+            .flatten()
+            .flatten()
+            .collect();
+
+        assert_eq!(games.len(), 1, "Should import exactly one game");
+
+        // Check raw blob contains COMMENT_MARKER bytes
+        let comment_count = games[0]
+            .moves
+            .iter()
+            .filter(|&&b| b == encoding::COMMENT_MARKER)
+            .count();
+        assert!(
+            comment_count >= 2,
+            "Expected at least 2 comment markers in blob, found {}. Blob size: {}, blob: {:?}",
+            comment_count,
+            games[0].moves.len(),
+            games[0].moves
+        );
+
+        // Decode and verify comment text survives round-trip
+        let movetext = decode_game_to_movetext(&games[0].moves, Fen::default()).unwrap();
+        assert!(
+            movetext.contains("White opens with e4"),
+            "First comment missing from decoded movetext: {}",
+            movetext
+        );
+        assert!(
+            movetext.contains("Steinitz Deferred"),
+            "Second comment missing from decoded movetext: {}",
+            movetext
+        );
+    }
+
+    #[test]
+    fn comments_survive_database_round_trip() {
+        let pgn = r#"[Event "Test"]
+[Site "S"]
+[Date "2026.01.01"]
+[White "W"]
+[Black "B"]
+[Result "*"]
+
+1. e4 { A great opening move. } e5 { The symmetrical response. } 2. Nf3 Nc6 *
+"#;
+
+        let mut importer = Importer::new(None);
+        let games: Vec<TempGame> = BufferedReader::new(pgn.as_bytes())
+            .into_iter(&mut importer)
+            .flatten()
+            .flatten()
+            .collect();
+        assert_eq!(games.len(), 1);
+
+        // Store in SQLite and read back
+        let mut db = SqliteConnection::establish(":memory:").unwrap();
+        db.batch_execute(CREATE_TABLES_SQL).unwrap();
+        games[0].insert_to_db(&mut db).unwrap();
+
+        let stored_game: Game = games::table.first(&mut db).unwrap();
+        let movetext =
+            decode_game_to_movetext(&stored_game.moves, Fen::default()).unwrap();
+
+        assert!(
+            movetext.contains("{"),
+            "No comments found after database round-trip: {}",
+            movetext
+        );
+        assert!(
+            movetext.contains("A great opening move."),
+            "Comment text lost in database: {}",
+            movetext
+        );
+        assert!(
+            movetext.contains("The symmetrical response."),
+            "Second comment lost in database: {}",
+            movetext
+        );
     }
 }

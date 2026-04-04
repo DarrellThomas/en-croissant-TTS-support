@@ -15,7 +15,7 @@ import {
   TextInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IconAlertCircle } from "@tabler/icons-react";
+import { IconAlertCircle, IconFileImport } from "@tabler/icons-react";
 import { appDataDir, resolve } from "@tauri-apps/api/path";
 import { open } from "@tauri-apps/plugin-dialog";
 import { useAtom } from "jotai";
@@ -121,13 +121,12 @@ function AddDatabase({
               setOpened(false);
             })}
           >
-            <TextInput label={t("Common.Name")} withAsterisk {...form.getInputProps("title")} />
-
-            <TextInput label={t("Common.Description")} {...form.getInputProps("description")} />
-
             <FileInput
               label={t("Common.PGNFile")}
               description={t("Databases.Add.ClickToSelectPGN")}
+              placeholder={t("Databases.Add.BrowseForPGN")}
+              withAsterisk
+              rightSection={<IconFileImport size={16} />}
               onClick={async () => {
                 const selected = await open({
                   multiple: true,
@@ -164,6 +163,10 @@ function AddDatabase({
               filename={form.values.filename ?? null}
               error={form.errors.files}
             />
+
+            <TextInput label={t("Common.Name")} withAsterisk {...form.getInputProps("title")} />
+
+            <TextInput label={t("Common.Description")} {...form.getInputProps("description")} />
 
             <Button fullWidth mt="xl" type="submit">
               {t("Databases.Add.Convert")}
