@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0",
+  "job_id": "EP-003",
+  "title": "Cherry-pick PR #778: updates chessground to 10.1.1 to resolve black line artifacts on chess tiles",
+  "state": "spec",
+  "type": "cherry_pick",
+  "priority": 1,
+  "source": {
+    "upstream_pr": 778,
+    "url": "https://github.com/franciscoBSalgueiro/en-croissant/pull/778",
+    "notes": "Merged 2026-03-29T20:13:31Z"
+  },
+  "description": "Updates chessground to 10.1.1, which includes a fix I contributed in\r\nhttps://github.com/lichess-org/chessground/pull/382 for black line artifacts at square boundaries on WebKitGTK (used by Tauri apps on Linux).\r\n\r\ne.g:\r\n\r\n<img width=\"952\" height=\"660\" alt=\"Screenshot_20260322_232930\" src=\"https://github.com/user-attachments/assets/05a1a85a-697c-4747-a33b-45e807dc5291\" />\r\n\r\n\r\nAfter updating, the board seems fine now.",
+  "notes": ["Upstream files: package.json, pnpm-lock.yaml", "Labels: none"],
+  "scope": {
+    "in_scope": [
+      "Port upstream PR #778 changes to our fork",
+      "Resolve any merge conflicts with our modifications",
+      "Verify the fix works in our build"
+    ],
+    "out_of_scope": ["Unrelated changes to the same files", "Upstream features we haven't adopted"]
+  },
+  "contracts": {
+    "correctness": {
+      "requirements": [
+        "The bug/feature from PR #778 works correctly",
+        "No regressions in existing functionality"
+      ],
+      "edge_cases": ["TODO: identify edge cases"]
+    },
+    "performance": {
+      "no_regression": true
+    },
+    "compatibility": {
+      "backward_compatible": true,
+      "migration_needed": false
+    }
+  },
+  "acceptance_gates": [
+    "cargo test passes",
+    "pnpm format && pnpm lint:fix clean",
+    "PR #778 behavior verified in running app"
+  ],
+  "test_plan": {
+    "automated": [
+      {
+        "name": "cargo test",
+        "command": "cd src-tauri && cargo test"
+      },
+      {
+        "name": "lint",
+        "command": "pnpm lint:fix"
+      }
+    ],
+    "manual": ["Verify PR #778 fix in running app", "TODO: specific verification steps"]
+  },
+  "primary_files": ["package.json", "pnpm-lock.yaml"],
+  "done_criteria": [
+    "PR #778 changes successfully ported",
+    "All tests pass",
+    "Verified in running app",
+    "Committed and pushed"
+  ]
+}

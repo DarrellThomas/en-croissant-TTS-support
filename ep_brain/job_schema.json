@@ -1,0 +1,191 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://en-parlant.dev/schemas/job_schema.json",
+  "title": "En Parlant~ Job Spec",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "job_id",
+    "title",
+    "state",
+    "type",
+    "priority",
+    "source",
+    "description",
+    "scope",
+    "contracts",
+    "acceptance_gates",
+    "test_plan",
+    "primary_files",
+    "done_criteria"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "job_id": {
+      "type": "string",
+      "pattern": "^EP-[0-9]+$",
+      "description": "e.g. EP-001"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "spec",
+        "planning",
+        "in_progress",
+        "testing",
+        "review",
+        "done",
+        "blocked",
+        "discarded"
+      ]
+    },
+    "type": {
+      "type": "string",
+      "enum": ["cherry_pick", "bugfix", "feature", "refactor", "infra", "test"]
+    },
+    "priority": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "1=critical, 5=nice-to-have"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Where this job came from",
+      "properties": {
+        "upstream_pr": { "type": "integer", "description": "Upstream PR number" },
+        "upstream_issue": { "type": "integer", "description": "Upstream issue number" },
+        "upstream_commit": { "type": "string", "description": "Upstream commit hash" },
+        "ep_brain_ref": { "type": "string", "description": "ep_brain issue ref" },
+        "url": { "type": "string", "format": "uri" },
+        "notes": { "type": "string" }
+      }
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1
+    },
+    "notes": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["in_scope", "out_of_scope"],
+      "properties": {
+        "in_scope": { "$ref": "#/$defs/string_array" },
+        "out_of_scope": { "$ref": "#/$defs/string_array" }
+      }
+    },
+    "contracts": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "What must be true for this job to be accepted",
+      "properties": {
+        "correctness": {
+          "type": "object",
+          "properties": {
+            "requirements": { "$ref": "#/$defs/string_array" },
+            "edge_cases": { "$ref": "#/$defs/string_array" }
+          }
+        },
+        "performance": {
+          "type": "object",
+          "properties": {
+            "no_regression": { "type": "boolean", "default": true },
+            "requirements": { "$ref": "#/$defs/string_array" }
+          }
+        },
+        "compatibility": {
+          "type": "object",
+          "properties": {
+            "backward_compatible": { "type": "boolean", "default": true },
+            "migration_needed": { "type": "boolean", "default": false },
+            "requirements": { "$ref": "#/$defs/string_array" }
+          }
+        },
+        "security": {
+          "type": "object",
+          "properties": {
+            "requirements": { "$ref": "#/$defs/string_array" }
+          }
+        }
+      }
+    },
+    "acceptance_gates": {
+      "$ref": "#/$defs/string_array",
+      "description": "All must pass for the job to be accepted"
+    },
+    "test_plan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["automated"],
+      "properties": {
+        "automated": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "command"],
+            "properties": {
+              "name": { "type": "string" },
+              "command": { "type": "string" },
+              "expected": { "type": "string" }
+            }
+          },
+          "description": "Tests that can be run via CLI"
+        },
+        "manual": {
+          "$ref": "#/$defs/string_array",
+          "description": "Steps requiring human verification"
+        }
+      }
+    },
+    "primary_files": {
+      "$ref": "#/$defs/string_array",
+      "description": "Files expected to be modified"
+    },
+    "done_criteria": {
+      "$ref": "#/$defs/string_array",
+      "description": "All must be true for the job to be marked done"
+    },
+    "iteration_log": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["timestamp", "action", "result"],
+        "properties": {
+          "timestamp": { "type": "string" },
+          "action": { "type": "string" },
+          "result": { "type": "string" },
+          "files_changed": { "$ref": "#/$defs/string_array" },
+          "test_results": { "type": "string" },
+          "keep_or_discard": { "type": "string", "enum": ["keep", "discard", "partial"] },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+    "failure_budget": {
+      "type": "object",
+      "properties": {
+        "max_attempts": { "type": "integer", "minimum": 1, "default": 3 },
+        "escalate_if": { "$ref": "#/$defs/string_array" }
+      }
+    }
+  },
+  "$defs": {
+    "string_array": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    }
+  }
+}

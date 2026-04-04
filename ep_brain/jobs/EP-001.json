@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.0",
+  "job_id": "EP-001",
+  "title": "Cherry-pick PR #724: Kill engine child processes on app exit (fixes #723)",
+  "state": "planning",
+  "type": "cherry_pick",
+  "priority": 1,
+  "source": {
+    "upstream_pr": 724,
+    "url": "https://github.com/franciscoBSalgueiro/en-croissant/pull/724",
+    "notes": "Merged 2026-03-02T18:32:44Z"
+  },
+  "description": "## Summary\n\n- Add `Drop` impl to `BaseEngine` calling `child.start_kill()` so engine processes are killed when dropped\n- Add `kill_sync()` methods to `BaseEngine` and `EngineProcess` for non-async kill from `drop()` and shutdown handlers\n- Add `RunEvent::ExitRequested` handler in `main.rs` that iterates `AppState::engine_processes` and kills each one\n\nFixes #723.\n\n## Root cause\n\n`BaseEngine` holds a `tokio::process::Child` but has no `Drop` impl. When the app exits, the child is dropped without ",
+  "notes": [
+    "Upstream files: src-tauri/src/chess.rs, src-tauri/src/engine/process.rs, src-tauri/src/main.rs",
+    "Labels: none"
+  ],
+  "scope": {
+    "in_scope": [
+      "Port upstream PR #724 changes to our fork",
+      "Resolve any merge conflicts with our modifications",
+      "Verify the fix works in our build"
+    ],
+    "out_of_scope": ["Unrelated changes to the same files", "Upstream features we haven't adopted"]
+  },
+  "contracts": {
+    "correctness": {
+      "requirements": [
+        "The bug/feature from PR #724 works correctly",
+        "No regressions in existing functionality"
+      ],
+      "edge_cases": ["TODO: identify edge cases"]
+    },
+    "performance": {
+      "no_regression": true
+    },
+    "compatibility": {
+      "backward_compatible": true,
+      "migration_needed": false
+    }
+  },
+  "acceptance_gates": [
+    "cargo test passes",
+    "pnpm format && pnpm lint:fix clean",
+    "PR #724 behavior verified in running app"
+  ],
+  "test_plan": {
+    "automated": [
+      {
+        "name": "cargo test",
+        "command": "cd src-tauri && cargo test"
+      },
+      {
+        "name": "lint",
+        "command": "pnpm lint:fix"
+      }
+    ],
+    "manual": ["Verify PR #724 fix in running app", "TODO: specific verification steps"]
+  },
+  "primary_files": [
+    "src-tauri/src/chess.rs",
+    "src-tauri/src/engine/process.rs",
+    "src-tauri/src/main.rs"
+  ],
+  "done_criteria": [
+    "PR #724 changes successfully ported",
+    "All tests pass",
+    "Verified in running app",
+    "Committed and pushed"
+  ]
+}
