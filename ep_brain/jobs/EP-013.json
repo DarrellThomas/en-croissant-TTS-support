@@ -1,0 +1,101 @@
+{
+  "schema_version": "1.0",
+  "job_id": "EP-013",
+  "title": "Auto-precache TTS for commented games on load",
+  "state": "planning",
+  "type": "feature",
+  "priority": 2,
+  "source": {
+    "notes": "User request: when loading a commented game with a premium TTS provider, precache all speech so narration is instant. The function precacheGame() already exists in tts.ts but is never called."
+  },
+  "description": "When a user opens a commented game with ElevenLabs/Google TTS configured, the app should immediately start precaching all narration in the background so playback is instant when the user reaches each move. The precacheGame() function at tts.ts:1427 already walks the tree and caches all annotations — it just needs to be wired up. Tie it to the showComments toggle: comments visible = precache, comments hidden = don't precache.",
+  "notes": [
+    "precacheGame() already exists at tts.ts:1427 — walks full tree, generates speech, caches blob URLs",
+    "It already skips cloud/system providers and handles all premium providers",
+    "It already skips entries already in audioCache",
+    "It serializes requests (one at a time) and breaks on error (rate limit safety)",
+    "Need to call it: (1) when a tab loads a game with comments, (2) when showComments is toggled on",
+    "Don't call it: when showComments is off, when provider is cloud/system, when no API key",
+    "Should run in background (fire-and-forget) — don't block the UI",
+    "Consider: ElevenLabs rate limits — precacheGame already stops on error, which is correct",
+    "Consider: large games with 100+ comments — precache serializes, so it'll take time but won't overwhelm the API"
+  ],
+  "scope": {
+    "in_scope": [
+      "Call precacheGame() when a game tab loads with comments and a premium TTS provider",
+      "Call precacheGame() when showComments is toggled ON (and auto-narrate or TTS is active)",
+      "Fire-and-forget — don't block UI, log result to console",
+      "Respect the existing early-returns in precacheGame (no API key, cloud provider, etc.)"
+    ],
+    "out_of_scope": [
+      "Modifying precacheGame() itself (it already works)",
+      "Adding a progress indicator for precaching (future enhancement)",
+      "Precaching for the cloud provider (clips are on CDN already)",
+      "Precaching system TTS (no API, speaks directly)"
+    ]
+  },
+  "contracts": {
+    "correctness": {
+      "requirements": [
+        "Precaching fires when loading a commented game with ElevenLabs/Google configured",
+        "Precaching does NOT fire when showComments is off",
+        "Precaching does NOT fire for cloud or system providers",
+        "Cached audio plays instantly when the user reaches the move",
+        "Precaching stops gracefully on rate limit or API error"
+      ],
+      "edge_cases": [
+        "Switching tabs mid-precache — should not crash or leak",
+        "Toggling showComments off then on rapidly — should not double-precache",
+        "Game with no comments — precacheGame returns 0 immediately, no harm",
+        "Invalid API key — precacheGame errors on first call and stops"
+      ]
+    },
+    "performance": {
+      "no_regression": true,
+      "requirements": [
+        "Precaching must not block the UI thread (fire-and-forget async)",
+        "Precaching must not cause visible lag on game load"
+      ]
+    },
+    "compatibility": {
+      "backward_compatible": true,
+      "migration_needed": false
+    }
+  },
+  "acceptance_gates": [
+    "pnpm format && pnpm lint:fix clean",
+    "Opening a commented game with ElevenLabs triggers background precaching",
+    "Console shows 'TTS precached N/M annotations' after loading",
+    "Navigating to precached moves plays audio instantly (no network delay)",
+    "showComments off = no precache"
+  ],
+  "test_plan": {
+    "automated": [
+      {
+        "name": "lint",
+        "command": "pnpm lint:fix"
+      }
+    ],
+    "manual": [
+      "Open browser console (Inspect > Console)",
+      "Open with-comments.pgn as a local database game with ElevenLabs configured",
+      "Observe console: should see 'TTS precaching N annotations...' then 'TTS precached N/M annotations'",
+      "Navigate through the game — commented moves should narrate instantly with no delay",
+      "Toggle 'hide comments' — precaching should not fire",
+      "Toggle 'show comments' back on — precaching should fire again for any uncached entries",
+      "Switch to cloud provider — precaching should not fire"
+    ]
+  },
+  "primary_files": [
+    "src/components/common/GameNotation.tsx",
+    "src/utils/tts.ts"
+  ],
+  "done_criteria": [
+    "precacheGame() called on game load for premium providers when comments visible",
+    "precacheGame() called when showComments toggled on",
+    "Fire-and-forget pattern (no UI blocking)",
+    "All lint passes",
+    "Manual testing confirms instant narration after precache",
+    "Committed and pushed"
+  ]
+}
