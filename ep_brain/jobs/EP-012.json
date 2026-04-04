@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "job_id": "EP-012",
   "title": "TTS narration not triggered when clicking into variations",
-  "state": "planning",
+  "state": "done",
   "type": "bugfix",
   "priority": 2,
   "source": {

@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "job_id": "EP-010",
   "title": "Fix ElevenLabs TTS 'request canceled' toast on replay/backtrack",
-  "state": "planning",
+  "state": "done",
   "type": "bugfix",
   "priority": 1,
   "source": {

@@ -2,23 +2,44 @@
   "schema_version": "1.0",
   "job_id": "EP-011",
   "title": "Fix tooltip remnant artifacts in notation panel toggle buttons",
-  "state": "spec",
+  "state": "planning",
   "type": "bugfix",
   "priority": 3,
-  "source": {},
-  "description": "Fix tooltip remnant artifacts in notation panel toggle buttons",
+  "source": {
+    "notes": "User report: when hovering over the toggle buttons (hide moves, table view, hide comments, hide variations) in the notation panel, moving between buttons leaves remnant letters from the previous tooltip visible."
+  },
+  "description": "Four Mantine Tooltip components in GameNotation.tsx (lines 165-186) have dynamic labels that change when the toggle state flips (e.g. 'Hide Comments' ↔ 'Show Comments'). When moving the mouse between adjacent buttons, the tooltip text from the previous button bleeds through — remnant characters are visible during the transition. This is a known Mantine Tooltip issue with closely-spaced dynamic tooltips.",
+  "notes": [
+    "File: src/components/common/GameNotation.tsx lines 165-186",
+    "4 tooltips in a tight Group with gap='sm'",
+    "Each tooltip label is a ternary that changes on state toggle",
+    "Likely cause: Mantine Tooltip reuses the floating element and animates, but the text update races with the open/close transition",
+    "Possible fixes: (1) add openDelay to prevent instant show on mouse-through, (2) add key prop to force re-mount on label change, (3) use withinPortal to isolate rendering, (4) use Tooltip.Group with openDelay for coordinated behavior",
+    "Mantine docs recommend Tooltip.Group for adjacent tooltips: https://mantine.dev/core/tooltip/#tooltip-group"
+  ],
   "scope": {
     "in_scope": [
-      "TODO: define what this job covers"
+      "Fix the tooltip remnant artifacts for the 4 notation panel toggles",
+      "Use Mantine's recommended pattern (Tooltip.Group or openDelay)"
     ],
     "out_of_scope": [
-      "TODO: define what is excluded"
+      "Other tooltips in the app",
+      "Tooltip styling/theming changes",
+      "Changing the toggle button behavior"
     ]
   },
   "contracts": {
     "correctness": {
       "requirements": [
-        "TODO: define correctness requirements"
+        "Moving between toggle buttons shows clean tooltip text with no remnants",
+        "Each tooltip still shows the correct label for its current state",
+        "Toggling a button updates its tooltip text immediately",
+        "Tooltips still appear on hover (not removed entirely)"
+      ],
+      "edge_cases": [
+        "Rapidly moving mouse across all 4 buttons",
+        "Hovering a button, clicking it (toggles state), then moving to next button",
+        "Mouse leaving the button group entirely — tooltip should disappear cleanly"
       ]
     },
     "performance": {
@@ -30,29 +51,33 @@
     }
   },
   "acceptance_gates": [
-    "All automated tests pass",
     "pnpm format && pnpm lint:fix clean",
-    "TODO: add job-specific gates"
+    "No remnant text visible when moving between toggle buttons",
+    "All 4 tooltips still display correct text"
   ],
   "test_plan": {
     "automated": [
-      {
-        "name": "cargo test",
-        "command": "cd src-tauri && cargo test"
-      },
       {
         "name": "lint",
         "command": "pnpm lint:fix"
       }
     ],
     "manual": [
-      "TODO: define manual verification steps"
+      "Open a game in the analysis board",
+      "Slowly move mouse across all 4 toggle buttons (eye, table, comments, variations)",
+      "Verify each tooltip shows clean text with no remnant letters from the previous",
+      "Click a toggle (e.g. hide comments), hover it again — tooltip should say 'Show Comments'",
+      "Rapidly sweep mouse back and forth across the buttons — no artifacts"
     ]
   },
   "primary_files": [
-    "TODO: list files to be modified"
+    "src/components/common/GameNotation.tsx"
   ],
   "done_criteria": [
-    "TODO: define when this job is complete"
+    "Tooltip remnants eliminated",
+    "All 4 tooltips still functional",
+    "Lint passes",
+    "Manual visual verification",
+    "Committed and pushed"
   ]
 }
