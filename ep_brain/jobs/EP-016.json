@@ -1,0 +1,118 @@
+{
+  "schema_version": "1.0",
+  "job_id": "EP-016",
+  "title": "Add Zen Mode for distraction-free board view",
+  "state": "planning",
+  "type": "feature",
+  "priority": 1,
+  "source": {
+    "upstream_pr": 787,
+    "url": "https://github.com/franciscoBSalgueiro/en-croissant/pull/787",
+    "notes": "Our own PR to upstream. Port it into our fork directly. Upstream may or may not merge it."
+  },
+  "description": "Zen Mode hides all UI chrome (sidebar, top bar, tabs, analysis/notation panels) and centers the board for a distraction-free experience. Toggle via Shift+Z shortcut or sidebar icon. Escape to exit. Board auto-centers and expands to fill available space. Persisted in localStorage. Works across analysis, play, and puzzle modes.",
+  "notes": [
+    "8 files changed in the upstream PR, ~334 lines of diff",
+    "CUSTOM ICONS: We have our own zen icon set at .icons/zen/svg/ (20 SVGs from Flaticon). Use one of these instead of tabler's IconYoga. Good candidates: 015-zen.svg, 006-meditation.svg, 007-meditate.svg",
+    "The upstream PR uses IconYoga from @tabler/icons-react — replace with our custom SVG",
+    "Since this is OUR PR, the code was written against upstream's codebase. Our fork has diverged (TTS atoms, custom CSS, etc.) so there may be minor merge conflicts",
+    "Key files: Sidebar.tsx (zen toggle icon), BoardsPage.tsx (zen layout logic), Board.tsx (auto-resize), __root.tsx (hide top bar/sidebar), atoms.ts (zenModeAtom), keybinds.ts (Shift+Z), SettingsPage.tsx (zen toggle in settings), react-mosaic.css (zen styles)"
+  ],
+  "scope": {
+    "in_scope": [
+      "Add zenModeAtom to atoms.ts (persisted in localStorage)",
+      "Add Shift+Z keybind to keybinds.ts",
+      "Add zen toggle icon to Sidebar.tsx using custom SVG from .icons/zen/",
+      "Hide sidebar, top bar, tabs, and side panels when zen mode is active",
+      "Auto-center and expand board to fill available space",
+      "Escape key exits zen mode",
+      "Hover left edge shows reminder tooltip",
+      "Add zen mode toggle to Settings page",
+      "CSS for zen mode transitions in react-mosaic.css"
+    ],
+    "out_of_scope": [
+      "Custom zen icon design (we already have icons)",
+      "Zen mode for non-board pages (databases, puzzles list, etc.)",
+      "Auto-hide cursor in zen mode (future enhancement)"
+    ]
+  },
+  "contracts": {
+    "correctness": {
+      "requirements": [
+        "Shift+Z toggles zen mode on and off",
+        "Escape exits zen mode",
+        "Sidebar icon toggles zen mode",
+        "All UI chrome hidden in zen mode (sidebar, top bar, tabs, panels)",
+        "Board fills available space and centers",
+        "Zen mode state persists across page refreshes (localStorage)",
+        "Works in analysis, play vs engine, and puzzle modes",
+        "TTS narration continues working in zen mode"
+      ],
+      "edge_cases": [
+        "Entering zen mode while engine is analyzing — analysis should continue",
+        "Entering zen mode while TTS is speaking — should continue",
+        "Resizing window in zen mode — board should adapt",
+        "Switching tabs while in zen mode",
+        "Opening settings while in zen mode (need escape hatch)"
+      ]
+    },
+    "performance": {
+      "no_regression": true,
+      "requirements": [
+        "Toggling zen mode should be instant (no visible delay)"
+      ]
+    },
+    "compatibility": {
+      "backward_compatible": true,
+      "migration_needed": false
+    }
+  },
+  "acceptance_gates": [
+    "pnpm format && pnpm lint:fix clean",
+    "Shift+Z toggles zen mode",
+    "Escape exits zen mode",
+    "Board fills screen in zen mode",
+    "Custom zen icon visible in sidebar",
+    "State persists across refresh"
+  ],
+  "test_plan": {
+    "automated": [
+      {
+        "name": "lint",
+        "command": "pnpm lint:fix"
+      }
+    ],
+    "manual": [
+      "Open a game in analysis mode, press Shift+Z — all chrome should disappear, board centers",
+      "Press Escape — chrome returns",
+      "Click the zen icon in the sidebar — same behavior",
+      "Refresh the page while in zen mode — should still be in zen mode",
+      "Press Shift+Z during an engine game — game continues, just UI simplified",
+      "Enable TTS auto-narrate, enter zen mode, navigate moves — narration should still work",
+      "Hover left edge of screen in zen mode — should see reminder tooltip",
+      "Check Settings page — zen mode toggle should be present",
+      "Resize window in zen mode — board should adapt"
+    ]
+  },
+  "primary_files": [
+    "src/components/Sidebar.tsx",
+    "src/components/boards/Board.tsx",
+    "src/components/settings/SettingsPage.tsx",
+    "src/components/tabs/BoardsPage.tsx",
+    "src/routes/__root.tsx",
+    "src/state/atoms.ts",
+    "src/state/keybinds.ts",
+    "src/styles/react-mosaic.css"
+  ],
+  "done_criteria": [
+    "Zen mode toggles via Shift+Z, sidebar icon, and Escape to exit",
+    "Custom zen SVG icon in sidebar (from .icons/zen/)",
+    "All UI chrome hidden in zen mode",
+    "Board auto-centers and fills space",
+    "State persisted in localStorage",
+    "TTS continues working in zen mode",
+    "All lint passes",
+    "Manual testing confirms all modes work",
+    "Committed and pushed"
+  ]
+}
