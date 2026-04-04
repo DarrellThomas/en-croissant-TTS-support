@@ -2364,6 +2364,42 @@ mod tests {
     }
 
     #[test]
+    fn importer_preserves_comment_at_variation_start() {
+        // Pattern from Morphy MBM: ({Note that} 45. Rxe4+ ...)
+        // Comment appears BEFORE the first move in a variation
+        let pgn = r#"[Event "T"]
+[Site "S"]
+[Date "2026.01.01"]
+[White "W"]
+[Black "B"]
+[Result "*"]
+
+1. e4 ({Note that} 1. d4 {continues normally}) 1... e5 *
+"#;
+
+        let mut importer = Importer::new(None);
+        let games: Vec<TempGame> = BufferedReader::new(pgn.as_bytes())
+            .into_iter(&mut importer)
+            .flatten()
+            .flatten()
+            .collect();
+
+        assert_eq!(games.len(), 1);
+        let movetext = decode_game_to_movetext(&games[0].moves, Fen::default()).unwrap();
+
+        assert!(
+            movetext.contains("Note that"),
+            "Comment at variation start lost: {}",
+            movetext
+        );
+        assert!(
+            movetext.contains("continues normally"),
+            "Comment after variation move lost: {}",
+            movetext
+        );
+    }
+
+    #[test]
     fn importer_preserves_mainline_comments_user_format() {
         // Exact format from user's with-comments.pgn: newline-separated brace
         // comments with em-dashes and long text
