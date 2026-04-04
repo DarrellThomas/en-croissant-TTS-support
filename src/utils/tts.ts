@@ -1322,7 +1322,6 @@ export async function speakText(text: string): Promise<void> {
         } catch (e) {
             if (timeout) clearTimeout(timeout);
             if (e instanceof DOMException && e.name === "AbortError") return;
-            if (e instanceof TypeError && /cancel|failed to fetch/i.test(e.message)) return;
             if (attempt < maxAttempts) {
                 // Server may still be starting — wait and retry
                 console.log(`TTS attempt ${attempt} failed, retrying in 2s...`);
