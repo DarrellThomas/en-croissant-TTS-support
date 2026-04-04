@@ -313,7 +313,13 @@ function TabSwitch({
 }) {
   const [windowsState, setWindowsState] = useAtom(windowsStateAtom);
 
-  const zenNode: MosaicNode<ViewId> | null = zenMode ? "left" : windowsState.currentNode;
+  // In zen mode, force the left pane to 100% width while preserving the
+  // original layout structure so it restores cleanly on exit.
+  const mosaicValue = (() => {
+    const node = windowsState.currentNode;
+    if (!zenMode || !node || typeof node === "string") return node;
+    return { ...node, splitPercentage: 100 };
+  })();
 
   const mosaicClass = zenMode ? "zen-mode" : undefined;
 
@@ -324,7 +330,7 @@ function TabSwitch({
         <Mosaic<ViewId>
           className={cx(mosaicClass)}
           renderTile={(id) => fullLayout[id]}
-          value={zenNode}
+          value={mosaicValue}
           onChange={(currentNode) => {
             if (!zenMode) setWindowsState({ currentNode });
           }}
@@ -338,7 +344,7 @@ function TabSwitch({
         <Mosaic<ViewId>
           className={cx(mosaicClass)}
           renderTile={(id) => fullLayout[id]}
-          value={zenNode}
+          value={mosaicValue}
           onChange={(currentNode) => {
             if (!zenMode) setWindowsState({ currentNode });
           }}
@@ -357,7 +363,7 @@ function TabSwitch({
         <Mosaic<ViewId>
           className={cx(mosaicClass)}
           renderTile={(id) => fullLayout[id]}
-          value={zenNode}
+          value={mosaicValue}
           onChange={(currentNode) => {
             if (!zenMode) setWindowsState({ currentNode });
           }}
