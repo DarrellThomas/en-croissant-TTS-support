@@ -1,0 +1,85 @@
+{
+  "schema_version": "1.0",
+  "job_id": "EP-015",
+  "title": "Cherry-pick PR #734: Resurrect custom titlebar on Linux",
+  "state": "planning",
+  "type": "cherry_pick",
+  "priority": 2,
+  "source": {
+    "upstream_pr": 734,
+    "url": "https://github.com/franciscoBSalgueiro/en-croissant/pull/734",
+    "notes": "Merged 2026-03-07. Extends the Windows custom titlebar to also show on Linux."
+  },
+  "description": "The custom titlebar (with integrated menu) currently only shows on Windows (VITE_PLATFORM === 'win32'). Linux gets the native OS titlebar which varies by distro/DE. This PR extends the 4 platform checks to include 'linux', giving Linux users the same polished custom titlebar as Windows.",
+  "notes": [
+    "4 spots to change across 2 files — all are platform gate checks",
+    "Spot 1: __root.tsx:383 — menu setup: isNative || VITE_PLATFORM !== 'win32' → add && !== 'linux'",
+    "Spot 2: __root.tsx:419 — header prop: same pattern",
+    "Spot 3: __root.tsx:439 — TopBar render: VITE_PLATFORM === 'win32' → add || === 'linux'",
+    "Spot 4: SettingsPage.tsx:493 — titlebar setting visibility: same as spot 3"
+  ],
+  "scope": {
+    "in_scope": [
+      "Add 'linux' platform check at all 4 spots",
+      "Verify the custom titlebar renders correctly on Linux"
+    ],
+    "out_of_scope": [
+      "macOS titlebar (uses native always)",
+      "Titlebar styling changes",
+      "Menu content changes"
+    ]
+  },
+  "contracts": {
+    "correctness": {
+      "requirements": [
+        "Custom titlebar shows on Linux with integrated menu",
+        "Window controls (minimize, maximize, close) work",
+        "Titlebar setting appears in Settings > Appearance on Linux",
+        "Native titlebar option still works if user selects it"
+      ],
+      "edge_cases": [
+        "Switching between native and custom titlebar in settings",
+        "Fullscreen mode — titlebar should hide",
+        "Dev server (TAURI_DEV_HOST) — titlebar should still work"
+      ]
+    },
+    "performance": {
+      "no_regression": true
+    },
+    "compatibility": {
+      "backward_compatible": true,
+      "migration_needed": false
+    }
+  },
+  "acceptance_gates": [
+    "pnpm format && pnpm lint:fix clean",
+    "Custom titlebar visible on Linux with working menu",
+    "Window controls functional"
+  ],
+  "test_plan": {
+    "automated": [
+      {
+        "name": "lint",
+        "command": "pnpm lint:fix"
+      }
+    ],
+    "manual": [
+      "Launch app on Linux — should show custom titlebar (not native)",
+      "Click menu items (File, Edit, etc.) — should open menus",
+      "Click minimize, maximize, close buttons — should work",
+      "Go to Settings > Appearance — 'Title Bar' setting should be visible",
+      "Switch to Native titlebar — app should switch to OS-native titlebar",
+      "Switch back to Custom — should restore custom titlebar"
+    ]
+  },
+  "primary_files": [
+    "src/routes/__root.tsx",
+    "src/components/settings/SettingsPage.tsx"
+  ],
+  "done_criteria": [
+    "All 4 platform checks updated to include linux",
+    "Lint passes",
+    "Custom titlebar works on Linux",
+    "Committed and pushed"
+  ]
+}
