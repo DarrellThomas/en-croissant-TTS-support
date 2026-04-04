@@ -325,10 +325,24 @@ export const createTreeStore = (id?: string, initialTree?: TreeState) => {
         },
         goToMove: (move) => {
             stopSpeaking();
-            set((state) => ({
-                ...state,
-                position: move,
-            }));
+            set((state) => {
+                if (move.length > 0 && isAutoNarrateEnabled()) {
+                    const targetNode = getNodeAtPath(state.root, move);
+                    if (targetNode.comment || targetNode.annotations.length > 0) {
+                        speakMoveNarration(
+                            targetNode.san,
+                            targetNode.comment,
+                            targetNode.annotations,
+                            targetNode.halfMoves,
+                            state.headers,
+                        );
+                    }
+                }
+                return {
+                    ...state,
+                    position: move,
+                };
+            });
         },
         goToBranchStart: () => {
             set(
