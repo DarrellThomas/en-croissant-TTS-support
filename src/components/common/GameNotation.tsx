@@ -42,6 +42,7 @@ import {
 } from "@/state/atoms";
 import { keyMapAtom } from "@/state/keybinds";
 import { formatScore } from "@/utils/score";
+import { precacheGame } from "@/utils/tts";
 import { getTranspositions } from "@/utils/transpositions";
 import { getNodeAtPath, type TreeNode } from "@/utils/treeReducer";
 import CompleteMoveCell from "./CompleteMoveCell";
@@ -53,10 +54,16 @@ function GameNotation({ topBar, controls }: { topBar?: boolean; controls?: React
   const currentFen = useStore(store, (s) => s.currentNode().fen);
   const copyPgn = useStore(store, (s) => s.copyPgn);
   const headers = useStore(store, (s) => s.headers);
-  const rootComment = useStore(store, (s) => s.root.comment);
+  const root = useStore(store, (s) => s.root);
+  const rootComment = root.comment;
 
   const viewport = useRef<HTMLDivElement>(null);
   const targetRef = useRef<HTMLSpanElement>(null);
+
+  const [invisibleValue, setInvisible] = useAtom(currentInvisibleAtom);
+  const invisible = topBar && invisibleValue;
+  const showVariations = useAtomValue(currentShowVariationsAtom);
+  const showComments = useAtomValue(currentShowCommentsAtom);
 
   useEffect(() => {
     if (viewport.current) {
@@ -76,10 +83,11 @@ function GameNotation({ topBar, controls }: { topBar?: boolean; controls?: React
     }
   }, [currentFen]);
 
-  const [invisibleValue, setInvisible] = useAtom(currentInvisibleAtom);
-  const invisible = topBar && invisibleValue;
-  const showVariations = useAtomValue(currentShowVariationsAtom);
-  const showComments = useAtomValue(currentShowCommentsAtom);
+  useEffect(() => {
+    if (showComments) {
+      precacheGame(root).catch(() => {});
+    }
+  }, [showComments, root]);
   const [tableView, setTableView] = useAtom(tableViewAtom);
   const colorScheme = useColorScheme();
 
