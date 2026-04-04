@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "job_id": "EP-015",
   "title": "Cherry-pick PR #734: Resurrect custom titlebar on Linux",
-  "state": "planning",
+  "state": "done",
   "type": "cherry_pick",
   "priority": 2,
   "source": {
