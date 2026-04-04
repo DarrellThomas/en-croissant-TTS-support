@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "job_id": "EP-002",
   "title": "Cherry-pick PR #782: Fix regex in the chess.com link import",
-  "state": "spec",
+  "state": "planning",
   "type": "cherry_pick",
   "priority": 1,
   "source": {
@@ -10,23 +10,36 @@
     "url": "https://github.com/franciscoBSalgueiro/en-croissant/pull/782",
     "notes": "Merged 2026-03-29T19:45:14Z"
   },
-  "description": "The Problem: The previous regex required a /live/ segment (e.g., chess.com/live/12345), which does not always exist immediately after a non-daily game finishes.\r\n\r\nThe Fix: Modified the regex to accept both the existing prefixes and the standard post-game URL format.",
-  "notes": ["Upstream files: src/utils/chess.com/api.tsx", "Labels: none"],
+  "description": "The chess.com game import regex requires /live/ or /daily/ in the URL path, but chess.com sometimes omits this segment in post-game URLs (e.g. chess.com/game/12345). The fix makes the live/daily segment optional and defaults to 'live' when absent.",
+  "notes": [
+    "2-line change in one file — minimal risk",
+    "Old regex: /.*\\/game\\/(live|daily)\\/(\\d+)/",
+    "New regex: /.*\\/game\\/(?:(live|daily)\\/)?(\\d+)/",
+    "Also change: match[1] fallback to 'live' when group is undefined"
+  ],
   "scope": {
     "in_scope": [
-      "Port upstream PR #782 changes to our fork",
-      "Resolve any merge conflicts with our modifications",
-      "Verify the fix works in our build"
+      "Update regex in getChesscomGame to make live/daily optional",
+      "Default gameType to 'live' when the URL segment is absent"
     ],
-    "out_of_scope": ["Unrelated changes to the same files", "Upstream features we haven't adopted"]
+    "out_of_scope": [
+      "Other chess.com API changes",
+      "Lichess import logic"
+    ]
   },
   "contracts": {
     "correctness": {
       "requirements": [
-        "The bug/feature from PR #782 works correctly",
-        "No regressions in existing functionality"
+        "URLs with /game/live/12345 still work (existing behavior)",
+        "URLs with /game/daily/12345 still work (existing behavior)",
+        "URLs with /game/12345 now work (new behavior, defaults to live)"
       ],
-      "edge_cases": ["TODO: identify edge cases"]
+      "edge_cases": [
+        "URL with trailing slash: /game/12345/",
+        "URL with query params: /game/12345?foo=bar",
+        "URL with no game ID should still return null",
+        "Empty string input"
+      ]
     },
     "performance": {
       "no_regression": true
@@ -39,7 +52,7 @@
   "acceptance_gates": [
     "cargo test passes",
     "pnpm format && pnpm lint:fix clean",
-    "PR #782 behavior verified in running app"
+    "Regex matches all 3 URL formats correctly"
   ],
   "test_plan": {
     "automated": [
@@ -52,13 +65,19 @@
         "command": "pnpm lint:fix"
       }
     ],
-    "manual": ["Verify PR #782 fix in running app", "TODO: specific verification steps"]
+    "manual": [
+      "In running app: paste a chess.com URL like https://www.chess.com/game/12345 (no live/daily) and verify it loads",
+      "Paste https://www.chess.com/game/live/12345 and verify it still works",
+      "Paste https://www.chess.com/game/daily/12345 and verify it still works"
+    ]
   },
-  "primary_files": ["src/utils/chess.com/api.tsx"],
+  "primary_files": [
+    "src/utils/chess.com/api.tsx"
+  ],
   "done_criteria": [
-    "PR #782 changes successfully ported",
+    "Regex updated to make live/daily optional",
+    "gameType defaults to 'live' when segment absent",
     "All tests pass",
-    "Verified in running app",
     "Committed and pushed"
   ]
 }

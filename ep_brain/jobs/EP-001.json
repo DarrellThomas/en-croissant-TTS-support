@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "job_id": "EP-001",
   "title": "Cherry-pick PR #724: Kill engine child processes on app exit (fixes #723)",
-  "state": "planning",
+  "state": "done",
   "type": "cherry_pick",
   "priority": 1,
   "source": {
@@ -21,7 +21,10 @@
       "Resolve any merge conflicts with our modifications",
       "Verify the fix works in our build"
     ],
-    "out_of_scope": ["Unrelated changes to the same files", "Upstream features we haven't adopted"]
+    "out_of_scope": [
+      "Unrelated changes to the same files",
+      "Upstream features we haven't adopted"
+    ]
   },
   "contracts": {
     "correctness": {
@@ -29,7 +32,9 @@
         "The bug/feature from PR #724 works correctly",
         "No regressions in existing functionality"
       ],
-      "edge_cases": ["TODO: identify edge cases"]
+      "edge_cases": [
+        "TODO: identify edge cases"
+      ]
     },
     "performance": {
       "no_regression": true
@@ -55,7 +60,10 @@
         "command": "pnpm lint:fix"
       }
     ],
-    "manual": ["Verify PR #724 fix in running app", "TODO: specific verification steps"]
+    "manual": [
+      "Verify PR #724 fix in running app",
+      "TODO: specific verification steps"
+    ]
   },
   "primary_files": [
     "src-tauri/src/chess.rs",
@@ -67,5 +75,14 @@
     "All tests pass",
     "Verified in running app",
     "Committed and pushed"
+  ],
+  "iteration_log": [
+    {
+      "timestamp": "2026-04-04T02:42:00Z",
+      "action": "Verified already cherry-picked",
+      "result": "All code from PR #724 present in our fork",
+      "keep_or_discard": "keep",
+      "notes": "kill_sync, Drop for BaseEngine, ExitRequested handler all present"
+    }
   ]
 }
