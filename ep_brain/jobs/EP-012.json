@@ -1,0 +1,88 @@
+{
+  "schema_version": "1.0",
+  "job_id": "EP-012",
+  "title": "TTS narration not triggered when clicking into variations",
+  "state": "planning",
+  "type": "bugfix",
+  "priority": 2,
+  "source": {
+    "notes": "User report: navigating manually into a variation branch doesn't trigger TTS. TTS only fires via goToNext (arrow key / auto-advance), not goToMove (clicking a move in notation)."
+  },
+  "description": "TTS narration is only wired into goToNext() at tree.ts:126, which always follows children[0] (mainline). When the user clicks a move in the notation panel — mainline or variation — it calls goToMove() at tree.ts:326 which just sets the position without triggering narration. The fix: add TTS narration to goToMove() so clicking any move (including variation moves) speaks its comment/annotation when auto-narrate is enabled.",
+  "notes": [
+    "goToNext (line 126): calls stopSpeaking, then speakMoveNarration for children[0] — only mainline",
+    "goToMove (line 326): calls stopSpeaking, sets position — NO TTS",
+    "goToPrevious (line 158): calls stopSpeaking — NO TTS (correct, going backward shouldn't narrate)",
+    "The fix should: look up the node at the target position, check if auto-narrate is on, and speak if the node has a comment or annotations",
+    "Be careful: goToMove is called for ALL click navigation, not just variations. Don't double-narrate if the user is just clicking the next mainline move.",
+    "Key difference from goToNext: goToMove receives the full target path, so we need to resolve the node at that path"
+  ],
+  "scope": {
+    "in_scope": [
+      "Add TTS narration to goToMove in tree.ts",
+      "Speak the target node's comment/annotations when auto-narrate is enabled",
+      "Handle the case where the target node has no comment (don't speak)"
+    ],
+    "out_of_scope": [
+      "Changing goToNext behavior",
+      "Adding TTS to goToPrevious (backward navigation shouldn't narrate)",
+      "TTS provider logic or voice selection"
+    ]
+  },
+  "contracts": {
+    "correctness": {
+      "requirements": [
+        "Clicking a variation move with a comment triggers TTS narration",
+        "Clicking a mainline move with a comment triggers TTS narration",
+        "Clicking a move without a comment does NOT trigger TTS",
+        "Auto-narrate disabled means no TTS on click",
+        "goToNext still works as before (arrow key navigation)"
+      ],
+      "edge_cases": [
+        "Clicking the same move twice — should replay narration, not double-fire",
+        "Rapidly clicking through variation moves — stopSpeaking should cancel prior",
+        "Clicking a move while TTS is mid-sentence — should stop and start new",
+        "Root node click (position []) — should not narrate"
+      ]
+    },
+    "performance": {
+      "no_regression": true
+    },
+    "compatibility": {
+      "backward_compatible": true,
+      "migration_needed": false
+    }
+  },
+  "acceptance_gates": [
+    "pnpm format && pnpm lint:fix clean",
+    "Clicking variation moves with comments triggers narration",
+    "Arrow key navigation still narrates as before",
+    "No narration when auto-narrate is off"
+  ],
+  "test_plan": {
+    "automated": [
+      {
+        "name": "lint",
+        "command": "pnpm lint:fix"
+      }
+    ],
+    "manual": [
+      "Load a game with comments and variations (with-comments.pgn)",
+      "Enable auto-narrate, click a variation move that has a comment — should narrate",
+      "Click a mainline move with a comment — should narrate",
+      "Click a move without a comment — should NOT narrate (just move sound)",
+      "Disable auto-narrate, click a commented variation move — should NOT narrate",
+      "Use arrow keys to navigate — should still narrate as before"
+    ]
+  },
+  "primary_files": [
+    "src/state/store/tree.ts"
+  ],
+  "done_criteria": [
+    "goToMove triggers TTS for commented nodes when auto-narrate is on",
+    "No regressions in goToNext narration",
+    "All lint passes",
+    "Manual testing confirms variation narration works",
+    "Committed and pushed"
+  ]
+}
