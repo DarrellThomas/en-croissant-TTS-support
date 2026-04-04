@@ -22,10 +22,7 @@
       "Update regex in getChesscomGame to make live/daily optional",
       "Default gameType to 'live' when the URL segment is absent"
     ],
-    "out_of_scope": [
-      "Other chess.com API changes",
-      "Lichess import logic"
-    ]
+    "out_of_scope": ["Other chess.com API changes", "Lichess import logic"]
   },
   "contracts": {
     "correctness": {
@@ -71,9 +68,7 @@
       "Paste https://www.chess.com/game/daily/12345 and verify it still works"
     ]
   },
-  "primary_files": [
-    "src/utils/chess.com/api.tsx"
-  ],
+  "primary_files": ["src/utils/chess.com/api.tsx"],
   "done_criteria": [
     "Regex updated to make live/daily optional",
     "gameType defaults to 'live' when segment absent",
