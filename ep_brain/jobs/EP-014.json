@@ -1,0 +1,101 @@
+{
+  "schema_version": "1.0",
+  "job_id": "EP-014",
+  "title": "Harden TTS comment preprocessor for real-world chess book PGN",
+  "state": "planning",
+  "type": "bugfix",
+  "priority": 1,
+  "source": {
+    "notes": "User report: Everyman Chess 'Morphy: Move By Move' PGN comments produce garbled TTS. This is the core value proposition of En Parlant~ — making annotated chess books listenable.",
+    "ep_brain_ref": "SECRET_SAUCE"
+  },
+  "description": "The cleanCommentForTTS() function in tts.ts handles basic SAN expansion and chess vocab, but fails on real-world patterns found in published chess book PGNs. Comments from professional annotators contain prose mixed with inline move notation, section dividers, hyphenated move ranges, and multi-line wrapping that all sound wrong when sent directly to ElevenLabs. The preprocessor needs hardening to handle these patterns.",
+  "notes": [
+    "Test file: /data/chess-lab/courses/everyman-chess/MorphyMBM/MorphyMBM.pgn",
+    "The existing cleanCommentForTTS is at tts.ts:652. expandInlineSAN is at tts.ts:594. applyChessVocab is at tts.ts:616.",
+    "All fixes go in cleanCommentForTTS or its helpers — no changes to the TTS provider code or the audio pipeline.",
+    "IMPORTANT: This function runs on every comment before TTS. It must be fast and must not break comments that already sound fine."
+  ],
+  "scope": {
+    "in_scope": [
+      "Fix all the patterns below in cleanCommentForTTS and its helpers",
+      "Test against the Morphy MBM PGN as the reference case",
+      "Ensure changes don't break comments that already work well"
+    ],
+    "out_of_scope": [
+      "Changing TTS provider logic",
+      "Changing the audio pipeline or caching",
+      "Adding new TTS providers",
+      "Translating comments to other languages"
+    ]
+  },
+  "contracts": {
+    "correctness": {
+      "requirements": [
+        "Pattern 1: '...h5-h4' (Black move range) → 'h5 to h4' — the '...' prefix means Black's move, the hyphen means 'to'",
+        "Pattern 2: '---' (section dividers) → remove or replace with pause. Authors use '---' as paragraph breaks in prose.",
+        "Pattern 3: '48...Be7+' (inline move with Black indicator) → '48, Bishop e7, check' — the expandInlineSAN regex doesn't match '...' as dots",
+        "Pattern 4: Multi-line comments have hard line breaks mid-sentence from 80-char PGN wrapping → join into single line before processing",
+        "Pattern 5: Semicolons before closing brace '{, followed by 48...Be7+.}' → clean trailing punctuation",
+        "Pattern 6: 'his pawn by ...h5-h4' — the standalone '...' prefix before a pawn move range",
+        "Pattern 7: Parenthetical move refs like '(45 Rxe4 variation below)' embedded in prose — should be spoken naturally",
+        "Pattern 8: '{Note that}' as a comment that's just a prose fragment linking to a variation — speak it naturally",
+        "Pattern 9: 'the h1-square' — hyphenated square reference should say 'the h1 square' not 'the h1 dash square'",
+        "Pattern 10: Single quotes around chess terms like 'wrong bishop' — strip quotes, TTS handles them poorly"
+      ],
+      "edge_cases": [
+        "Empty comment '{}'",
+        "Comment that is purely prose with no chess notation",
+        "Comment with [%eval] tags mixed with prose",
+        "Very long comment (500+ chars) — should not slow down preprocessing",
+        "Comment in a non-English language — expandInlineSAN should still work"
+      ]
+    },
+    "performance": {
+      "no_regression": true,
+      "requirements": [
+        "cleanCommentForTTS must remain fast — it runs on every comment",
+        "No new external dependencies"
+      ]
+    },
+    "compatibility": {
+      "backward_compatible": true,
+      "migration_needed": false
+    }
+  },
+  "acceptance_gates": [
+    "pnpm format && pnpm lint:fix clean",
+    "Morphy MBM game plays through with natural-sounding narration",
+    "No garbled output for any of the 10 patterns listed above",
+    "Comments that already sound fine are not degraded"
+  ],
+  "test_plan": {
+    "automated": [
+      {
+        "name": "lint",
+        "command": "pnpm lint:fix"
+      }
+    ],
+    "manual": [
+      "Import MorphyMBM.pgn, open a game with rich commentary (game at line 898)",
+      "Enable ElevenLabs TTS with auto-narrate",
+      "Navigate through the game and listen to each comment",
+      "Specifically verify: '...h5-h4' says 'h5 to h4', not garbled",
+      "Verify '---' dividers are silent (not 'dash dash dash')",
+      "Verify '48...Be7+' says '48, Bishop e7, check'",
+      "Verify 'the h1-square' says 'the h1 square'",
+      "Verify no quotes are audible around chess terms",
+      "Test a game from with-comments.pgn to confirm no regression (those comments are already clean)"
+    ]
+  },
+  "primary_files": [
+    "src/utils/tts.ts"
+  ],
+  "done_criteria": [
+    "All 10 patterns handled in cleanCommentForTTS or its helpers",
+    "Morphy MBM game narrates naturally",
+    "No regressions on already-working comments",
+    "All lint passes",
+    "Committed and pushed"
+  ]
+}
