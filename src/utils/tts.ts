@@ -1321,9 +1321,8 @@ export async function speakText(text: string): Promise<void> {
             return; // success — exit retry loop
         } catch (e) {
             if (timeout) clearTimeout(timeout);
-            // stopSpeaking() bumps requestGeneration — if it changed, we were
-            // intentionally interrupted (works regardless of error type/message).
-            if (thisGeneration !== requestGeneration) return;
+            if (e instanceof DOMException && e.name === "AbortError") return;
+            if (e instanceof TypeError && /cancel|failed to fetch/i.test(e.message)) return;
             if (attempt < maxAttempts) {
                 // Server may still be starting — wait and retry
                 console.log(`TTS attempt ${attempt} failed, retrying in 2s...`);
