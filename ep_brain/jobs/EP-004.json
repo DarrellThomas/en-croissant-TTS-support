@@ -11,20 +11,14 @@
     "notes": "Merged 2026-03-01T23:02:09Z"
   },
   "description": "## Summary\n\nFixes #316.\n\n- The `cleanSan()` function in `parseKeyboardMove()` had a `length > 2` guard that blocked 2-character inputs like `OO` and `00` from being recognized as kingside castling\n- Literal string matching (`\"o-o\"`, `\"o-o-o\"`) only caught exact lowercase hyphenated forms, missing `O-O`, `0-0`, `OO`, `00`, etc.\n- Replaced with regex-based normalization that accepts any combination of `O`/`o`/`0` with optional hyphens for both kingside and queenside castling\n\n## Test plan\n\n- [ ] E",
-  "notes": [
-    "Upstream files: src/utils/chess.ts",
-    "Labels: none"
-  ],
+  "notes": ["Upstream files: src/utils/chess.ts", "Labels: none"],
   "scope": {
     "in_scope": [
       "Port upstream PR #712 changes to our fork",
       "Resolve any merge conflicts with our modifications",
       "Verify the fix works in our build"
     ],
-    "out_of_scope": [
-      "Unrelated changes to the same files",
-      "Upstream features we haven't adopted"
-    ]
+    "out_of_scope": ["Unrelated changes to the same files", "Upstream features we haven't adopted"]
   },
   "contracts": {
     "correctness": {
@@ -32,9 +26,7 @@
         "The bug/feature from PR #712 works correctly",
         "No regressions in existing functionality"
       ],
-      "edge_cases": [
-        "TODO: identify edge cases"
-      ]
+      "edge_cases": ["TODO: identify edge cases"]
     },
     "performance": {
       "no_regression": true
@@ -60,14 +52,9 @@
         "command": "pnpm lint:fix"
       }
     ],
-    "manual": [
-      "Verify PR #712 fix in running app",
-      "TODO: specific verification steps"
-    ]
+    "manual": ["Verify PR #712 fix in running app", "TODO: specific verification steps"]
   },
-  "primary_files": [
-    "src/utils/chess.ts"
-  ],
+  "primary_files": ["src/utils/chess.ts"],
   "done_criteria": [
     "PR #712 changes successfully ported",
     "All tests pass",

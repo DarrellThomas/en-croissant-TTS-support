@@ -11,20 +11,14 @@
     "notes": "Merged 2026-03-01T23:44:07Z"
   },
   "description": "## Summary\n- Strip `[%timestamp N]` annotations from PGN comment text after parsing\n- Chess.com exports include both `[%clk 0:09:59.9]` and `[%timestamp 1]` in move comments. The `[%clk]` is already parsed by chessops, but `[%timestamp]` was left in the displayed comment text, cluttering the notation\n- The `[%timestamp]` value represents elapsed seconds since game start (not remaining clock time), so it can't be reliably converted to a clock value without time control info. The `[%clk]` value is",
-  "notes": [
-    "Upstream files: src/utils/chess.ts",
-    "Labels: none"
-  ],
+  "notes": ["Upstream files: src/utils/chess.ts", "Labels: none"],
   "scope": {
     "in_scope": [
       "Port upstream PR #720 changes to our fork",
       "Resolve any merge conflicts with our modifications",
       "Verify the fix works in our build"
     ],
-    "out_of_scope": [
-      "Unrelated changes to the same files",
-      "Upstream features we haven't adopted"
-    ]
+    "out_of_scope": ["Unrelated changes to the same files", "Upstream features we haven't adopted"]
   },
   "contracts": {
     "correctness": {
@@ -32,9 +26,7 @@
         "The bug/feature from PR #720 works correctly",
         "No regressions in existing functionality"
       ],
-      "edge_cases": [
-        "TODO: identify edge cases"
-      ]
+      "edge_cases": ["TODO: identify edge cases"]
     },
     "performance": {
       "no_regression": true
@@ -60,14 +52,9 @@
         "command": "pnpm lint:fix"
       }
     ],
-    "manual": [
-      "Verify PR #720 fix in running app",
-      "TODO: specific verification steps"
-    ]
+    "manual": ["Verify PR #720 fix in running app", "TODO: specific verification steps"]
   },
-  "primary_files": [
-    "src/utils/chess.ts"
-  ],
+  "primary_files": ["src/utils/chess.ts"],
   "done_criteria": [
     "PR #720 changes successfully ported",
     "All tests pass",

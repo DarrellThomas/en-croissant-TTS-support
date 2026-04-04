@@ -21,10 +21,7 @@
       "Resolve any merge conflicts with our modifications",
       "Verify the fix works in our build"
     ],
-    "out_of_scope": [
-      "Unrelated changes to the same files",
-      "Upstream features we haven't adopted"
-    ]
+    "out_of_scope": ["Unrelated changes to the same files", "Upstream features we haven't adopted"]
   },
   "contracts": {
     "correctness": {
@@ -32,9 +29,7 @@
         "The bug/feature from PR #738 works correctly",
         "No regressions in existing functionality"
       ],
-      "edge_cases": [
-        "TODO: identify edge cases"
-      ]
+      "edge_cases": ["TODO: identify edge cases"]
     },
     "performance": {
       "no_regression": true
@@ -60,10 +55,7 @@
         "command": "pnpm lint:fix"
       }
     ],
-    "manual": [
-      "Verify PR #738 fix in running app",
-      "TODO: specific verification steps"
-    ]
+    "manual": ["Verify PR #738 fix in running app", "TODO: specific verification steps"]
   },
   "primary_files": [
     "package.json",
