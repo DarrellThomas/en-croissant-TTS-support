@@ -86,10 +86,7 @@
       "Switch to cloud provider — precaching should not fire"
     ]
   },
-  "primary_files": [
-    "src/components/common/GameNotation.tsx",
-    "src/utils/tts.ts"
-  ],
+  "primary_files": ["src/components/common/GameNotation.tsx", "src/utils/tts.ts"],
   "done_criteria": [
     "precacheGame() called on game load for premium providers when comments visible",
     "precacheGame() called when showComments toggled on",

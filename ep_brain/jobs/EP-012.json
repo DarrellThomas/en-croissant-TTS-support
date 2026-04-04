@@ -75,9 +75,7 @@
       "Use arrow keys to navigate — should still narrate as before"
     ]
   },
-  "primary_files": [
-    "src/state/store/tree.ts"
-  ],
+  "primary_files": ["src/state/store/tree.ts"],
   "done_criteria": [
     "goToMove triggers TTS for commented nodes when auto-narrate is on",
     "No regressions in goToNext narration",

@@ -47,9 +47,7 @@
     },
     "performance": {
       "no_regression": true,
-      "requirements": [
-        "No visible stutter or flicker during piece movement"
-      ]
+      "requirements": ["No visible stutter or flicker during piece movement"]
     },
     "compatibility": {
       "backward_compatible": true,
@@ -83,10 +81,7 @@
       "Verify premove highlighting (play vs engine, premove a response)"
     ]
   },
-  "primary_files": [
-    "package.json",
-    "pnpm-lock.yaml"
-  ],
+  "primary_files": ["package.json", "pnpm-lock.yaml"],
   "done_criteria": [
     "chessground bumped to ^10.1.1 in package.json",
     "pnpm-lock.yaml updated",

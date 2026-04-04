@@ -72,9 +72,7 @@
       "Disconnect network, try narration — SHOULD show timeout/network error toast"
     ]
   },
-  "primary_files": [
-    "src/utils/tts.ts"
-  ],
+  "primary_files": ["src/utils/tts.ts"],
   "done_criteria": [
     "Abort/cancel errors are silently swallowed (no toast)",
     "Real API errors still produce user-visible toasts",

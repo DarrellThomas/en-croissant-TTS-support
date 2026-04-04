@@ -90,9 +90,7 @@
       "Test a game from with-comments.pgn to confirm no regression (those comments are already clean)"
     ]
   },
-  "primary_files": [
-    "src/utils/tts.ts"
-  ],
+  "primary_files": ["src/utils/tts.ts"],
   "done_criteria": [
     "All 10 patterns handled in cleanCommentForTTS or its helpers",
     "Morphy MBM game narrates naturally",

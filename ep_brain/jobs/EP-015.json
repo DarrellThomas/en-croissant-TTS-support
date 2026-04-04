@@ -72,10 +72,7 @@
       "Switch back to Custom — should restore custom titlebar"
     ]
   },
-  "primary_files": [
-    "src/routes/__root.tsx",
-    "src/components/settings/SettingsPage.tsx"
-  ],
+  "primary_files": ["src/routes/__root.tsx", "src/components/settings/SettingsPage.tsx"],
   "done_criteria": [
     "All 4 platform checks updated to include linux",
     "Lint passes",
