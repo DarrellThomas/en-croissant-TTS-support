@@ -24,7 +24,7 @@ Everything in En Croissant, plus:
 
 - **Move narration** — moves spoken aloud as you navigate through games
 - **Auto-narrate** — TTS triggers automatically on each move
-- **Multiple TTS providers** — ElevenLabs, Google Cloud, KittenTTS (local), OpenTTS (local), or system TTS
+- **Multiple TTS providers** — ElevenLabs, Grok (xAI), Google Cloud, KittenTTS (local), OpenTTS (local), or system TTS
 - **Multi-language** — English, French, Spanish, German, Japanese, Russian, Chinese, Korean
 - **Chess vocabulary** — SAN notation converted to natural spoken language per locale
 - **Audio cache** — previously synthesized moves are replayed instantly
@@ -42,6 +42,7 @@ Everything in En Croissant, plus:
 | Provider               | Cost                     | Quality     | Languages     | Offline | Setup          |
 | ---------------------- | ------------------------ | ----------- | ------------- | ------- | -------------- |
 | **ElevenLabs**         | Free tier (10K chars/mo) | Exceptional | 8 languages   | No      | API key        |
+| **Grok (xAI)**         | $4.20 / 1M chars         | Excellent   | 20+ languages | No      | API key        |
 | **Google Cloud**       | Free tier (1M chars/mo)  | Very good   | 8 languages   | No      | API key        |
 | **KittenTTS**          | Free                     | Good        | English only  | Yes     | Python + model |
 | **System (OS Native)** | Free                     | Passable    | OS-dependent  | Yes     | None           |
@@ -109,7 +110,7 @@ docker start opentts    # restart
 docker rm -f opentts    # remove entirely
 ```
 
-Note: OpenTTS works best with European languages. For Japanese, Chinese, or Korean, use Google Cloud or ElevenLabs instead.
+Note: OpenTTS works best with European languages. For Japanese, Chinese, or Korean, use Grok, Google Cloud, or ElevenLabs instead.
 
 ## Quick Start: Google Cloud TTS
 
@@ -121,6 +122,15 @@ Google's WaveNet voices sound natural and support all 8 languages. The free tier
 4. Paste your API key and click **Test**
 
 See the [full walkthrough](docs/tts/setup-google.md) for step-by-step instructions.
+
+## Quick Start: Grok (xAI)
+
+High-quality AI voices at 1/10th the cost of ElevenLabs ($4.20 per 1M characters). Supports 20+ languages with 5 distinct voices.
+
+1. Create an API key at [console.x.ai](https://console.x.ai) under **API Keys**
+2. In En Parlant~: **Settings > Sound > TTS Provider** → Grok (xAI)
+3. Paste your API key (starts with `xai-`) and pick a voice
+4. Click **Test** to preview
 
 ## Quick Start: ElevenLabs
 

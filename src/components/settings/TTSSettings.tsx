@@ -21,6 +21,8 @@ import {
   ttsEnabledAtom,
   ttsGoogleApiKeyAtom,
   ttsGoogleGenderAtom,
+  ttsGrokApiKeyAtom,
+  ttsGrokVoiceAtom,
   ttsKittenTTSThreadsAtom,
   ttsKittenTTSUrlAtom,
   ttsKittenTTSVoiceAtom,
@@ -38,6 +40,7 @@ import { playCloudDemoClip } from "@/utils/cloudTts";
 import {
   clearAudioCache,
   type ElevenLabsVoice,
+  GROK_VOICES,
   KITTENTTS_VOICES,
   listOpenTTSVoices,
   listSystemVoices,
@@ -74,6 +77,7 @@ export function TTSProviderSelect() {
       data={[
         { value: "cloud", label: "En Parlant Cloud Clips" },
         { value: "elevenlabs", label: "ElevenLabs" },
+        { value: "grok", label: "Grok (xAI)" },
         { value: "google", label: "Google Cloud" },
         { value: "kittentts", label: "KittenTTS (English Only)" },
         { value: "opentts", label: "OpenTTS (Self-Hosted)" },
@@ -251,6 +255,27 @@ export function TTSGoogleApiKeyInput() {
       <PasswordInput
         w="20rem"
         placeholder="AIza..."
+        value={tempKey}
+        onChange={(e) => setTempKey(e.currentTarget.value)}
+        onBlur={() => setApiKey(tempKey)}
+      />
+    </Group>
+  );
+}
+
+export function TTSGrokApiKeyInput() {
+  const [apiKey, setApiKey] = useAtom(ttsGrokApiKeyAtom);
+  const [tempKey, setTempKey] = useState(apiKey);
+
+  useEffect(() => {
+    setTempKey(apiKey);
+  }, [apiKey]);
+
+  return (
+    <Group gap="xs">
+      <PasswordInput
+        w="20rem"
+        placeholder="xai-..."
         value={tempKey}
         onChange={(e) => setTempKey(e.currentTarget.value)}
         onBlur={() => setApiKey(tempKey)}
@@ -643,6 +668,37 @@ export function TTSVoiceSelect() {
           size="xs"
           variant="light"
           disabled={!openTTSVoice}
+          onClick={() => {
+            speakText(testPhrase);
+          }}
+        >
+          Test
+        </Button>
+      </Group>
+    );
+  }
+
+  // Grok state
+  const [grokVoice, setGrokVoice] = useAtom(ttsGrokVoiceAtom);
+
+  if (provider === "grok") {
+    const grokVoiceOptions = GROK_VOICES.map((v) => ({
+      value: v.id,
+      label: v.label,
+    }));
+
+    return (
+      <Group gap="xs">
+        <Select
+          w="16rem"
+          data={grokVoiceOptions}
+          value={grokVoice}
+          onChange={(v) => v && setGrokVoice(v)}
+          allowDeselect={false}
+        />
+        <Button
+          size="xs"
+          variant="light"
           onClick={() => {
             speakText(testPhrase);
           }}

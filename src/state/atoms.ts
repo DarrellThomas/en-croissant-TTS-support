@@ -235,6 +235,12 @@ export const ttsLanguageAtom = atomWithStorage<string>("tts-language", "en", und
 export const ttsProviderAtom = atomWithStorage<string>("tts-provider", "cloud", undefined, {
     getOnInit: true,
 });
+export const ttsGrokApiKeyAtom = atomWithStorage<string>("tts-grok-api-key", "", undefined, {
+    getOnInit: true,
+});
+export const ttsGrokVoiceAtom = atomWithStorage<string>("tts-grok-voice", "sal", undefined, {
+    getOnInit: true,
+});
 export const ttsGoogleApiKeyAtom = atomWithStorage<string>("tts-google-api-key", "", undefined, {
     getOnInit: true,
 });

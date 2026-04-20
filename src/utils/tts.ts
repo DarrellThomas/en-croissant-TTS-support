@@ -8,6 +8,8 @@ import {
     ttsEnabledAtom,
     ttsGoogleApiKeyAtom,
     ttsGoogleGenderAtom,
+    ttsGrokApiKeyAtom,
+    ttsGrokVoiceAtom,
     ttsKittenTTSThreadsAtom,
     ttsKittenTTSUrlAtom,
     ttsKittenTTSVoiceAtom,
@@ -989,6 +991,47 @@ async function generateSpeechGoogle(
     return bytes.buffer;
 }
 
+// --- Grok (xAI) TTS API ---
+
+const GROK_TTS_URL = "https://api.x.ai/v1/tts";
+
+export const GROK_VOICES = [
+    { id: "sal", label: "Sal (Neutral, balanced)" },
+    { id: "eve", label: "Eve (Female, energetic)" },
+    { id: "ara", label: "Ara (Female, warm)" },
+    { id: "rex", label: "Rex (Male, confident)" },
+    { id: "leo", label: "Leo (Male, authoritative)" },
+];
+
+async function generateSpeechGrok(
+    text: string,
+    apiKey: string,
+    voiceId: string,
+    lang = "en",
+    signal?: AbortSignal,
+): Promise<ArrayBuffer> {
+    const response = await fetch(GROK_TTS_URL, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${apiKey}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            text,
+            voice_id: voiceId,
+            language: lang,
+        }),
+        signal,
+    });
+
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Grok TTS API error ${response.status}: ${errorText}`);
+    }
+
+    return response.arrayBuffer();
+}
+
 // --- OpenTTS API ---
 
 async function generateSpeechOpenTTS(
@@ -1270,6 +1313,16 @@ export async function speakText(text: string): Promise<void> {
             );
             return;
         }
+    } else if (provider === "grok") {
+        apiKey = store.get(ttsGrokApiKeyAtom);
+        voiceId = store.get(ttsGrokVoiceAtom) || "sal";
+        if (!apiKey) {
+            showTtsNotification(
+                "Grok TTS: API key required",
+                "Go to Settings > Sound and enter your xAI API key.",
+            );
+            return;
+        }
     } else if (provider === "google") {
         apiKey = store.get(ttsGoogleApiKeyAtom);
         gender = store.get(ttsGoogleGenderAtom) || "MALE";
@@ -1303,7 +1356,8 @@ export async function speakText(text: string): Promise<void> {
 
     // Timeout for cloud providers — don't hang forever on bad networks
     const isLocalServer = provider === "kittentts" || provider === "opentts";
-    const isCloudProvider = provider === "elevenlabs" || provider === "google";
+    const isCloudProvider =
+        provider === "elevenlabs" || provider === "grok" || provider === "google";
     let timeout: ReturnType<typeof setTimeout> | null = null;
     if (isCloudProvider) {
         timeout = setTimeout(() => abort.abort(), 15000);
@@ -1325,6 +1379,8 @@ export async function speakText(text: string): Promise<void> {
                 } else if (provider === "opentts") {
                     audioData = await generateSpeechOpenTTS(text, openTTSUrl, voiceId, lang);
                     mimeType = "audio/wav";
+                } else if (provider === "grok") {
+                    audioData = await generateSpeechGrok(text, apiKey, voiceId, lang, abort.signal);
                 } else if (provider === "google") {
                     audioData = await generateSpeechGoogle(
                         text,
@@ -1377,8 +1433,14 @@ export async function speakText(text: string): Promise<void> {
                 );
             } else if (isCloudProvider) {
                 const msg = String(e);
+                const providerName =
+                    provider === "grok"
+                        ? "Grok"
+                        : provider === "google"
+                          ? "Google Cloud"
+                          : "ElevenLabs";
                 showTtsNotification(
-                    `${provider === "google" ? "Google Cloud" : "ElevenLabs"} TTS failed`,
+                    `${providerName} TTS failed`,
                     msg.includes("abort") || msg.includes("timeout")
                         ? "Request timed out. Check your internet connection."
                         : msg,
@@ -1491,6 +1553,10 @@ export async function precacheGame(root: TreeNode): Promise<number> {
         openTTSUrl = store.get(ttsOpenTTSUrlAtom) || "http://localhost:5500";
         voiceId = store.get(ttsOpenTTSVoiceAtom) || "";
         if (!voiceId) return 0;
+    } else if (provider === "grok") {
+        apiKey = store.get(ttsGrokApiKeyAtom);
+        voiceId = store.get(ttsGrokVoiceAtom) || "sal";
+        if (!apiKey) return 0;
     } else if (provider === "google") {
         apiKey = store.get(ttsGoogleApiKeyAtom);
         gender = store.get(ttsGoogleGenderAtom) || "MALE";
@@ -1537,6 +1603,8 @@ export async function precacheGame(root: TreeNode): Promise<number> {
             } else if (provider === "opentts") {
                 audioData = await generateSpeechOpenTTS(text, openTTSUrl, voiceId, lang);
                 mimeType = "audio/wav";
+            } else if (provider === "grok") {
+                audioData = await generateSpeechGrok(text, apiKey, voiceId, lang);
             } else if (provider === "google") {
                 audioData = await generateSpeechGoogle(text, apiKey, lang, gender);
             } else {

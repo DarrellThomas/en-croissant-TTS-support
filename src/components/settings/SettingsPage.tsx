@@ -86,6 +86,7 @@ import {
   TTSClearCacheButton,
   TTSEnabledSwitch,
   TTSGoogleApiKeyInput,
+  TTSGrokApiKeyInput,
   TTSKittenTTSThreadsInput,
   TTSKittenTTSUrlInput,
   TTSLanguageSelect,
@@ -611,11 +612,13 @@ export default function Page() {
         category: "tts",
         title: "TTS Provider",
         description:
-          "En Parlant Cloud Clips (instant, no setup), ElevenLabs (premium AI), Google Cloud (WaveNet), KittenTTS (English only, high quality), OpenTTS (self-hosted), or System (OS native)",
+          "En Parlant Cloud Clips (instant, no setup), ElevenLabs (premium AI), Grok (xAI, high quality), Google Cloud (WaveNet), KittenTTS (English only, high quality), OpenTTS (self-hosted), or System (OS native)",
         keywords: [
           "tts",
           "provider",
           "elevenlabs",
+          "grok",
+          "xai",
           "google",
           "cloud",
           "opentts",
@@ -693,6 +696,15 @@ export default function Page() {
         description: "API key for ElevenLabs provider. Get one at elevenlabs.io",
         keywords: ["tts", "api", "key", "elevenlabs"],
         render: () => <TTSApiKeyInput />,
+      },
+      {
+        id: "tts-grok-api-key",
+        category: "tts",
+        title: "Grok (xAI) API Key",
+        description:
+          "API key for Grok TTS provider. Get one at console.x.ai — high quality at $4.20/1M characters",
+        keywords: ["tts", "api", "key", "grok", "xai"],
+        render: () => <TTSGrokApiKeyInput />,
       },
       {
         id: "tts-google-api-key",
