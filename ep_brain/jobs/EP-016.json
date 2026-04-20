@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "job_id": "EP-016",
   "title": "Add Zen Mode for distraction-free board view",
-  "state": "planning",
+  "state": "done",
   "type": "feature",
   "priority": 1,
   "source": {
@@ -58,9 +58,7 @@
     },
     "performance": {
       "no_regression": true,
-      "requirements": [
-        "Toggling zen mode should be instant (no visible delay)"
-      ]
+      "requirements": ["Toggling zen mode should be instant (no visible delay)"]
     },
     "compatibility": {
       "backward_compatible": true,
